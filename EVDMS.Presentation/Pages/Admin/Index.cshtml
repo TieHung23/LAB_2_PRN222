@@ -1,0 +1,535 @@
+@page
+@model Index
+
+@{
+    Layout = "Shared/_AdminLayout";
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="page-header">
+    <div class="container">
+        <h1><i class="fas fa-tachometer-alt me-3"></i>@ViewData["Title"]</h1>
+        <p class="mb-0">Welcome back! Here's what's happening with your EV dealership management system.</p>
+    </div>
+</div>
+
+<!-- Dashboard Content -->
+<div class="admin-page-content">
+    <!-- Statistics Cards -->
+    <div class="row mb-5">
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="admin-card p-0 overflow-hidden">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center">
+                        <div class="stats-icon bg-primary bg-gradient me-3">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h6 class="text-muted mb-1 fw-semibold">Total Accounts</h6>
+                            <h3 class="mb-0 fw-bold text-primary">1,247</h3>
+                            <small class="text-success"><i class="fas fa-arrow-up me-1"></i>12% this month</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-light bg-opacity-50 p-3">
+                    <a href="/Admin/Accounts" class="btn btn-sm btn-outline-primary">View Details</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="admin-card p-0 overflow-hidden">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center">
+                        <div class="stats-icon bg-success bg-gradient me-3">
+                            <i class="fas fa-car"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h6 class="text-muted mb-1 fw-semibold">Vehicle Models</h6>
+                            <h3 class="mb-0 fw-bold text-success">89</h3>
+                            <small class="text-success"><i class="fas fa-arrow-up me-1"></i>5% this month</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-light bg-opacity-50 p-3">
+                    <a href="/Admin/VehicleModels" class="btn btn-sm btn-outline-success">Manage Models</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="admin-card p-0 overflow-hidden">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center">
+                        <div class="stats-icon bg-warning bg-gradient me-3">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h6 class="text-muted mb-1 fw-semibold">Orders</h6>
+                            <h3 class="mb-0 fw-bold text-warning">342</h3>
+                            <small class="text-danger"><i class="fas fa-arrow-down me-1"></i>3% this month</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-light bg-opacity-50 p-3">
+                    <a href="/Admin/Orders" class="btn btn-sm btn-outline-warning">View Orders</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="admin-card p-0 overflow-hidden">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center">
+                        <div class="stats-icon bg-info bg-gradient me-3">
+                            <i class="fas fa-store"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h6 class="text-muted mb-1 fw-semibold">Active Dealers</h6>
+                            <h3 class="mb-0 fw-bold text-info">156</h3>
+                            <small class="text-success"><i class="fas fa-arrow-up me-1"></i>8% this month</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-light bg-opacity-50 p-3">
+                    <a href="/Admin/Dealers" class="btn btn-sm btn-outline-info">Manage Dealers</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="admin-card">
+                <div class="card-header d-flex align-items-center justify-content-between p-2">
+                    <h5 class="mb-0 fw-bold">
+                        <i class="fas fa-bolt me-2"></i>Quick Actions
+                    </h5>
+                    <small class="text-white-50">Frequently used admin functions</small>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row g-3">
+                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+                            <a href="/Admin/Accounts" class="quick-action-btn">
+                                <div class="quick-action-icon bg-primary bg-gradient">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <h6 class="fw-semibold mb-1">Manage Accounts</h6>
+                                <small class="text-muted">User management</small>
+                            </a>
+                        </div>
+                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+                            <a href="/Admin/VehicleModels" class="quick-action-btn">
+                                <div class="quick-action-icon bg-success bg-gradient">
+                                    <i class="fas fa-car"></i>
+                                </div>
+                                <h6 class="fw-semibold mb-1">Car Models</h6>
+                                <small class="text-muted">Vehicle catalog</small>
+                            </a>
+                        </div>
+                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+                            <a href="/Admin/Orders" class="quick-action-btn">
+                                <div class="quick-action-icon bg-warning bg-gradient">
+                                    <i class="fas fa-shopping-cart"></i>
+                                </div>
+                                <h6 class="fw-semibold mb-1">View Orders</h6>
+                                <small class="text-muted">Order management</small>
+                            </a>
+                        </div>
+                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+                            <a href="/Admin/Dealers" class="quick-action-btn">
+                                <div class="quick-action-icon bg-info bg-gradient">
+                                    <i class="fas fa-store"></i>
+                                </div>
+                                <h6 class="fw-semibold mb-1">Manage Dealers</h6>
+                                <small class="text-muted">Dealer network</small>
+                            </a>
+                        </div>
+                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+                            <a href="/Admin/Customers" class="quick-action-btn">
+                                <div class="quick-action-icon bg-secondary bg-gradient">
+                                    <i class="fas fa-user-friends"></i>
+                                </div>
+                                <h6 class="fw-semibold mb-1">View Customers</h6>
+                                <small class="text-muted">Customer base</small>
+                            </a>
+                        </div>
+                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+                            <a href="/Admin/Inventory" class="quick-action-btn">
+                                <div class="quick-action-icon bg-dark bg-gradient">
+                                    <i class="fas fa-warehouse"></i>
+                                </div>
+                                <h6 class="fw-semibold mb-1">Check Inventory</h6>
+                                <small class="text-muted">Stock levels</small>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity & Analytics -->
+    <div class="row">
+        <div class="col-lg-8 mb-4">
+            <div class="admin-card">
+                <div class="card-header d-flex align-items-center justify-content-between p-2">
+                    <h5 class="mb-0 fw-bold">
+                        <i class="fas fa-chart-line me-2"></i>Recent Activity
+                    </h5>
+                    <div class="dropdown">
+                        <button class="btn btn-sm btn-outline-light dropdown-toggle" type="button"
+                                data-bs-toggle="dropdown">
+                            <i class="fas fa-clock me-1"></i>Last 7 days
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-clock me-2"></i>Last 24 hours</a>
+                            </li>
+                            <li><a class="dropdown-item active" href="#"><i class="fas fa-calendar me-2"></i>Last 7 days</a>
+                            </li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-calendar-alt me-2"></i>Last 30
+                                    days</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-body p-4">
+                    <div class="activity-timeline">
+                        <div class="activity-item">
+                            <div class="activity-icon bg-success bg-gradient">
+                                <i class="fas fa-plus"></i>
+                            </div>
+                            <div class="activity-content">
+                                <h6 class="mb-1 fw-semibold">New vehicle model added</h6>
+                                <p class="text-muted mb-1">Tesla Model Y Performance was added to the catalog</p>
+                                <small class="text-muted"><i class="fas fa-clock me-1"></i>2 hours ago</small>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon bg-primary bg-gradient">
+                                <i class="fas fa-user-plus"></i>
+                            </div>
+                            <div class="activity-content">
+                                <h6 class="mb-1 fw-semibold">New customer registration</h6>
+                                <p class="text-muted mb-1">John Smith registered as a new customer</p>
+                                <small class="text-muted"><i class="fas fa-clock me-1"></i>4 hours ago</small>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon bg-warning bg-gradient">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="activity-content">
+                                <h6 class="mb-1 fw-semibold">Order completed</h6>
+                                <p class="text-muted mb-1">Order #ORD-2024-1587 was successfully completed</p>
+                                <small class="text-muted"><i class="fas fa-clock me-1"></i>6 hours ago</small>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon bg-info bg-gradient">
+                                <i class="fas fa-handshake"></i>
+                            </div>
+                            <div class="activity-content">
+                                <h6 class="mb-1 fw-semibold">New dealer partnership</h6>
+                                <p class="text-muted mb-1">EV Motors Hanoi joined as authorized dealer</p>
+                                <small class="text-muted"><i class="fas fa-clock me-1"></i>1 day ago</small>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon bg-purple bg-gradient">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <div class="activity-content">
+                                <h6 class="mb-1 fw-semibold">Customer feedback received</h6>
+                                <p class="text-muted mb-1">5-star rating for VinFast VF8 from customer Maria</p>
+                                <small class="text-muted"><i class="fas fa-clock me-1"></i>2 days ago</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center mt-4">
+                        <a href="/Admin/Activities" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-history me-1"></i>View All Activities
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 mb-4">
+            <div class="admin-card">
+                <div class="card-header d-flex align-items-center justify-content-between p-2">
+                    <h5 class="mb-0 fw-bold">
+                        <i class="fas fa-bell me-2"></i>System Alerts
+                    </h5>
+                    <span class="badge bg-danger bg-gradient">3</span>
+                </div>
+                <div class="card-body p-4">
+                    <div class="alert-item mb-3">
+                        <div class="alert alert-warning d-flex align-items-start">
+                            <div class="alert-icon me-3">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h6 class="alert-title mb-1">Low inventory alert</h6>
+                                <p class="alert-text mb-2">5 vehicles below minimum stock level</p>
+                                <small class="text-muted"><i class="fas fa-clock me-1"></i>30 minutes ago</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert-item mb-3">
+                        <div class="alert alert-info d-flex align-items-start">
+                            <div class="alert-icon me-3">
+                                <i class="fas fa-tools"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h6 class="alert-title mb-1">System maintenance</h6>
+                                <p class="alert-text mb-2">Scheduled maintenance tonight at 2:00 AM</p>
+                                <small class="text-muted"><i class="fas fa-clock me-1"></i>2 hours ago</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert-item mb-3">
+                        <div class="alert alert-success d-flex align-items-start">
+                            <div class="alert-icon me-3">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h6 class="alert-title mb-1">Backup completed</h6>
+                                <p class="alert-text mb-2">Daily system backup completed successfully</p>
+                                <small class="text-muted"><i class="fas fa-clock me-1"></i>3 hours ago</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert-item mb-0">
+                        <div class="alert alert-danger d-flex align-items-start">
+                            <div class="alert-icon me-3">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h6 class="alert-title mb-1">Security notice</h6>
+                                <p class="alert-text mb-2">Unusual login attempts detected</p>
+                                <small class="text-muted"><i class="fas fa-clock me-1"></i>5 hours ago</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <a href="/Admin/Alerts" class="btn btn-outline-warning btn-sm">
+                            <i class="fas fa-bell me-1"></i>View All Alerts
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .stats-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: white;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-header.bg-gradient {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    }
+
+    .quick-action-btn {
+        display: block;
+        text-decoration: none;
+        color: inherit;
+        text-align: center;
+        padding: 1.5rem 1rem;
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        height: 100%;
+    }
+
+    .quick-action-btn:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        text-decoration: none;
+        color: inherit;
+        background: rgba(255, 255, 255, 0.9);
+    }
+
+    .quick-action-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        color: white;
+        margin: 0 auto 1rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .activity-timeline {
+        position: relative;
+    }
+
+    .activity-item {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 1.5rem;
+        position: relative;
+    }
+
+    .activity-item:not(:last-child)::after {
+        content: '';
+        position: absolute;
+        left: 20px;
+        top: 40px;
+        bottom: -1.5rem;
+        width: 2px;
+        background: #e9ecef;
+    }
+
+    .activity-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9rem;
+        color: white;
+        margin-right: 1rem;
+        flex-shrink: 0;
+        position: relative;
+        z-index: 1;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    .activity-content h6 {
+        font-size: 0.9rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .activity-content p {
+        font-size: 0.85rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .alert {
+        border: none;
+        border-radius: 12px;
+        padding: 1rem;
+    }
+
+    .alert-warning {
+        background: rgba(255, 193, 7, 0.1);
+        color: #856404;
+    }
+
+    .alert-info {
+        background: rgba(13, 202, 240, 0.1);
+        color: #055160;
+    }
+
+    .alert-success {
+        background: rgba(25, 135, 84, 0.1);
+        color: #0f5132;
+    }
+
+    .alert-danger {
+        background: rgba(220, 53, 69, 0.1);
+        color: #721c24;
+    }
+
+    .alert-item {
+        margin-bottom: 1rem;
+    }
+
+    .alert-icon {
+        font-size: 1.1rem;
+        width: 35px;
+        height: 35px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        flex-shrink: 0;
+    }
+
+    .alert-warning .alert-icon {
+        background: rgba(255, 193, 7, 0.2);
+        color: #856404;
+    }
+
+    .alert-info .alert-icon {
+        background: rgba(13, 202, 240, 0.2);
+        color: #055160;
+    }
+
+    .alert-success .alert-icon {
+        background: rgba(25, 135, 84, 0.2);
+        color: #0f5132;
+    }
+
+    .alert-danger .alert-icon {
+        background: rgba(220, 53, 69, 0.2);
+        color: #721c24;
+    }
+
+    .alert-title {
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+    }
+
+    .alert-text {
+        font-size: 0.85rem;
+        margin-bottom: 0.5rem;
+        line-height: 1.4;
+    }
+
+    .bg-purple {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    }
+
+    .dropdown-menu {
+        border: none;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        border-radius: 12px;
+    }
+
+    .dropdown-item {
+        padding: 0.75rem 1rem;
+        font-size: 0.875rem;
+        border-radius: 8px;
+        margin: 0.25rem;
+        transition: all 0.3s ease;
+    }
+
+    .dropdown-item:hover {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+
+    .dropdown-item.active {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+
+    .badge {
+        font-size: 0.75rem;
+        padding: 0.5rem 0.75rem;
+        border-radius: 8px;
+    }
+</style>
