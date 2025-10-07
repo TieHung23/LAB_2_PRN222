@@ -1,0 +1,78 @@
+@page
+@model LoginModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="page-header">
+    <div class="container">
+        <h1><i class="fas fa-sign-in-alt me-2"></i>Login</h1>
+        <p class="mb-0">Access your EVDMS account</p>
+    </div>
+</div>
+
+<div class="container main-content">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <div class="text-center mb-4">
+                        <img
+                            src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/VinFast_logo_%28simple_variant%29.svg/2048px-VinFast_logo_%28simple_variant%29.svg.png"
+                            alt="EVDMS Logo" class="mb-3"
+                            style="width: 150px; height: auto; object-fit: fill"/>
+                    </div>
+
+                    <form method="post">
+                        <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="Input.Email" class="form-label">
+                                <i class="fas fa-envelope me-1"></i>Email Address
+                            </label>
+                            <input asp-for="Input.Email" class="form-control form-control-lg"
+                                   placeholder="Enter your email"/>
+                            <span asp-validation-for="Input.Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Input.Password" class="form-label">
+                                <i class="fas fa-lock me-1"></i>Password
+                            </label>
+                            <input asp-for="Input.Password" class="form-control form-control-lg"
+                                   placeholder="Enter your password"/>
+                            <span asp-validation-for="Input.Password" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            <input asp-for="Input.RememberMe" class="form-check-input"/>
+                            <label asp-for="Input.RememberMe" class="form-check-label">
+                                Remember me
+                            </label>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-lg w-100 mb-3"
+                                style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none;">
+                            <i class="fas fa-sign-in-alt me-2"></i>Sign In
+                        </button>
+
+                        <div class="text-center">
+                            <a asp-page="/Account/ForgotPassword" class="text-decoration-none">Forgot Password?</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="text-center mt-3">
+                <a asp-page="/Index" class="text-decoration-none">
+                    <i class="fas fa-arrow-left me-1"></i>Back to Home
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial"/>
+}
+
