@@ -1,12 +1,15 @@
+using System;
 using System.ComponentModel.DataAnnotations;
+using EVDMS.Core.CommonEntities;
 
 namespace EVDMS.Core.Entities;
 
-public class Payment
+public class Payment : UpdatedCommon
 {
-    [Key] public int Id { get; set; }
+    [Key]
+    public Guid Id { get; set; } = Guid.NewGuid();
 
-    public int OrderId { get; set; }
+    public Guid OrderId { get; set; }
 
     public Order? Order { get; set; }
 

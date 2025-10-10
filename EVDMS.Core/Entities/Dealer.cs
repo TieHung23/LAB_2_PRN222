@@ -1,10 +1,13 @@
+using System;
 using System.ComponentModel.DataAnnotations;
+using EVDMS.Core.CommonEntities;
 
 namespace EVDMS.Core.Entities;
 
-public class Dealer
+public class Dealer : UpdatedCommon
 {
-    [Key] public int Id { get; set; }
+    [Key]
+    public Guid Id { get; set; } = Guid.NewGuid();
 
     public string Code { get; set; } = string.Empty;
 

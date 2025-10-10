@@ -1,10 +1,12 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace EVDMS.Core.Entities;
 
-public class VehicleModel
+public class VehicleModel : CreatedCommon
 {
-    [Key] public int Id { get; set; }
+    [Key]
+    public Guid Id { get; set; } = Guid.NewGuid();
 
     public string ModelName { get; set; } = string.Empty;
 
@@ -22,11 +24,11 @@ public class VehicleModel
 
     public bool IsDeleted { get; set; } = false;
 
-    public int VehicleConfigId { get; set; }
+    public Guid VehicleConfigId { get; set; }
 
     public VehicleConfig? VehicleConfig { get; set; }
 
-    public ICollection<int>? FeatureIds { get; set; }
+    public ICollection<Guid>? FeatureIds { get; set; }
 
     public ICollection<Feature>? Features { get; set; }
 }

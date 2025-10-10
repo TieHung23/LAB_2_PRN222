@@ -1,7 +1,27 @@
+using EVDMS.BLL.WrapConfiguration;
+using Microsoft.AspNetCore.Authentication.Cookies;
+
 var builder = WebApplication.CreateBuilder(args);
+var passwordToHash = "admin123";
+var hashedPassword = BCrypt.Net.BCrypt.HashPassword(passwordToHash);
+Console.WriteLine(hashedPassword);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+
+builder.Services.AddDatabaseDAL(builder.Configuration);
+
+builder.Services.AddRepositoryDAL();
+builder.Services.AddServices();
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Account/Login";
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+        options.AccessDeniedPath = "/Home/AccessDenied";
+    });
+builder.Logging.AddFilter("Microsoft.EntityFrameworkCore", LogLevel.None);
 
 var app = builder.Build();
 
