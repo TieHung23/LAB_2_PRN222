@@ -1,16 +1,18 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace EVDMS.Core.Entities;
 
 public class TestDrive
 {
-    [Key] public int Id { get; set; }
+    [Key]
+    public Guid Id { get; set; } = Guid.NewGuid();
 
-    public int VehicleModelId { get; set; }
+    public Guid VehicleModelId { get; set; }
 
     public VehicleModel? VehicleModel { get; set; }
 
-    public int CustomerId { get; set; }
+    public Guid CustomerId { get; set; }
 
     public Customer? Customer { get; set; }
 
