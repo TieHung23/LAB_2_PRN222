@@ -1,18 +1,20 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace EVDMS.Core.Entities;
 
-public class Order
+public class Order : CreatedCommon
 {
-    [Key] public int Id { get; set; }
+    [Key]
+    public Guid Id { get; set; } = Guid.NewGuid();
 
-    public int CustomerId { get; set; }
+    public Guid CustomerId { get; set; }
 
-    public int AccountId { get; set; }
+    public Guid AccountId { get; set; }
 
-    public int InventoryId { get; set; }
+    public Guid InventoryId { get; set; }
 
-    public int? PromotionId { get; set; }
+    public Guid? PromotionId { get; set; }
 
     public Customer? Customer { get; set; }
 

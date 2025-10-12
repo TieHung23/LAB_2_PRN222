@@ -1,25 +1,30 @@
+using System;
 using System.ComponentModel.DataAnnotations;
-using EVDMS.Core.Enums;
+using System.ComponentModel.DataAnnotations.Schema;
+using EVDMS.Core.CommonEntities;
 
 namespace EVDMS.Core.Entities;
 
-public class Account
+public class Account : UpdatedCommon
 {
-    [Key] public int Id { get; set; }
+    [Key]
+    public Guid Id { get; set; } = Guid.NewGuid();
 
-    public string UserName { get; set; } = string.Empty;
-
+    //public string UserName { get; set; } = string.Empty;
+    public string Email { get; set; } = string.Empty;
     public string HashedPassword { get; set; } = string.Empty;
 
     public string FullName { get; set; } = string.Empty;
 
-    public ActiveEnums Active { get; set; } = ActiveEnums.Active;
-
-    public RoleEnums Role { get; set; } = RoleEnums.DealerStaff;
+    public bool IsActive { get; set; } = true;
 
     public bool IsDeleted { get; set; } = false;
 
-    public int? DealerId { get; set; }
+    public Guid? DealerId { get; set; }
+
+    public Guid RoleId { get; set; }
 
     public Dealer? Dealer { get; set; }
+
+    public Role? Role { get; set; }
 }

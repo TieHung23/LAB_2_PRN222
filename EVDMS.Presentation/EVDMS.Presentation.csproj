@@ -7,12 +7,23 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <_ContentIncludedByDefault Remove="wwwroot\assets\favicon.ico"/>
-        <_ContentIncludedByDefault Remove="wwwroot\assets\img\bg-masthead.jpg"/>
-        <_ContentIncludedByDefault Remove="wwwroot\assets\img\bg-signup.jpg"/>
-        <_ContentIncludedByDefault Remove="wwwroot\assets\img\demo-image-01.jpg"/>
-        <_ContentIncludedByDefault Remove="wwwroot\assets\img\demo-image-02.jpg"/>
-        <_ContentIncludedByDefault Remove="wwwroot\assets\img\ipad.png"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\favicon.ico" />
+        <_ContentIncludedByDefault Remove="wwwroot\assets\img\bg-masthead.jpg" />
+        <_ContentIncludedByDefault Remove="wwwroot\assets\img\bg-signup.jpg" />
+        <_ContentIncludedByDefault Remove="wwwroot\assets\img\demo-image-01.jpg" />
+        <_ContentIncludedByDefault Remove="wwwroot\assets\img\demo-image-02.jpg" />
+        <_ContentIncludedByDefault Remove="wwwroot\assets\img\ipad.png" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.9">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\EVDMS.BLL\EVDMS.BLL.csproj" />
     </ItemGroup>
 
 </Project>
