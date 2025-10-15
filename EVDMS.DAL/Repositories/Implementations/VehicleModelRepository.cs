@@ -13,70 +13,62 @@ namespace EVDMS.DAL.Repositories.Implementations
     public class VehicleModelRepository : IVehicleModelRepository
     {
         private readonly ApplicationDbContext _context;
+
         public VehicleModelRepository(ApplicationDbContext context)
         {
             _context = context;
         }
-
-        public async Task<IEnumerable<VehicleModel>> GetFeaturedModelsAsync(int count)
+        public async Task<VehicleModel> CreateAsync(VehicleModel vehicleModel)
         {
-            return await _context.VehicleModels
-                                 .Where(vm => !vm.IsDeleted && vm.IsActive)
-                                 .Take(count)
-                                 .ToListAsync();
+            await _context.VehicleModels.AddAsync(vehicleModel);
+            await _context.SaveChangesAsync();
+            return vehicleModel;
         }
-
-
-        public async Task<IEnumerable<VehicleModel>> GetAllAsync(string searchTerm)
+        public async Task DeleteAsync(VehicleModel vehicleModel)
         {
-            var query = _context.VehicleModels
-                                .Where(vm => !vm.IsDeleted && vm.IsActive)
-                                .AsQueryable();
+            _context.VehicleModels.Update(vehicleModel);
+            await _context.SaveChangesAsync();
+        }
+        public async Task<IEnumerable<VehicleModel>> GetAllAsync(string? searchTerm)
+        {
+            var query = _context.VehicleModels.Where(vm => !vm.IsDeleted);
 
-            if (!string.IsNullOrEmpty(searchTerm))
+            if (!string.IsNullOrWhiteSpace(searchTerm))
             {
-                query = query.Where(vm => vm.ModelName.Contains(searchTerm) || vm.Brand.Contains(searchTerm));
+                query = query.Where(vm => vm.ModelName.Contains(searchTerm));
             }
 
             return await query.OrderBy(vm => vm.ModelName).ToListAsync();
         }
-
-        public async Task<VehicleModel> GetByIdAsync(Guid id)
+        public async Task<VehicleModel?> GetByIdAsync(Guid id)
         {
-            return await _context.VehicleModels
-                                 .Include(vm => vm.VehicleConfig) 
-                                 .FirstOrDefaultAsync(vm => vm.Id == id);
+            return await _context.VehicleModels.FirstOrDefaultAsync(vm => vm.Id == id && !vm.IsDeleted);
         }
-
-        public async Task<VehicleModel> CreateAsync(VehicleModel vehicleModel)
+        public async Task<VehicleModel?> GetByNameAsync(string modelName)
         {
-            _context.VehicleModels.Add(vehicleModel);
-            await _context.SaveChangesAsync();
-            return vehicleModel;
+            return await _context.VehicleModels.FirstOrDefaultAsync(vm =>
+                vm.ModelName.Equals(modelName, StringComparison.OrdinalIgnoreCase) && !vm.IsDeleted);
         }
-
         public async Task UpdateAsync(VehicleModel vehicleModel)
         {
-            // Đánh dấu đối tượng là đã bị thay đổi
-            _context.Entry(vehicleModel).State = EntityState.Modified;
+            _context.VehicleModels.Update(vehicleModel);
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(Guid id)
+        public async Task<IEnumerable<VehicleModel>> SearchAsync(string searchTerm)
         {
-            var vehicleModel = await _context.VehicleModels.FindAsync(id);
-            if (vehicleModel != null)
+            // Nếu từ khóa rỗng hoặc null, trả về danh sách trống
+            if (string.IsNullOrWhiteSpace(searchTerm))
             {
-                // Thực hiện soft-delete thay vì xóa cứng
-                vehicleModel.IsDeleted = true;
-                await _context.SaveChangesAsync();
+                return Enumerable.Empty<VehicleModel>();
             }
-        }
 
-        public async Task<IEnumerable<VehicleModel>> SearchByNameAsync(string modelName)
-        {
+            var lowerCaseSearchTerm = searchTerm.ToLower();
+
             return await _context.VehicleModels
-                .Where(vm => !vm.IsDeleted && vm.IsActive && vm.ModelName.Contains(modelName))
+                .Where(vm => !vm.IsDeleted &&
+                             (vm.ModelName.ToLower().Contains(lowerCaseSearchTerm) ||
+                              vm.VehicleType.ToLower().Contains(lowerCaseSearchTerm)))
                 .OrderBy(vm => vm.ModelName)
                 .ToListAsync();
         }

@@ -8,13 +8,12 @@ namespace EVDMS.DAL.Repositories.Abstractions
 {
     public interface IVehicleModelRepository
     {
-        Task<IEnumerable<VehicleModel>> GetFeaturedModelsAsync(int count);
-        Task<IEnumerable<VehicleModel>> GetAllAsync(string searchTerm);
-        Task<VehicleModel> GetByIdAsync(Guid id);
-
+        Task<IEnumerable<VehicleModel>> GetAllAsync(string? searchTerm);
+        Task<VehicleModel?> GetByIdAsync(Guid id);
+        Task<VehicleModel?> GetByNameAsync(string modelName);
         Task<VehicleModel> CreateAsync(VehicleModel vehicleModel);
         Task UpdateAsync(VehicleModel vehicleModel);
-        Task DeleteAsync(Guid id);
-        Task<IEnumerable<VehicleModel>> SearchByNameAsync(string modelName);
+        Task DeleteAsync(VehicleModel vehicleModel);
+        Task<IEnumerable<VehicleModel>> SearchAsync(string searchTerm);
     }
 }
