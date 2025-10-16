@@ -18,9 +18,6 @@ builder.Services.AddDatabaseDAL(builder.Configuration);
 builder.Services.AddRepositoryDAL();
 builder.Services.AddServices();
 
-builder.Services.AddScoped<IVehicleModelRepository, VehicleModelRepository>();
-builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
-builder.Services.AddScoped<IVehicleModelService, VehicleModelService>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
