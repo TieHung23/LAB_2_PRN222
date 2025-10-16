@@ -1,4 +1,8 @@
+using EVDMS.BLL.Services.Abstractions;
+using EVDMS.BLL.Services.Implementations;
 using EVDMS.BLL.WrapConfiguration;
+using EVDMS.DAL.Repositories.Abstractions;
+using EVDMS.DAL.Repositories.Implementations;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +17,10 @@ builder.Services.AddDatabaseDAL(builder.Configuration);
 
 builder.Services.AddRepositoryDAL();
 builder.Services.AddServices();
+
+builder.Services.AddScoped<IVehicleModelRepository, VehicleModelRepository>();
+builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
+builder.Services.AddScoped<IVehicleModelService, VehicleModelService>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>

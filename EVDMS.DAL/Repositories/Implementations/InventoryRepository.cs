@@ -32,5 +32,11 @@ namespace EVDMS.DAL.Repositories.Implementations
                                  .ThenInclude(vm => vm.VehicleConfig)
                                  .FirstOrDefaultAsync(i => i.Id == id);
         }
+
+        public async Task<bool> CheckIfVehicleModelExistsInInventory(Guid vehicleModelId)
+        {
+            return await _context.Inventories.AnyAsync(inv => inv.VehicleModelId == vehicleModelId);
+        }
+
     }
 }
