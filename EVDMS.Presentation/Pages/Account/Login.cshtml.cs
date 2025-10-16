@@ -1,43 +1,74 @@
-using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using EVDMS.BLL.Services.Abstractions;
+using System.Collections.Generic;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
+using EVDMS.Core.Entities;
 
-namespace EVDMS.Presentation.Pages.Account;
-
-public class LoginModel : PageModel
+namespace EVDMS.Presentation.Pages.Account
 {
-    [BindProperty] public InputModel Input { get; set; } = null!;
-
-    public string? ReturnUrl { get; set; }
-
-    public void OnGet(string? returnUrl = null)
+    public class LoginModel : PageModel
     {
-        ReturnUrl = returnUrl;
-    }
+        private readonly IAccountService _accountService;
 
-    public IActionResult OnPost(string? returnUrl = null)
-    {
-        // returnUrl ??= Url.Content("~/");
+        public LoginModel(IAccountService accountService)
+        {
+            _accountService = accountService;
+        }
 
-        if (!ModelState.IsValid) return Page();
+        [BindProperty]
+        [Required(ErrorMessage = "Vui lòng nhập email")]
+        [EmailAddress]
+        public string Email { get; set; }
 
-        if (Input is { Email: "admin@evdms.com", Password: "admin123" })
-            return LocalRedirect("/Admin");
-
-        ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-        return Page();
-    }
-
-    public class InputModel
-    {
-        [Required(ErrorMessage = "Email is required")]
-        [EmailAddress(ErrorMessage = "Invalid email address")]
-        public string Email { get; set; } = string.Empty;
-
-        [Required(ErrorMessage = "Password is required")]
+        [BindProperty]
+        [Required(ErrorMessage = "Vui lòng nhập mật khẩu")]
         [DataType(DataType.Password)]
-        public string Password { get; set; } = string.Empty;
+        public string Password { get; set; }
 
-        [Display(Name = "Remember me?")] public bool RememberMe { get; set; }
+        public string Message { get; set; }
+
+        public void OnGet()
+        {
+        }
+
+        public async Task<IActionResult> OnPostAsync()
+        {
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
+
+            var account = await _accountService.Login(Email, Password);
+
+            if (account != null)
+            {
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.NameIdentifier, account.Id.ToString()),
+                    new Claim(ClaimTypes.Email, account.Email),
+                    new Claim(ClaimTypes.Name, account.FullName),
+                    new Claim(ClaimTypes.Role, account.Role.Name)
+                };
+
+                var claimsIdentity = new ClaimsIdentity(claims, "MyCookieAuth");
+                var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+                await HttpContext.SignInAsync("MyCookieAuth", claimsPrincipal);
+
+                if (account.Role.Name == "Admin")
+                {
+                    return RedirectToPage("/Admin/Index");
+                }
+
+                return RedirectToPage("/Index");
+            }
+
+            Message = "Email hoặc mật khẩu không chính xác.";
+            return Page();
+        }
     }
 }

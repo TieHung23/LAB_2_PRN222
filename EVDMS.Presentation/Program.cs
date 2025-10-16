@@ -1,4 +1,4 @@
-using EVDMS.BLL.Services.Abstractions;
+﻿using EVDMS.BLL.Services.Abstractions;
 using EVDMS.BLL.Services.Implementations;
 using EVDMS.BLL.WrapConfiguration;
 using EVDMS.DAL.Repositories.Abstractions;
@@ -22,13 +22,14 @@ builder.Services.AddScoped<IVehicleModelRepository, VehicleModelRepository>();
 builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
 builder.Services.AddScoped<IVehicleModelService, VehicleModelService>();
 
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
-    {
-        options.LoginPath = "/Account/Login";
-        options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
-        options.AccessDeniedPath = "/Home/AccessDenied";
-    });
+builder.Services.AddAuthentication("MyCookieAuth").AddCookie("MyCookieAuth", options =>
+{
+    options.Cookie.Name = "MyCookieAuth";
+    options.LoginPath = "/Account/Login"; // Trang sẽ chuyển đến nếu người dùng chưa đăng nhập
+    options.AccessDeniedPath = "/Account/AccessDenied"; // Trang báo lỗi khi không có quyền
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(30); // Thời gian cookie hết hạn
+});
+
 builder.Logging.AddFilter("Microsoft.EntityFrameworkCore", LogLevel.None);
 
 var app = builder.Build();
@@ -45,6 +46,7 @@ app.UseHttpsRedirection();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();
