@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using EVDMS.BLL.Services.Abstractions;
+﻿using EVDMS.BLL.Services.Abstractions;
 using EVDMS.Core.Entities;
 using EVDMS.DAL.Repositories.Abstractions;
-using BCrypt.Net;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace EVDMS.BLL.Services.Implementations
 {
@@ -16,16 +13,17 @@ namespace EVDMS.BLL.Services.Implementations
 
         public AccountService(IAccountRepository accountRepository)
         {
-            _accountRepository = accountRepository; 
+            _accountRepository = accountRepository;
         }
 
-        public async Task<Account> Login(string username, string password)
+        public async Task<Account> Login(string email, string password)
         {
-            var account = await _accountRepository.GetAccountByUsername(username);
+            var account = await _accountRepository.GetByEmail(email);
             if (account == null)
             {
                 return null;
             }
+
             bool isPasswordVerified = BCrypt.Net.BCrypt.Verify(password, account.HashedPassword);
             if (isPasswordVerified)
             {
@@ -36,6 +34,13 @@ namespace EVDMS.BLL.Services.Implementations
             }
             return null;
         }
+
+        public async Task<bool> EmailExistsAsync(string email)
+        {
+            return await _accountRepository.EmailExistsAsync(email);
+        }
+
+        // Các phương thức còn lại giữ nguyên
         public async Task<IEnumerable<Account>> GetAccounts(string searchTerm)
         {
             return await _accountRepository.GetAccounts(searchTerm);
@@ -43,7 +48,6 @@ namespace EVDMS.BLL.Services.Implementations
 
         public async Task<Account> CreateAccountAsync(Account newAccount)
         {
-
             newAccount.HashedPassword = BCrypt.Net.BCrypt.HashPassword(newAccount.HashedPassword);
             return await _accountRepository.AddAsync(newAccount);
         }
@@ -55,7 +59,6 @@ namespace EVDMS.BLL.Services.Implementations
 
         public async Task UpdateAccountAsync(Account account)
         {
-
             await _accountRepository.UpdateAsync(account);
         }
 
@@ -89,10 +92,6 @@ namespace EVDMS.BLL.Services.Implementations
         public async Task<IEnumerable<Account>> GetAccountsByDealerAsync(Guid dealerId)
         {
             return await _accountRepository.GetAccountsByDealerAsync(dealerId);
-        }
-        public async Task<bool> IsUserNameExist(string userName)
-        {
-            return await _accountRepository.IsUserExist(userName);
         }
     }
 }
