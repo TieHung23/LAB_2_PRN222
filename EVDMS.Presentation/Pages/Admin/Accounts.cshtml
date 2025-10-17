@@ -6,21 +6,38 @@
 }
 
 <div class="page-header">
-    <h1><i class="fas fa-users me-3"></i>@ViewData["Title"]</h1>
-    <p>Manage all user accounts in the system (Admins, EVM Staff, Dealer Managers, Dealer Staff).</p>
+    <div class="container">
+        <h1><i class="fas fa-users me-3"></i>@ViewData["Title"]</h1>
+        <p>Manage all user accounts in the system (Admins, EVM Staff, Dealer Managers, Dealer Staff).</p>
+    </div>
 </div>
 
 <div class="admin-page-content">
-    <div class="admin-card">
-        <div class="card-header d-flex align-items-center justify-content-between">
-            <h5 class="mb-0 fw-bold"><i class="fas fa-list-ul me-2"></i>Account List</h5>
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#accountModal">
-                <i class="fas fa-plus me-2"></i>Create New Account
-            </button>
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-        <div class="card-body">
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    <div class="admin-card">
+        <div class="card-header d-flex align-items-center justify-content-between p-3">
+            <h5 class="mb-0 fw-bold"><i class="fas fa-list-ul me-2"></i>Account List</h5>
+
+            <a asp-page="./Accounts/Create" class="btn btn-sm btn-primary bg-gradient">
+                <i class="fas fa-plus me-1"></i>Create New Account
+            </a>
+        </div>
+        <div class="card-body p-4">
             <div class="table-responsive">
-                <table class="table table-hover align-middle">
+                <table class="table table-hover table-striped admin-table align-middle">
                     <thead class="table-light">
                         <tr>
                             <th>Full Name</th>
@@ -28,114 +45,85 @@
                             <th>Role</th>
                             <th>Dealer</th>
                             <th>Status</th>
-                            <th class="text-end">Actions</th>
+                            <th class="text-center">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @if (Model.Accounts == null || !Model.Accounts.Any())
-                        {
-                            <tr>
-                                <td colspan="6" class="text-center text-muted">
-                                    <i class="fas fa-info-circle me-2"></i>No accounts found.
-                                </td>
-                            </tr>
-                        }
-                        else
+                        @if (Model.Accounts != null && Model.Accounts.Any())
                         {
                             @foreach (var account in Model.Accounts)
                             {
                                 <tr>
                                     <td>@account.FullName</td>
                                     <td>@account.Email</td>
-                                    <td><span class="badge bg-info">@account.Role?.Name</span></td>
-                                    <td>@(account.Dealer?.Name ?? "N/A")</td>
+                                    <td>@account.Role?.Name</td>
+                                    <td>@account.Dealer?.Name</td>
                                     <td>
                                         @if (account.IsActive)
                                         {
-                                            <span class="badge bg-success">Active</span>
+                                            <span class="badge bg-success bg-opacity-75">Active</span>
                                         }
                                         else
                                         {
-                                            <span class="badge bg-danger">Inactive</span>
+                                            <span class="badge bg-secondary bg-opacity-75">Inactive</span>
                                         }
                                     </td>
-                                    <td class="text-end">
-                                        <button class="btn btn-sm btn-outline-primary" title="Edit">
-                                            <i class="fas fa-pencil-alt"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-outline-danger" title="Delete">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
+                                    <td class="text-center">
+                                        <a asp-page="./Accounts/Edit" asp-route-id="@account.Id" class="btn btn-sm btn-outline-warning">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+
+                                        <form method="post" asp-page-handler="Delete" asp-route-id="@account.Id" style="display: inline;"
+                                              onsubmit="return confirm('Are you sure you want to delete this account?');">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                            @Html.AntiForgeryToken()
+                                        </form>
                                     </td>
                                 </tr>
                             }
                         }
+                        else
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center">No accounts found.</td>
+                            </tr>
+                        }
                     </tbody>
                 </table>
             </div>
-            <nav class="mt-3">
-                <ul class="pagination justify-content-end">
-                    <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
-                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                </ul>
-            </nav>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="accountModal" tabindex="-1" aria-labelledby="accountModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <form method="post">
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title" id="accountModalLabel"><i class="fas fa-user-plus me-2"></i>Create/Edit Account</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <input type="hidden" asp-for="Account.Id" />
+@section Styles {
+    <style>
+        .admin-table th {
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: #475569;
+        }
 
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <label asp-for="Account.FullName" class="form-label">Full Name</label>
-                            <input asp-for="Account.FullName" class="form-control" />
-                        </div>
-                        <div class="col-md-6">
-                            <label asp-for="Account.Email" class="form-label">Email</label>
-                            <input asp-for="Account.Email" type="email" class="form-control" />
-                        </div>
-                        <div class="col-md-6">
-                            <label asp-for="Account.HashedPassword" class="form-label">Password (Leave blank if unchanged)</label>
-                            <input asp-for="Account.HashedPassword" type="password" class="form-control" />
-                        </div>
-                        <div class="col-md-6">
-                            <label asp-for="Account.RoleId" class="form-label">Role</label>
-                            <select asp-for="Account.RoleId" class="form-select">
-                                <option value="">-- Select Role --</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label asp-for="Account.DealerId" class="form-label">Dealer</label>
-                            <select asp-for="Account.DealerId" class="form-select">
-                                <option value="">-- Select Dealer (if applicable) --</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label asp-for="Account.IsActive" class="form-label">Status</label>
-                            <select asp-for="Account.IsActive" class="form-select">
-                                <option value="true">Active</option>
-                                <option value="false">Inactive</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary"><i class="fas fa-save me-2"></i>Save changes</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
+        .admin-table td {
+            vertical-align: middle;
+            font-size: 0.875rem;
+        }
+
+        .admin-table .btn-sm {
+            width: 32px;
+            height: 32px;
+            line-height: 1.5;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+        }
+
+        .badge {
+            font-size: 0.75rem;
+            padding: 0.4em 0.7em;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+    </style>
+}

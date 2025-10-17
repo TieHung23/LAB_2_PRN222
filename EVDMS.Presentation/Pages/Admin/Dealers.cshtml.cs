@@ -8,30 +8,43 @@ namespace EVDMS.Presentation.Pages.Admin
     public class DealersModel : PageModel
     {
         private readonly IDealerService _dealerService;
-        // Inject IAccountService để lấy danh sách manager
 
         public DealersModel(IDealerService dealerService)
         {
             _dealerService = dealerService;
         }
 
-        public IEnumerable<Dealer> Dealers { get; set; }
+        // Danh sách để hiển thị
+        public IEnumerable<Dealer> Dealers { get; set; } = new List<Dealer>();
 
-        [BindProperty]
-        public Dealer Dealer { get; set; }
+        // Xóa BindProperty Dealer
 
         public async Task OnGetAsync()
         {
-            // Placeholder:
-            // Dealers = await _dealerService.GetAllAsync();
-            Dealers = new List<Dealer>();
+            // Gọi service để lấy danh sách
+            Dealers = await _dealerService.GetAllAsync();
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostDeleteAsync(Guid id)
         {
-            // Placeholder:
-            // await _dealerService.SaveAsync(Dealer);
-            return RedirectToPage();
+            try
+            {
+                await _dealerService.DeleteDealerAsync(id);
+                TempData["SuccessMessage"] = "Dealer deleted successfully.";
+            }
+            // --- Bắt lỗi cụ thể ---
+            catch (InvalidOperationException ex)
+            {
+                TempData["ErrorMessage"] = ex.Message; // Hiển thị thông báo từ Service
+            }
+            // --- Bắt các lỗi khác ---
+            catch (Exception ex)
+            {
+               
+                TempData["ErrorMessage"] = "An unexpected error occurred while deleting the dealer. Check logs for details.";
+                
+            }
+            return RedirectToPage("./Dealers");
         }
     }
 }

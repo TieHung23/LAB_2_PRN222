@@ -1,14 +1,18 @@
-﻿using System;
+﻿using EVDMS.Core.Entities;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Linq.Expressions; // Cần cho AnyAsync
 using System.Threading.Tasks;
-using EVDMS.Core.Entities;
 
 namespace EVDMS.DAL.Repositories.Abstractions
 {
     public interface ICustomerRepository
     {
         Task<IEnumerable<Customer>> GetAllAsync();
+        Task<Customer?> GetByIdAsync(Guid id);
+        Task<Customer> AddAsync(Customer entity);
+        Task UpdateAsync(Customer entity);
+        Task DeleteAsync(Customer entity); 
+        Task<bool> AnyAsync(Expression<Func<Customer, bool>> predicate);
     }
 }

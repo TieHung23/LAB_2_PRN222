@@ -6,7 +6,8 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
-using EVDMS.Core.Entities;
+// Chúng ta sẽ dùng tên đầy đủ EVDMS.Core.Entities.Account để tránh lỗi namespace
+// (Giống như cách chúng ta đã sửa ở trang Accounts.cshtml.cs)
 
 namespace EVDMS.Presentation.Pages.Account
 {
@@ -42,16 +43,27 @@ namespace EVDMS.Presentation.Pages.Account
                 return Page();
             }
 
-            var account = await _accountService.Login(Email, Password);
+            var basicAccount = await _accountService.Login(Email, Password);
 
-            if (account != null)
+            if (basicAccount != null)
             {
+
+                var accountWithDetails = await _accountService.GetAccountByIdWithDetailsAsync(basicAccount.Id);
+
+                if (accountWithDetails == null || accountWithDetails.Role == null)
+                {
+                    Message = "Tài khoản không có vai trò (Role) hợp lệ. Vui lòng liên hệ Admin.";
+                    return Page();
+                }
+
+
+
                 var claims = new List<Claim>
                 {
-                    new Claim(ClaimTypes.NameIdentifier, account.Id.ToString()),
-                    new Claim(ClaimTypes.Email, account.Email),
-                    new Claim(ClaimTypes.Name, account.FullName),
-                    new Claim(ClaimTypes.Role, account.Role.Name)
+                    new Claim(ClaimTypes.NameIdentifier, accountWithDetails.Id.ToString()),
+                    new Claim(ClaimTypes.Email, accountWithDetails.Email),
+                    new Claim(ClaimTypes.Name, accountWithDetails.FullName),
+                    new Claim(ClaimTypes.Role, accountWithDetails.Role.Name) 
                 };
 
                 var claimsIdentity = new ClaimsIdentity(claims, "MyCookieAuth");
@@ -59,7 +71,7 @@ namespace EVDMS.Presentation.Pages.Account
 
                 await HttpContext.SignInAsync("MyCookieAuth", claimsPrincipal);
 
-                if (account.Role.Name == "Admin")
+                if (accountWithDetails.Role.Name == "Admin")
                 {
                     return RedirectToPage("/Admin/Index");
                 }

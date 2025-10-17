@@ -1,62 +1,52 @@
 ﻿using EVDMS.BLL.Services.Abstractions;
-// Sửa lỗi 1: Chỉ định rõ chúng ta đang dùng Entity 'Account'
-using EVDMS.Core.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering; // Giữ lại vì có thể cần cho filter sau này
 
 namespace EVDMS.Presentation.Pages.Admin
 {
     public class AccountsModel : PageModel
     {
         private readonly IAccountService _accountService;
-        // Bạn cũng có thể inject IRoleService và IDealerService để lấy dữ liệu cho dropdowns
+        // Xóa RoleService và DealerService vì không cần load dropdown ở đây nữa
 
+        // Inject IAccountService
         public AccountsModel(IAccountService accountService)
         {
             _accountService = accountService;
         }
 
-        // Sửa lỗi 1: Chỉ định rõ class 'Account'
-        public IEnumerable<EVDMS.Core.Entities.Account> Accounts { get; set; }
+        // Chỉ cần danh sách Accounts để hiển thị
+        public IEnumerable<EVDMS.Core.Entities.Account> Accounts { get; set; } = new List<EVDMS.Core.Entities.Account>();
 
-        [BindProperty]
-        // Sửa lỗi 1: Chỉ định rõ class 'Account'
-        public EVDMS.Core.Entities.Account Account { get; set; }
-
-        // Thêm các Property để giữ danh sách Roles và Dealers cho Modal
-        // public IEnumerable<Role> Roles { get; set; }
-        // public IEnumerable<Dealer> Dealers { get; set; }
+        // Xóa các BindProperty liên quan đến modal
 
         public async Task OnGetAsync()
         {
-            // Placeholder: Thay thế bằng lệnh gọi service thực tế
-            // Accounts = await _accountService.GetAllAsync(); 
-            // Roles = await _roleService.GetAllAsync();
-            // Dealers = await _dealerService.GetAllAsync();
-
-            Accounts = new List<EVDMS.Core.Entities.Account>(); // Khởi tạo rỗng để trang không lỗi
+            // Chỉ cần lấy danh sách tài khoản (đã bao gồm Role và Dealer nếu service làm đúng)
+            Accounts = await _accountService.GetAccounts(string.Empty);
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        // Xóa OnPostAsync (logic Create/Update đã chuyển sang trang khác)
+
+        // Giữ lại OnPostDeleteAsync
+        public async Task<IActionResult> OnPostDeleteAsync(Guid id)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                // Nếu model không hợp lệ, tải lại trang với dữ liệu đã nhập
-                await OnGetAsync(); // Tải lại danh sách cho dropdowns
-                return Page();
+                await _accountService.DeleteAccountAsync(id);
+                // (Tùy chọn) Thêm TempData để hiển thị thông báo thành công
+                // TempData["SuccessMessage"] = "Account deleted successfully.";
             }
-
-            // Placeholder: Thêm logic để Create hoặc Update
-            // if (Account.Id == Guid.Empty) // So sánh Guid
-            // {
-            //    await _accountService.CreateAsync(Account);
-            // }
-            // else
-            // {
-            //    await _accountService.UpdateAsync(Account);
-            // }
-
-            return RedirectToPage();
+            catch (Exception ex)
+            {
+                // Thêm log lỗi
+                // (Tùy chọn) Thêm TempData để hiển thị thông báo lỗi
+                // TempData["ErrorMessage"] = $"Error deleting account: {ex.Message}";
+            }
+            return RedirectToPage("./Accounts"); // Redirect về trang danh sách
         }
+
+        // Xóa hàm LoadModalData()
     }
 }

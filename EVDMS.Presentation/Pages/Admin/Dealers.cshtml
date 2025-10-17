@@ -6,56 +6,94 @@
 }
 
 <div class="page-header">
-    <h1><i class="fas fa-store me-3"></i>@ViewData["Title"]</h1>
-    <p>Manage all authorized dealerships in the network.</p>
+    <div class="container">
+        <h1><i class="fas fa-store me-3"></i>@ViewData["Title"]</h1>
+        <p>Manage all authorized dealerships in the network.</p>
+    </div>
 </div>
 
 <div class="admin-page-content">
-    <div class="admin-card">
-        <div class="card-header d-flex align-items-center justify-content-between">
-            <h5 class="mb-0 fw-bold"><i class="fas fa-list-ul me-2"></i>Dealer List</h5>
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#dealerModal">
-                <i class="fas fa-plus me-2"></i>Create New Dealer
-            </button>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-        <div class="card-body">
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="admin-card">
+        <div class="card-header d-flex align-items-center justify-content-between p-3">
+            <h5 class="mb-0 fw-bold"><i class="fas fa-list-ul me-2"></i>Dealer List</h5>
+            <a asp-page="./Dealers/Create" class="btn btn-sm btn-primary bg-gradient">
+                <i class="fas fa-plus me-1"></i>Create New Dealer
+            </a>
+        </div>
+        <div class="card-body p-4">
             <div class="table-responsive">
-                <table class="table table-hover align-middle">
+                <table class="table table-hover table-striped admin-table align-middle">
                     <thead class="table-light">
                         <tr>
+                            <th>Code</th>
                             <th>Dealer Name</th>
                             <th>Address</th>
                             <th>Phone</th>
-                            <th class="text-end">Actions</th>
+                            <th>Email</th>
+                            <th>Region</th>
+                            <th>Status</th>
+                            <th class="text-center">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @if (Model.Dealers == null || !Model.Dealers.Any())
-                        {
-                            <tr>
-                                <td colspan="4" class="text-center text-muted">
-                                    <i class="fas fa-info-circle me-2"></i>No dealers found.
-                                </td>
-                            </tr>
-                        }
-                        else
+                        @if (Model.Dealers != null && Model.Dealers.Any())
                         {
                             @foreach (var dealer in Model.Dealers)
                             {
                                 <tr>
+                                    <td>@dealer.Code</td>
                                     <td>@dealer.Name</td>
                                     <td>@dealer.Address</td>
                                     <td>@dealer.PhoneNumber</td>
-                                    <td class="text-end">
-                                        <button class="btn btn-sm btn-outline-primary" title="Edit">
-                                            <i class="fas fa-pencil-alt"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-outline-danger" title="Delete">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
+                                    <td>@dealer.Email</td>
+                                    <td>@dealer.Region</td>
+                                    <td>
+                                        @if (dealer.IsActive)
+                                        {
+                                            <span class="badge bg-success bg-opacity-75">Active</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary bg-opacity-75">Inactive</span>
+                                        }
+                                    </td>
+                                    <td class="text-center">
+                                        <a asp-page="./Dealers/Edit" asp-route-id="@dealer.Id" class="btn btn-sm btn-outline-warning">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+
+                                        <form method="post" asp-page-handler="Delete" asp-route-id="@dealer.Id" style="display: inline;"
+                                              onsubmit="return confirm('Are you sure you want to delete this dealer? ...');">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                            @Html.AntiForgeryToken()
+                                        </form>
                                     </td>
                                 </tr>
                             }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="8" class="text-center">No dealers found.</td>
+                            </tr>
                         }
                     </tbody>
                 </table>
@@ -64,34 +102,34 @@
     </div>
 </div>
 
-<div class="modal fade" id="dealerModal" tabindex="-1" aria-labelledby="dealerModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <form method="post">
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title" id="dealerModalLabel"><i class="fas fa-store me-2"></i>Create/Edit Dealer</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <input type="hidden" asp-for="Dealer.Id" />
-                    <div class="mb-3">
-                        <label asp-for="Dealer.Name" class="form-label">Dealer Name</label>
-                        <input asp-for="Dealer.Name" class="form-control" />
-                    </div>
-                    <div class="mb-3">
-                        <label asp-for="Dealer.Address" class="form-label">Address</label>
-                        <input asp-for="Dealer.Address" class="form-control" />
-                    </div>
-                    <div class="mb-3">
-                        <label asp-for="Dealer.PhoneNumber" class="form-label">Phone</label>
-                        <input asp-for="Dealer.PhoneNumber" class="form-control" />
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary"><i class="fas fa-save me-2"></i>Save changes</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
+@section Styles {
+    <style>
+        /* CSS cho bảng giữ nguyên như Accounts */
+        .admin-table th {
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: #475569;
+        }
+
+        .admin-table td {
+            vertical-align: middle;
+            font-size: 0.875rem;
+        }
+
+        .admin-table .btn-sm {
+            width: 32px;
+            height: 32px;
+            line-height: 1.5;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+        }
+
+        .badge {
+            font-size: 0.75rem;
+            padding: 0.4em 0.7em;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+    </style>
+}
