@@ -1,0 +1,58 @@
+﻿@page
+@model EVDMS.Presentation.Pages.Admin.ActivitiesModel
+@{
+    Layout = "Shared/_AdminLayout";
+    ViewData["Title"] = "All Activities";
+}
+
+<div class="page-header">
+    <h1><i class="fas fa-history me-3"></i>@ViewData["Title"]</h1>
+    <p>A complete log of all system and user activities.</p>
+</div>
+
+<div class="admin-page-content">
+    <div class="admin-card">
+        <div class="card-header d-flex align-items-center justify-content-between">
+            <h5 class="mb-0 fw-bold"><i class="fas fa-list-ul me-2"></i>Activity Log</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Description</th>
+                            <th>User</th>
+                            <th>Timestamp</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="badge bg-success">Order</span></td>
+                            <td>Order #ORD-2024-1588 was created.</td>
+                            <td>dealer.staff@example.com</td>
+                            <td>@DateTime.Now.AddMinutes(-30)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge bg-primary">Account</span></td>
+                            <td>Admin updated profile for 'dealer.manager@example.com'</td>
+                            <td>admin@example.com</td>
+                            <td>@DateTime.Now.AddHours(-1)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge bg-info">Inventory</span></td>
+                            <td>5 units of 'VF9 Plus' added to Central Warehouse.</td>
+                            <td>evm.staff@example.com</td>
+                            <td>@DateTime.Now.AddHours(-2)</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" class="text-center text-muted p-5">
+                                ... Older activities ...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

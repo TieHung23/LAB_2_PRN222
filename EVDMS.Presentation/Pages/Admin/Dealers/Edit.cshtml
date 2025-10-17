@@ -1,0 +1,96 @@
+﻿@page "{id:guid}"
+@model EVDMS.Presentation.Pages.Admin.Dealers.EditModel
+@{
+    Layout = "/Pages/Shared/_AdminLayout.cshtml"; // Chỉ định layout admin
+    ViewData["Title"] = "Edit Dealer";
+}
+
+<div class="page-header">
+    <div class="container">
+        <h1><i class="fas fa-edit me-3"></i>@ViewData["Title"]</h1>
+        <p>Update the details for dealer: @Model.Dealer?.Name (@Model.Dealer?.Code)</p>
+    </div>
+</div>
+
+<div class="admin-page-content">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="admin-card">
+                <form method="post">
+                    <input type="hidden" asp-for="Dealer.Id" />
+
+                    <div class="card-header">
+                        <h5 class="mb-0">Dealer Details</h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-3" role="alert"></div>
+
+                        @if (TempData["SuccessMessage"] != null)
+                        {
+                            <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+                        }
+                        @if (TempData["ErrorMessage"] != null)
+                        {
+                            <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+                        }
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label asp-for="Dealer.Code" class="form-label">Dealer Code</label>
+                                <input asp-for="Dealer.Code" class="form-control form-control-sm" readonly />
+                                <span asp-validation-for="Dealer.Code" class="text-danger small"></span>
+                                <small class="text-muted">Dealer Code cannot be changed.</small>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Dealer.Name" class="form-label">Dealer Name *</label>
+                                <input asp-for="Dealer.Name" class="form-control form-control-sm" required />
+                                <span asp-validation-for="Dealer.Name" class="text-danger small"></span>
+                            </div>
+                            <div class="col-12">
+                                <label asp-for="Dealer.Address" class="form-label">Address *</label>
+                                <input asp-for="Dealer.Address" class="form-control form-control-sm" required />
+                                <span asp-validation-for="Dealer.Address" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Dealer.PhoneNumber" class="form-label">Phone Number *</label>
+                                <input asp-for="Dealer.PhoneNumber" type="tel" class="form-control form-control-sm" required />
+                                <span asp-validation-for="Dealer.PhoneNumber" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Dealer.Email" class="form-label">Email *</label>
+                                <input asp-for="Dealer.Email" type="email" class="form-control form-control-sm" required />
+                                <span asp-validation-for="Dealer.Email" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Dealer.Region" class="form-label">Region *</label>
+                                <input asp-for="Dealer.Region" class="form-control form-control-sm" required />
+                                <span asp-validation-for="Dealer.Region" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Dealer.IsActive" class="form-label">Status</label>
+                                <select asp-for="Dealer.IsActive" class="form-select form-select-sm">
+                                    <option value="true">Active</option>
+                                    <option value="false">Inactive</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer text-end p-3">
+                        <a asp-page="../Dealers" class="btn btn-sm btn-secondary me-2">
+                            <i class="fas fa-arrow-left me-1"></i>Cancel
+                        </a>
+                        <button type="submit" class="btn btn-sm btn-primary">
+                            <i class="fas fa-save me-1"></i>Update Dealer
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

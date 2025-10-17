@@ -1,11 +1,14 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace EVDMS.Presentation.Pages.Admin;
-
-public class Index : PageModel
+namespace EVDMS.Presentation.Pages.Admin
 {
-    public void OnGet()
+    
+    [Authorize(Roles = "Admin")]
+    public class IndexModel : PageModel
     {
-        
+        public void OnGet()
+        {
+        }
     }
 }
