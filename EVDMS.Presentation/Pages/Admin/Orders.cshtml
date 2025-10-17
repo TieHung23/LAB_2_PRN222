@@ -1,5 +1,5 @@
 ﻿@page
-@model EVDMS.Presentation.Pages.Admin.OrdersModel
+@model OrdersModel
 @{
     Layout = "Shared/_AdminLayout";
     ViewData["Title"] = "Order Management";
@@ -19,39 +19,39 @@
             <div class="table-responsive">
                 <table class="table table-hover align-middle">
                     <thead class="table-light">
-                        <tr>
-                            <th>Order ID</th>
-                            <th>Customer</th>
-                            <th>Dealer</th>
-                            <th>Vehicle</th>
-                            <th>Total Amount</th>
-                            <th class="text-end">Actions</th>
-                        </tr>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Customer</th>
+                        <th>Dealer</th>
+                        <th>Vehicle</th>
+                        <th>Total Amount</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
                     </thead>
                     <tbody>
-                        @if (Model.Orders == null || !Model.Orders.Any())
+                    @if (Model.Orders == null || !Model.Orders.Any())
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center text-muted">
+                                <i class="fas fa-info-circle me-2"></i>No orders found.
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var order in Model.Orders)
                         {
                             <tr>
-                                <td colspan="6" class="text-center text-muted">
-                                    <i class="fas fa-info-circle me-2"></i>No orders found.
+                                <td class="fw-semibold">@order.Id</td>
+                                <td>@order.Customer?.FullName</td>
+                                <td class="text-end">
+                                    <button class="btn btn-sm btn-outline-primary" title="View Details">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
                                 </td>
                             </tr>
                         }
-                        else
-                        {
-                            @foreach (var order in Model.Orders)
-                            {
-                                <tr>
-                                    <td class="fw-semibold">@order.Id</td>
-                                    <td>@order.Customer?.FullName</td
-                                    <td class="text-end">
-                                        <button class="btn btn-sm btn-outline-primary" title="View Details">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            }
-                        }
+                    }
                     </tbody>
                 </table>
             </div>
