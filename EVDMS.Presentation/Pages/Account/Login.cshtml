@@ -1,36 +1,203 @@
 ﻿@page
 @model EVDMS.Presentation.Pages.Account.LoginModel
 @{
+    Layout = null; // Bỏ layout mặc định
     ViewData["Title"] = "Login";
 }
 
-<div class="row justify-content-center">
-    <div class="col-md-4">
-        <section>
-            <form id="account" method="post">
-                <h2>Đăng nhập hệ thống</h2>
-                <hr />
-                @if (!string.IsNullOrEmpty(Model.Message))
-                {
-                    <div class="alert alert-danger" role="alert">@Model.Message</div>
-                }
-                <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-                <div class="form-floating mb-3">
-                  
-                    <input asp-for="Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                    <label asp-for="Email" class="form-label">Email</label>
-                    <span asp-for="Email" class="text-danger"></span>
-                </div>
-                <div class="form-floating mb-3">
-                    <input asp-for="Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
-                    <label asp-for="Password" class="form-label">Mật khẩu</label>
-                    <span asp-for="Password" class="text-danger"></span>
-                </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - EVDMS</title>
 
-                <div>
-                    <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Đăng nhập</button>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+          rel="stylesheet" />
+
+    <style>
+        /* Áp dụng phong cách từ AdminLayout */
+        * {
+            font-family: 'Inter', sans-serif;
+            box-sizing: border-box;
+        }
+
+        body {
+            /* Nền gradient đẹp mắt */
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 1rem;
+            /* Căn giữa form */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-container {
+            max-width: 460px;
+            width: 100%;
+        }
+
+        /* Thẻ "Glassmorphism" */
+        .login-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 2.5rem;
+            transition: all 0.3s ease;
+        }
+
+            .login-card:hover {
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+                transform: translateY(-5px);
+            }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        /* Icon logo (tái sử dụng từ Admin) */
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+            color: #fff;
+            border-radius: 14px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .login-header h2 {
+            font-weight: 700;
+            font-size: 1.75rem;
+            color: #1e293b;
+            letter-spacing: -0.5px;
+        }
+
+        .login-header p {
+            color: #64748b;
+            font-size: 1rem;
+            margin: 0;
+        }
+
+        /* Tùy chỉnh Form Inputs */
+        .form-floating .form-control {
+            border-radius: 12px;
+            padding: 1rem;
+            background: rgba(241, 245, 249, 0.7);
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+            .form-floating .form-control:focus {
+                background: #fff;
+                border-color: #667eea;
+                box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+            }
+
+        .form-floating > label {
+            padding: 1rem;
+            color: #64748b;
+        }
+
+        /* Nút bấm đồng bộ */
+        .btn-login {
+            font-weight: 600;
+            font-size: 1rem;
+            padding: 0.875rem 1rem;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: #fff;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+        }
+
+            .btn-login:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 7px 25px rgba(102, 126, 234, 0.4);
+                color: #fff;
+            }
+
+        .footer-links {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.875rem;
+        }
+
+            .footer-links a {
+                color: #475569;
+                text-decoration: none;
+                font-weight: 500;
+            }
+
+                .footer-links a:hover {
+                    color: #667eea;
+                    text-decoration: underline;
+                }
+
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="logo-icon">
+                    <i class="fas fa-bolt"></i>
                 </div>
-            </form>
-        </section>
+                <h2>Đăng nhập hệ thống</h2>
+                <p>Chào mừng bạn trở lại!</p>
+            </div>
+
+            <section>
+                <form id="account" method="post">
+
+                    @if (!string.IsNullOrEmpty(Model.Message))
+                    {
+                        <div class="alert alert-danger" role="alert">@Model.Message</div>
+                    }
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-2" role="alert" style="font-size: 0.875rem;"></div>
+
+                    <div class="form-floating mb-3">
+                        <input asp-for="Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                        <label asp-for="Email" class="form-label">Email</label>
+                        <span asp-for="Email" class="text-danger" style="font-size: 0.875rem;"></span>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input asp-for="Password" type="password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
+                        <label asp-for="Password" class="form-label">Mật khẩu</label>
+                        <span asp-for="Password" class="text-danger" style="font-size: 0.875rem;"></span>
+                    </div>
+
+                    <div class="d-grid mt-4">
+                        <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-login">
+                            <i class="fas fa-sign-in-alt me-2"></i>Đăng nhập
+                        </button>
+                    </div>
+
+                    <div class="footer-links">
+                        <a asp-page="/Index">
+                            <i class="fas fa-arrow-left me-1"></i> Quay về trang chủ
+                        </a>
+                    </div>
+                </form>
+            </section>
+        </div>
     </div>
-</div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+</body>
+</html>

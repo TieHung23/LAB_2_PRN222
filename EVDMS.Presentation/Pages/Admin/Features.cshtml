@@ -1,0 +1,91 @@
+﻿@page
+@model EVDMS.Presentation.Pages.Admin.FeaturesModel
+@{
+    Layout = "Shared/_AdminLayout";
+    ViewData["Title"] = "Feature Management";
+}
+
+<div class="page-header">
+    <h1><i class="fas fa-star me-3"></i>@ViewData["Title"]</h1>
+    <p>Manage features that can be associated with vehicle configurations.</p>
+</div>
+
+<div class="admin-page-content">
+    <div class="admin-card">
+        <div class="card-header d-flex align-items-center justify-content-between">
+            <h5 class="mb-0 fw-bold"><i class="fas fa-list-ul me-2"></i>Feature List</h5>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#featureModal">
+                <i class="fas fa-plus me-2"></i>Add New Feature
+            </button>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Feature Name</th>
+                            <th>Description</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Features == null || !Model.Features.Any())
+                        {
+                            <tr>
+                                <td colspan="3" class="text-center text-muted">
+                                    <i class="fas fa-info-circle me-2"></i>No features found.
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            @foreach (var feature in Model.Features)
+                            {
+                                <tr>
+                                    <td>@feature.Name</td>
+                                    <td>@feature.Descripsion</td>
+                                    <td class="text-end">
+                                        <button class="btn btn-sm btn-outline-primary" title="Edit">
+                                            <i class="fas fa-pencil-alt"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-danger" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="featureModal" tabindex="-1" aria-labelledby="featureModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="featureModalLabel"><i class="fas fa-star me-2"></i>Create/Edit Feature</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" asp-for="Feature.Id" />
+                    <div class="mb-3">
+                        <label asp-for="Feature.Name" class="form-label">Feature Name</label>
+                        <input asp-for="Feature.Name" class="form-control" />
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Feature.Descripsion" class="form-label">Description</label>
+                        <textarea asp-for="Feature.Descripsion" class="form-control" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save me-2"></i>Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
