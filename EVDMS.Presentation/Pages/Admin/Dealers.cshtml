@@ -1,0 +1,97 @@
+﻿@page
+@model EVDMS.Presentation.Pages.Admin.DealersModel
+@{
+    Layout = "Shared/_AdminLayout";
+    ViewData["Title"] = "Dealer Management";
+}
+
+<div class="page-header">
+    <h1><i class="fas fa-store me-3"></i>@ViewData["Title"]</h1>
+    <p>Manage all authorized dealerships in the network.</p>
+</div>
+
+<div class="admin-page-content">
+    <div class="admin-card">
+        <div class="card-header d-flex align-items-center justify-content-between">
+            <h5 class="mb-0 fw-bold"><i class="fas fa-list-ul me-2"></i>Dealer List</h5>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#dealerModal">
+                <i class="fas fa-plus me-2"></i>Create New Dealer
+            </button>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Dealer Name</th>
+                            <th>Address</th>
+                            <th>Phone</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Dealers == null || !Model.Dealers.Any())
+                        {
+                            <tr>
+                                <td colspan="4" class="text-center text-muted">
+                                    <i class="fas fa-info-circle me-2"></i>No dealers found.
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            @foreach (var dealer in Model.Dealers)
+                            {
+                                <tr>
+                                    <td>@dealer.Name</td>
+                                    <td>@dealer.Address</td>
+                                    <td>@dealer.PhoneNumber</td>
+                                    <td class="text-end">
+                                        <button class="btn btn-sm btn-outline-primary" title="Edit">
+                                            <i class="fas fa-pencil-alt"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-danger" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="dealerModal" tabindex="-1" aria-labelledby="dealerModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form method="post">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="dealerModalLabel"><i class="fas fa-store me-2"></i>Create/Edit Dealer</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" asp-for="Dealer.Id" />
+                    <div class="mb-3">
+                        <label asp-for="Dealer.Name" class="form-label">Dealer Name</label>
+                        <input asp-for="Dealer.Name" class="form-control" />
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Dealer.Address" class="form-label">Address</label>
+                        <input asp-for="Dealer.Address" class="form-control" />
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Dealer.PhoneNumber" class="form-label">Phone</label>
+                        <input asp-for="Dealer.PhoneNumber" class="form-control" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save me-2"></i>Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

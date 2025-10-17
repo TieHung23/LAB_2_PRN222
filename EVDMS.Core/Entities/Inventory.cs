@@ -17,6 +17,12 @@ public class Inventory : UpdatedCommon
 
     public Dealer? Dealer { get; set; }
 
+    public Guid VehicleConfigId { get; set; }
+
+    public VehicleConfig? VehicleConfig { get; set; }
+
+    public int StockQuantity { get; set; }
+
     public bool IsSale { get; set; } = true;
 
     public string Description { get; set; } = string.Empty;

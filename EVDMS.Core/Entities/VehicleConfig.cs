@@ -20,4 +20,6 @@ public class VehicleConfig : UpdatedCommon
     public decimal BasePrice { get; set; }
 
     public int WarrantyPeriod { get; set; }
+
+    public VehicleModel? VehicleModel { get; set; }
 }
