@@ -1,4 +1,3 @@
-using System;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
@@ -7,8 +6,6 @@ using EVDMS.BLL.Services.Abstractions;
 using EVDMS.Core.Entities;
 using EVDMS.DAL.Database;
 using EVDMS.DAL.Repositories.Abstractions;
-using EVDMS.DAL.Response;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace EVDMS.BLL.Services.Implementations;
@@ -16,11 +13,11 @@ namespace EVDMS.BLL.Services.Implementations;
 public class AIService : IAIService
 {
     private readonly HttpClient _client;
-    private readonly string ERROR_MSG;
-    private readonly string END_SYSTEM_PROMPT;
+    private readonly ApplicationDbContext _context;
     private readonly ILogger<AIService> _logger;
     private readonly IRawSQL _rawSQL;
-    private readonly ApplicationDbContext _context;
+    private readonly string END_SYSTEM_PROMPT;
+    private readonly string ERROR_MSG;
 
 
     public AIService(ILogger<AIService> logger, IRawSQL rawSQL, ApplicationDbContext context)
@@ -33,12 +30,12 @@ public class AIService : IAIService
         _context = context;
     }
 
-    public async Task<List<RevenueDataDTOs>> ExecuteSql(string sql)
+    /*public async Task<List<RevenueDataDTOs>> ExecuteSql(string sql)
     {
         var result = await _rawSQL.ExecRawSQLAsync(sql);
 
         return result;
-    }
+    }*/
 
     public async Task<string> GenerateSql(string userPrompt, string expectedResult)
     {
@@ -160,13 +157,9 @@ public class AIService : IAIService
         string sql;
 
         if (match.Success)
-        {
             sql = match.Groups[1].Value.Replace("`", "").Replace("sql", "", StringComparison.OrdinalIgnoreCase).Trim();
-        }
         else
-        {
             sql = reply.Trim();
-        }
 
         _logger.LogInformation($"Result SQL : {sql}");
 
