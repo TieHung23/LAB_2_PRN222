@@ -1,0 +1,119 @@
+﻿@page "{id:guid}"
+@model EVDMS.Presentation.Pages.Admin.Accounts.EditModel
+@{
+    Layout = "/Pages/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Edit Account";
+}
+
+<div class="page-header">
+    <div class="container">
+        <h1><i class="fas fa-user-edit me-3"></i>@ViewData["Title"]</h1>
+        <p>Update the details for the user account: @Model.Account?.Email</p>
+    </div>
+</div>
+
+<div class="admin-page-content">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="admin-card">
+                <form method="post">
+                    <input type="hidden" asp-for="Account.Id" />
+                    <input type="hidden" asp-for="Account.HashedPassword" />
+
+                    <div class="card-header">
+                        <h5 class="mb-0">Account Details</h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-3" role="alert"></div>
+
+                        @if (TempData["SuccessMessage"] != null)
+                        {
+                            <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+                        }
+                        @if (TempData["ErrorMessage"] != null)
+                        {
+                            <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+                        }
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label asp-for="Account.FullName" class="form-label">Full Name *</label>
+                                <input asp-for="Account.FullName" class="form-control form-control-sm" required />
+                                <span asp-validation-for="Account.FullName" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Account.Email" class="form-label">Email *</label>
+                                <input asp-for="Account.Email" type="email" class="form-control form-control-sm" required readonly />
+                                <span asp-validation-for="Account.Email" class="text-danger small"></span>
+                                <small class="text-muted">Email cannot be changed.</small>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="Account.RoleId" class="form-label">Role *</label>
+                                <select asp-for="Account.RoleId" id="roleDropdown" class="form-select form-select-sm" asp-items="Model.Roles" required>
+                                    <option value="">-- Select Role --</option>
+                                </select>
+                                <span asp-validation-for="Account.RoleId" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6" id="dealerDropdownContainer" style="display: none;">
+                                <label asp-for="Account.DealerId" class="form-label">Dealer *</label>
+                                <select asp-for="Account.DealerId" id="dealerDropdown" class="form-select form-select-sm" asp-items="Model.Dealers">
+                                    <option value="">-- Select Dealer --</option>
+                                </select>
+                                <span asp-validation-for="Account.DealerId" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="Account.IsActive" class="form-label">Status</label>
+                                <select asp-for="Account.IsActive" class="form-select form-select-sm">
+                                    <option value="true">Active</option>
+                                    <option value="false">Inactive</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer text-end p-3">
+                        <a asp-page="../Accounts" class="btn btn-sm btn-secondary me-2">
+                            <i class="fas fa-arrow-left me-1"></i>Cancel
+                        </a>
+                        <button type="submit" class="btn btn-sm btn-primary">
+                            <i class="fas fa-save me-1"></i>Update Account
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const roleDropdown = document.getElementById('roleDropdown');
+            const dealerContainer = document.getElementById('dealerDropdownContainer');
+            const dealerDropdown = document.getElementById('dealerDropdown');
+            const dealerRoles = ["Dealer Manager", "Dealer Staff"]; // Đồng bộ với EditModel.cs
+
+            function toggleDealerDropdown() {
+                const selectedRoleOption = roleDropdown.options[roleDropdown.selectedIndex];
+                const selectedRoleText = selectedRoleOption ? selectedRoleOption.text : "";
+
+                if (dealerRoles.includes(selectedRoleText)) {
+                    dealerContainer.style.display = 'block';
+                    dealerDropdown.required = true;
+                } else {
+                    dealerContainer.style.display = 'none';
+                    dealerDropdown.required = false;
+                    // Không xóa value ở trang Edit, giữ lại giá trị cũ nếu ẩn đi
+                }
+            }
+            toggleDealerDropdown();
+            roleDropdown.addEventListener('change', toggleDealerDropdown);
+        });
+    </script>
+}

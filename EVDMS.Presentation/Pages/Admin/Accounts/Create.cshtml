@@ -1,0 +1,128 @@
+﻿@page
+@model EVDMS.Presentation.Pages.Admin.Accounts.CreateModel
+@{
+    Layout = "/Pages/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Create Account";
+}
+
+<div class="page-header">
+    <div class="container">
+        <h1><i class="fas fa-user-plus me-3"></i>@ViewData["Title"]</h1>
+        <p>Create a new user account for the system.</p>
+    </div>
+</div>
+
+<div class="admin-page-content">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="admin-card">
+                <form method="post">
+                    <div class="card-header">
+                        <h5 class="mb-0">New Account Details</h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-3" role="alert"></div>
+
+                        @if (TempData["SuccessMessage"] != null)
+                        {
+                            <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+                        }
+                        @if (TempData["ErrorMessage"] != null)
+                        {
+                            <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+                        }
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label asp-for="Account.FullName" class="form-label">Full Name *</label>
+                                <input asp-for="Account.FullName" class="form-control form-control-sm" required />
+                                <span asp-validation-for="Account.FullName" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Account.Email" class="form-label">Email *</label>
+                                <input asp-for="Account.Email" type="email" class="form-control form-control-sm" required />
+                                <span asp-validation-for="Account.Email" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="Password" class="form-label">Password *</label>
+                                <input asp-for="Password" type="password" class="form-control form-control-sm" required minlength="6" />
+                                <span asp-validation-for="Password" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="Account.RoleId" class="form-label">Role *</label>
+                                <select asp-for="Account.RoleId" id="roleDropdown" class="form-select form-select-sm" asp-items="Model.Roles" required>
+                                    <option value="">-- Select Role --</option>
+                                </select>
+                                <span asp-validation-for="Account.RoleId" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6" id="dealerDropdownContainer" style="display: none;">
+                                <label asp-for="Account.DealerId" class="form-label">Dealer *</label>
+                                <select asp-for="Account.DealerId" id="dealerDropdown" class="form-select form-select-sm" asp-items="Model.Dealers">
+                                    <option value="">-- Select Dealer --</option>
+                                </select>
+                                <span asp-validation-for="Account.DealerId" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="Account.IsActive" class="form-label">Status</label>
+                                <select asp-for="Account.IsActive" class="form-select form-select-sm">
+                                    <option value="true">Active</option>
+                                    <option value="false">Inactive</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer text-end p-3">
+                        <a asp-page="../Accounts" class="btn btn-sm btn-secondary me-2">
+                            <i class="fas fa-arrow-left me-1"></i>Back to List
+                        </a>
+                        <button type="submit" class="btn btn-sm btn-primary">
+                            <i class="fas fa-save me-1"></i>Create Account
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const roleDropdown = document.getElementById('roleDropdown');
+            const dealerContainer = document.getElementById('dealerDropdownContainer');
+            const dealerDropdown = document.getElementById('dealerDropdown');
+
+           
+            const dealerRoles = ["Dealer Manager", "Dealer Staff"];
+
+            function toggleDealerDropdown() {
+                const selectedRoleOption = roleDropdown.options[roleDropdown.selectedIndex];
+                const selectedRoleText = selectedRoleOption ? selectedRoleOption.text : "";
+
+               
+                if (dealerRoles.includes(selectedRoleText)) {
+                    dealerContainer.style.display = 'block'; 
+                    dealerDropdown.required = true;        
+                } else {
+                    dealerContainer.style.display = 'none';  
+                    dealerDropdown.required = false;       
+                    dealerDropdown.value = "";              
+                }
+            }
+
+            
+            toggleDealerDropdown();
+
+           
+            roleDropdown.addEventListener('change', toggleDealerDropdown);
+        });
+    </script>
+}
