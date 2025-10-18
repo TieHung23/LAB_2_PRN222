@@ -1,142 +1,188 @@
 ﻿@page
 @model EVDMS.Presentation.Pages.Admin.VehicleModelsModel
 @{
-    Layout = "Shared/_AdminLayout";
-    ViewData["Title"] = "Vehicle Models";
+    ViewData["Title"] = "Quản lý Mẫu xe";
+    Layout = "_AdminLayout";
 }
 
-<div class="page-header">
-    <div class="container">
-        <h1><i class="fas fa-car me-3"></i>@ViewData["Title"]</h1>
-        <p class="mb-0">Manage your electric vehicle catalog, configurations, and pricing.</p>
-    </div>
-</div>
-
-<div class="admin-page-content">
-    <div class="row">
+<div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
         <div class="col-12">
-            <div class="admin-card">
-                <div class="card-header d-flex align-items-center justify-content-between p-3">
-                    <h5 class="mb-0 fw-bold">
-                        <i class="fas fa-list-ul me-2"></i>Vehicle Model List
-                    </h5>
-                    <a href="/Admin/VehicleModels/Create" class="btn btn-sm btn-primary bg-gradient">
-                        <i class="fas fa-plus me-1"></i> Add New Model
-                    </a>
+            <div class="bg-secondary rounded h-100 p-4">
+                <h4 class="mb-4">@ViewData["Title"]</h4>
+
+                <div class="d-flex align-items-center justify-content-between mb-4">
+                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modelModal" id="add-new-model-btn">
+                        <i class="fa fa-plus me-2"></i>Thêm Mẫu xe
+                    </button>
+                    <form method="get" class="d-flex ms-auto">
+                        <input class="form-control bg-dark border-0 me-2" type="search" placeholder="Tìm kiếm..." asp-for="SearchTerm">
+                        <button class="btn btn-primary" type="submit">Tìm</button>
+                    </form>
                 </div>
-                <div class="card-body p-4">
-                    <div class="row mb-3">
-                        <div class="col-md-4">
-                            <input type="text" class="form-control form-control-sm" placeholder="Search by model name...">
-                        </div>
-                        <div class="col-md-3">
-                            <select class="form-select form-select-sm">
-                                <option selected>All Statuses</option>
-                                <option value="1">Active</option>
-                                <option value="2">Inactive</option>
-                            </select>
-                        </div>
-                        <div class="col-md-2">
-                            <button class="btn btn-sm btn-outline-secondary w-100">Filter</button>
-                        </div>
-                    </div>
 
-                    <div class="table-responsive">
-                        <table class="table table-hover table-striped admin-table">
-                            <thead class="table-light">
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Model Name</th>
-                                    <th scope="col">Base Price</th>
-                                    <th scope="col">Range (km)</th>
-                                    <th scope="col">Status</th>
-                                    <th scope="col" class="text-center">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>VinFast VF8 Eco</td>
-                                    <td>$45,000</td>
-                                    <td>420</td>
-                                    <td><span class="badge bg-success bg-opacity-75">Active</span></td>
-                                    <td class="text-center">
-                                        <a href="#" class="btn btn-sm btn-outline-info" title="Details"><i class="fas fa-eye"></i></a>
-                                        <a href="#" class="btn btn-sm btn-outline-warning" title="Edit"><i class="fas fa-edit"></i></a>
-                                        <a href="#" class="btn btn-sm btn-outline-danger" title="Delete"><i class="fas fa-trash"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">2</th>
-                                    <td>VinFast VF9 Plus</td>
-                                    <td>$62,000</td>
-                                    <td>550</td>
-                                    <td><span class="badge bg-success bg-opacity-75">Active</span></td>
-                                    <td class="text-center">
-                                        <a href="#" class="btn btn-sm btn-outline-info" title="Details"><i class="fas fa-eye"></i></a>
-                                        <a href="#" class="btn btn-sm btn-outline-warning" title="Edit"><i class="fas fa-edit"></i></a>
-                                        <a href="#" class="btn btn-sm btn-outline-danger" title="Delete"><i class="fas fa-trash"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>VinFast VFe34</td>
-                                    <td>$30,000</td>
-                                    <td>300</td>
-                                    <td><span class="badge bg-secondary bg-opacity-75">Inactive</span></td>
-                                    <td class="text-center">
-                                        <a href="#" class="btn btn-sm btn-outline-info" title="Details"><i class="fas fa-eye"></i></a>
-                                        <a href="#" class="btn btn-sm btn-outline-warning" title="Edit"><i class="fas fa-edit"></i></a>
-                                        <a href="#" class="btn btn-sm btn-outline-danger" title="Delete"><i class="fas fa-trash"></i></a>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+                {
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <i class="fa fa-exclamation-circle me-2"></i>@Model.SuccessMessage
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
+                }
+                @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                {
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="fa fa-exclamation-circle me-2"></i>@Model.ErrorMessage
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
 
-                    <nav aria-label="Page navigation" class="d-flex justify-content-end mt-3">
-                        <ul class="pagination pagination-sm">
-                            <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
-                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                        </ul>
-                    </nav>
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover text-center">
+                        <thead>
+                            <tr class="text-white">
+                                <th scope="col">#</th>
+                                <th scope="col">Hình ảnh</th>
+                                <th scope="col">Tên Mẫu xe</th>
+                                <th scope="col">Thương hiệu</th>
+                                <th scope="col">Loại xe</th>
+                                <th scope="col">Năm ra mắt</th>
+                                <th scope="col">Trạng thái</th>
+                                <th scope="col">Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody class="align-middle">
+                            @if (Model.VehicleModels.Any())
+                            {
+                                @foreach (var (model, index) in Model.VehicleModels.Select((value, i) => (value, i)))
+                                {
+                                    <tr>
+                                        <td>@(index + 1)</td>
+                                        <td><img class="rounded" src="@(string.IsNullOrEmpty(model.ImgUrl) ? "/assets/logo-vinfast-inkythuatso.png" : model.ImgUrl)" alt="" style="width: 120px; height: 67px; object-fit: cover;"></td>
+                                        <td>@(model.ModelName)</td>
+                                        <td>@(model.Brand)</td>
+                                        <td>@(model.VehicleType)</td>
+                                        <td>@(model.ReleaseYear)</td>
+                                        <td>
+                                            @if (model.IsActive)
+                                            {
+                                                <span class="badge bg-success">Hoạt động</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-danger">Ngưng</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-sm btn-warning edit-btn" data-id="@(model.Id)">Sửa</button>
+                                            <form method="post" asp-page-handler="Delete" asp-route-id="@(model.Id)" onsubmit="return confirm('Bạn có chắc chắn muốn xóa mẫu xe này?');" style="display:inline;">
+                                                <button type="submit" class="btn btn-sm btn-danger">Xóa</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="8" class="text-center py-4">Không có dữ liệu để hiển thị.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+<div class="modal fade" id="modelModal" tabindex="-1" aria-labelledby="modelModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-secondary">
+            <form id="modal-form" method="post">
+                <div class="modal-header border-bottom-0">
+                    <h5 class="modal-title" id="modelModalLabel">Thêm Mẫu xe mới</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" asp-for="VmModel.Id" />
+                    <div class="form-floating mb-3">
+                        <input asp-for="VmModel.ModelName" class="form-control bg-dark border-0" placeholder=" " required>
+                        <label asp-for="VmModel.ModelName">Tên Mẫu xe</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input asp-for="VmModel.Brand" class="form-control bg-dark border-0" placeholder=" " required>
+                        <label asp-for="VmModel.Brand">Thương hiệu</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input asp-for="VmModel.VehicleType" class="form-control bg-dark border-0" placeholder=" " required>
+                        <label asp-for="VmModel.VehicleType">Loại xe</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="number" asp-for="VmModel.ReleaseYear" class="form-control bg-dark border-0" placeholder=" " required>
+                        <label asp-for="VmModel.ReleaseYear">Năm ra mắt</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input asp-for="VmModel.ImgUrl" class="form-control bg-dark border-0" placeholder=" ">
+                        <label asp-for="VmModel.ImgUrl">URL Hình ảnh</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <textarea asp-for="VmModel.Description" class="form-control bg-dark border-0" placeholder=" " style="height: 100px"></textarea>
+                        <label asp-for="VmModel.Description">Mô tả</label>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" asp-for="VmModel.IsActive">
+                        <label class="form-check-label" asp-for="VmModel.IsActive">Đang hoạt động</label>
+                    </div>
+                </div>
+                <div class="modal-footer border-top-0">
+                    <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-primary" id="modal-submit-btn">Lưu</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
-    <style>
-        /* Custom styles for admin tables */
-        .admin-table th {
-            font-weight: 600;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            color: #475569;
-        }
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function () {
+            const modelModal = new bootstrap.Modal(document.getElementById('modelModal'));
+            const modalForm = $('#modal-form');
+            const modalTitle = $('#modelModalLabel');
+            
+            function clearModal() {
+                modalForm.trigger('reset');
+                modalForm.find('input[type="hidden"]').val('');
+                $('#VmModel_IsActive').prop('checked', true); // Mặc định là active khi thêm mới
+            }
 
-        .admin-table td {
-            vertical-align: middle;
-            font-size: 0.875rem;
-        }
+            $('#add-new-model-btn').on('click', function () {
+                modalTitle.text('Thêm Mẫu xe mới');
+                modalForm.attr('action', '?handler=Create');
+                clearModal();
+            });
 
-        .admin-table .btn-sm {
-            width: 32px;
-            height: 32px;
-            line-height: 1.5;
-            padding: 0.25rem 0.5rem;
-            font-size: 0.75rem;
-        }
+            $('.edit-btn').on('click', function () {
+                const modelId = $(this).data('id');
+                modalTitle.text('Chỉnh sửa Mẫu xe');
+                modalForm.attr('action', '?handler=Edit');
+                clearModal();
 
-        .badge {
-            font-size: 0.75rem;
-            padding: 0.4em 0.7em;
-            border-radius: 8px;
-            font-weight: 500;
-        }
-    </style>
+                $.get(`?handler=ModelJson&id=${modelId}`, function (data) {
+                    if(data) {
+                        $('#VmModel_Id').val(data.id);
+                        $('#VmModel_ModelName').val(data.modelName);
+                        $('#VmModel_Brand').val(data.brand);
+                        $('#VmModel_VehicleType').val(data.vehicleType);
+                        $('#VmModel_ReleaseYear').val(data.releaseYear);
+                        $('#VmModel_ImgUrl').val(data.imgUrl);
+                        $('#VmModel_Description').val(data.description);
+                        $('#VmModel_IsActive').prop('checked', data.isActive);
+                        modelModal.show();
+                    }
+                });
+            });
+        });
+    </script>
 }
