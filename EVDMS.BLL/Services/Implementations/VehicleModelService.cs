@@ -21,18 +21,19 @@ namespace EVDMS.BLL.Services.Implementations
             _inventoryRepository = inventoryRepository;
         }
 
-        public async Task<IEnumerable<VehicleModel>> GetAllAsync(string? searchTerm)
+        public async Task<IEnumerable<VehicleModel>> GetAllAsync()
         {
-            return await _vehicleModelRepository.GetAllAsync(searchTerm);
+            return await _vehicleModelRepository.GetAllAsync();
+        }
+
+        public async Task<IEnumerable<VehicleModel>> SearchAsync(string searchTerm)
+        {
+            return await _vehicleModelRepository.SearchAsync(searchTerm);
         }
 
         public async Task<VehicleModel?> GetByIdAsync(Guid id)
         {
             return await _vehicleModelRepository.GetByIdAsync(id);
-        }
-        public async Task<IEnumerable<VehicleModel>> SearchAsync(string searchTerm)
-        {
-            return await _vehicleModelRepository.SearchAsync(searchTerm);
         }
 
         public async Task<VehicleModel> CreateAsync(VehicleModel vehicleModel)
@@ -60,18 +61,18 @@ namespace EVDMS.BLL.Services.Implementations
                 throw new ArgumentException("Lỗi: ID của xe không khớp. Không thể thực hiện cập nhật.");
             }
 
-            ValidateVehicleModel(vehicleModel);
-
             var existingVehicle = await _vehicleModelRepository.GetByIdAsync(id);
             if (existingVehicle == null)
             {
                 throw new KeyNotFoundException($"Lỗi: Không tìm thấy mẫu xe với ID '{id}' để cập nhật.");
             }
 
+            ValidateVehicleModel(vehicleModel);
+
             if (!existingVehicle.ModelName.Equals(vehicleModel.ModelName, StringComparison.OrdinalIgnoreCase))
             {
                 var existingByName = await _vehicleModelRepository.GetByNameAsync(vehicleModel.ModelName);
-                if (existingByName != null)
+                if (existingByName != null && existingByName.Id != existingVehicle.Id)
                 {
                     throw new InvalidOperationException($"Lỗi: Tên mẫu xe '{vehicleModel.ModelName}' đã tồn tại trong hệ thống.");
                 }
@@ -84,6 +85,7 @@ namespace EVDMS.BLL.Services.Implementations
             existingVehicle.ImgUrl = vehicleModel.ImgUrl;
             existingVehicle.ReleaseYear = vehicleModel.ReleaseYear;
             existingVehicle.IsActive = vehicleModel.IsActive;
+            // existingVehicle.UpdatedAt = DateTime.UtcNow; // Thêm nếu Entity có trường UpdatedAt
 
             await _vehicleModelRepository.UpdateAsync(existingVehicle);
         }
@@ -104,13 +106,11 @@ namespace EVDMS.BLL.Services.Implementations
 
             vehicleToDelete.IsDeleted = true;
             vehicleToDelete.IsActive = false;
+            // vehicleToDelete.UpdatedAt = DateTime.UtcNow; // Thêm nếu Entity có trường UpdatedAt
 
             await _vehicleModelRepository.DeleteAsync(vehicleToDelete);
         }
 
-        /// <summary>
-        /// Phương thức hỗ trợ để kiểm tra dữ liệu đầu vào của VehicleModel
-        /// </summary>
         private void ValidateVehicleModel(VehicleModel vehicleModel)
         {
             if (vehicleModel == null)
@@ -129,9 +129,9 @@ namespace EVDMS.BLL.Services.Implementations
             {
                 throw new ArgumentException("Loại xe (VehicleType) là trường bắt buộc.", nameof(vehicleModel.VehicleType));
             }
-            if (vehicleModel.ReleaseYear <= 1900 || vehicleModel.ReleaseYear > DateTime.UtcNow.Year + 1)
+            if (vehicleModel.ReleaseYear <= 1900 || vehicleModel.ReleaseYear > DateTime.UtcNow.Year + 2) // Cho phép năm ra mắt trước 2 năm
             {
-                throw new ArgumentException($"Năm ra mắt '{vehicleModel.ReleaseYear}' không hợp lệ.", nameof(vehicleModel.ReleaseYear));
+                throw new ArgumentOutOfRangeException(nameof(vehicleModel.ReleaseYear), $"Năm ra mắt '{vehicleModel.ReleaseYear}' không hợp lệ.");
             }
         }
     }
