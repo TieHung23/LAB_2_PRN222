@@ -19,8 +19,10 @@ builder.Services.AddRepositoryDAL();
 builder.Services.AddServices();
 
 builder.Services.AddScoped<IVehicleModelRepository, VehicleModelRepository>();
-builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
 builder.Services.AddScoped<IVehicleModelService, VehicleModelService>();
+builder.Services.AddScoped<IVehicleConfigRepository, VehicleConfigRepository>();
+builder.Services.AddScoped<IVehicleConfigService, VehicleConfigService>();
+builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
 // Đăng ký các Service của BLL cho Presentation Layer
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<ICustomerService, CustomerService>();
