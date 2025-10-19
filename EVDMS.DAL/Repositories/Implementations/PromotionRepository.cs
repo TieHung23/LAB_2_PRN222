@@ -29,5 +29,10 @@ namespace EVDMS.DAL.Repositories.Implementations
         {
             return await _context.Promotions.FindAsync(id);
         }
+
+        public async Task<IEnumerable<Promotion>> GetAllAsync()
+        {
+            return await _context.Promotions.ToListAsync();
+        }
     }
 }

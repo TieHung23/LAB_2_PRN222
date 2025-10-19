@@ -39,31 +39,26 @@ namespace EVDMS.DAL.Repositories.Implementations
             return order;
         }
 
-        public async Task<IEnumerable<Order>> GetOrdersByStaffIdAsync(Guid staffId)
-        {
-            return await _context.Orders
-                                 .Where(o => o.AccountId == staffId)
-                                 .Include(o => o.Customer)
-                                 .Include(o => o.Inventory)
-                                    .ThenInclude(i => i.VehicleModel)
-                                 .Include(o => o.Promotion)
-                                 .Include(o => o.Payment)
-                                 .OrderByDescending(o => o.CreatedAt)
-                                 .ToListAsync();
-        }
-
         public async Task<Order> GetByIdAsync(Guid id)
         {
             return await _context.Orders
-                                 .Where(o => o.Id == id)
-                                 .Include(o => o.Customer)
-                                 .Include(o => o.Account)
-                                 .Include(o => o.Inventory)
-                                    .ThenInclude(i => i.VehicleModel)
-                                        .ThenInclude(vm => vm.VehicleConfig)
-                                 .Include(o => o.Promotion)
-                                 .Include(o => o.Payment)
-                                 .FirstOrDefaultAsync();
+                .Include(o => o.Payment)
+                .Include(o => o.Customer)
+                .Include(o => o.Inventory)
+                    .ThenInclude(i => i.VehicleModel)
+                .FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        // 2. THAY THẾ HÀM GetOrdersByStaffIdAsync HIỆN TẠI BẰNG HÀM NÀY
+        public async Task<IEnumerable<Order>> GetOrdersByStaffIdAsync(Guid staffId)
+        {
+            return await _context.Orders
+                .Where(o => o.AccountId == staffId)
+                .Include(o => o.Customer)
+                .Include(o => o.Payment)
+                .Include(o => o.Inventory).ThenInclude(i => i.VehicleModel)
+                .OrderByDescending(o => o.CreatedAt)
+                .ToListAsync();
         }
 
 

@@ -1,0 +1,57 @@
+﻿@page
+@model CreateOrderModel
+@{
+    ViewData["Title"] = "Create Order";
+    Layout = "_DealerLayout";
+}
+
+<div class="row">
+    <div class="col-md-7">
+        <h2>Create New Order</h2>
+        <hr />
+        <form method="post">
+            <input type="hidden" asp-for="InventoryId" />
+
+            <div class="mb-3">
+                <label class="form-label">Customer</label>
+                <select asp-for="SelectedCustomerId" asp-items="Model.CustomerOptions" class="form-control">
+                    <option value="">-- Select Customer --</option>
+                </select>
+                <span asp-validation-for="SelectedCustomerId" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Promotion (Optional)</label>
+                <select asp-for="SelectedPromotionId" asp-items="Model.PromotionOptions" class="form-control">
+                    <option value="">-- No Promotion --</option>
+                </select>
+            </div>
+
+            <div class="d-grid">
+                <button type="submit" class="btn btn-primary btn-lg">Create Order</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="col-md-5">
+        <h4>Vehicle Details</h4>
+        <hr />
+        @if (Model.SelectedVehicle != null)
+        {
+            <div class="card">
+                <img src="@Model.SelectedVehicle.VehicleModel.ImgUrl" class="card-img-top" />
+                <div class="card-body">
+                    <h5 class="card-title">@Model.SelectedVehicle.VehicleModel.Brand @Model.SelectedVehicle.VehicleModel.ModelName</h5>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><strong>Base Price:</strong> @Model.SelectedVehicle.VehicleModel.VehicleConfig.BasePrice.ToString("C")</li>
+                        <li class="list-group-item"><strong>Color:</strong> @Model.SelectedVehicle.VehicleModel.VehicleConfig.Color</li>
+                    </ul>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

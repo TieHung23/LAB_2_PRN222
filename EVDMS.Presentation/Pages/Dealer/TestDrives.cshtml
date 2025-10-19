@@ -1,0 +1,54 @@
+﻿@page
+@model EVDMS.Presentation.Pages.Dealer.TestDrivesModel
+@{
+    ViewData["Title"] = "Lịch lái thử";
+    Layout = "_DealerLayout";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="m-0">Quản lý Lịch Lái thử</h1>
+    <a asp-page="/Dealer/CreateTestDrive" class="btn btn-primary">
+        <i class="fas fa-plus"></i> Đặt Lịch Lái thử mới
+    </a>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Khách hàng</th>
+                        <th>Mẫu xe</th>
+                        <th>Thời gian đặt lịch</th>
+                        <th>Trạng thái</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var td in Model.TestDriveList)
+                    {
+                        <tr>
+                            <td>@td.Customer.FullName</td>
+                            <td>@td.VehicleModel.ModelName</td>
+                            <td>@(td.ScheduledDateTime.HasValue? td.ScheduledDateTime.Value.ToString("g") : "N/A")</td>
+                            <td>
+                                @if (td.IsSuccess)
+                                {
+                                    <span class="badge bg-success">Hoàn thành</span>
+                                }
+                                else if (td.ScheduledDateTime < DateTime.Now)
+                                {
+                                    <span class="badge bg-danger">Đã quá hẹn</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-warning text-dark">Chưa thực hiện</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
