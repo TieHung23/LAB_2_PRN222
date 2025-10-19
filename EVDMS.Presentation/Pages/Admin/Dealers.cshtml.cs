@@ -15,7 +15,7 @@ namespace EVDMS.Presentation.Pages.Admin
         }
 
         // Danh sách để hiển thị
-        public IEnumerable<Dealer> Dealers { get; set; } = new List<Dealer>();
+        public IEnumerable<EVDMS.Core.Entities.Dealer> Dealers { get; set; } = new List<EVDMS.Core.Entities.Dealer>();
 
         // Xóa BindProperty Dealer
 

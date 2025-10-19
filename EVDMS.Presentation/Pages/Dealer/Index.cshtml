@@ -1,0 +1,282 @@
+﻿@page
+@model EVDMS.Presentation.Pages.Dealer.IndexModel
+@{
+    ViewData["Title"] = "Bảng điều khiển";
+    Layout = "/Pages/Shared/_DealerLayout.cshtml";
+}
+
+<style>
+    .kpi-card {
+        background: #fff; /* Nền trắng */
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: 20px;
+        height: 100%;
+    }
+
+        .kpi-card .kpi-icon {
+            font-size: 2.5rem;
+            padding: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px;
+            color: #fff;
+        }
+
+        .kpi-card .kpi-content {
+            flex-grow: 1;
+        }
+
+        .kpi-card .kpi-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #8a99b5; /* Màu xám từ layout */
+            text-transform: uppercase;
+        }
+
+        .kpi-card .kpi-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #1c1e2f; /* Màu chữ đậm từ layout */
+        }
+
+    /* Màu sắc cho icon */
+    .icon-revenue {
+        background-color: rgba(102, 126, 234, 0.2);
+        color: #667eea;
+    }
+
+    .icon-sales {
+        background-color: rgba(10, 207, 151, 0.2);
+        color: #0acf97;
+    }
+
+    .icon-testdrive {
+        background-color: rgba(240, 152, 25, 0.2);
+        color: #f09819;
+    }
+
+    .icon-staff {
+        background-color: rgba(250, 92, 124, 0.2);
+        color: #fa5c7c;
+    }
+
+    .chart-card {
+        background: #fff;
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        padding: 20px;
+    }
+
+</style>
+
+@if (Model.CurrentDealer != null)
+{
+    <div classs="mb-4">
+        <h3 class="text-white">Đại lý: @Model.CurrentDealer.Name</h3>
+        <p class="lead text-white-50">Xin chào @User.Identity.Name, chào mừng trở lại!</p>
+    </div>
+}
+
+@if (User.IsInRole("Dealer Manager"))
+{
+    <div class="row">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="kpi-card">
+                <div class="kpi-icon icon-revenue">
+                    <i class="fas fa-dollar-sign"></i>
+                </div>
+                <div class="kpi-content">
+                    <span class="kpi-title">Tổng Doanh thu</span>
+                    <span class="kpi-value">@Model.ManagerData?.BranchTotalRevenue.ToString("C0")</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="kpi-card">
+                <div class="kpi-icon icon-sales">
+                    <i class="fas fa-truck"></i>
+                </div>
+                <div class="kpi-content">
+                    <span class="kpi-title">Xe đã bán</span>
+                    <span class="kpi-value">@Model.ManagerData?.BranchCarsSold xe</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="kpi-card">
+                <div class="kpi-icon icon-testdrive">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <div class="kpi-content">
+                    <span class="kpi-title">Lái thử (Hôm nay)</span>
+                    <span class="kpi-value">@Model.ManagerData?.BranchTestDrivesToday lịch</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="kpi-card">
+                <div class="kpi-icon icon-staff">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="kpi-content">
+                    <span class="kpi-title">Tổng Nhân viên</span>
+                    <span class="kpi-value">@Model.ManagerData?.BranchStaffCount người</span>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else // Mặc định là Dealer Staff
+{
+    <div class="row">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="kpi-card">
+                <div class="kpi-icon icon-revenue">
+                    <i class="fas fa-dollar-sign"></i>
+                </div>
+                <div class="kpi-content">
+                    <span class="kpi-title">Doanh thu Cá nhân</span>
+                    <span class="kpi-value">@Model.StaffData?.TotalRevenue.ToString("C0")</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="kpi-card">
+                <div class="kpi-icon icon-sales">
+                    <i class="fas fa-truck"></i>
+                </div>
+                <div class="kpi-content">
+                    <span class="kpi-title">Xe bạn đã bán</span>
+                    <span class="kpi-value">@Model.StaffData?.CarsSold xe</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="kpi-card">
+                <div class="kpi-icon icon-testdrive">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <div class="kpi-content">
+                    <span class="kpi-title">Lái thử (Hôm nay)</span>
+                    <span class="kpi-value">@Model.StaffData?.TestDrivesToday lịch</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="kpi-card">
+                <div class="kpi-icon icon-testdrive" style="background-color: rgba(0,191,255, 0.2); color: #00BFFF;">
+                    <i class="fas fa-calendar-week"></i>
+                </div>
+                <div class="kpi-content">
+                    <span class="kpi-title">Lái thử (Tuần này)</span>
+                    <span class="kpi-value">@Model.StaffData?.TestDrivesThisWeek lịch</span>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+<div class="row">
+    <div class="col-lg-8 mb-4">
+        <div class="chart-card">
+            <h5 class="card-title">Doanh thu 6 tháng gần nhất (Triệu VNĐ)</h5>
+
+            <div style="position: relative; height: 350px; width: 100%;">
+                <canvas id="revenueChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 mb-4">
+        <div class="chart-card">
+            <h5 class="card-title">Tỷ lệ xe bán</h5>
+
+            <div style="position: relative; height: 350px; width: 100%;">
+                <canvas id="salesByTypeChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        (function() {
+            'use strict';
+
+            // Lấy dữ liệu từ Model (C#)
+            var revenueChartData, salesByTypeChartData;
+
+            @if (User.IsInRole("Dealer Manager"))
+            {
+                    <text>
+                    revenueChartData = JSON.parse('@Html.Raw(Model.ManagerData.RevenueChartDataJson)');
+                    salesByTypeChartData = JSON.parse('@Html.Raw(Model.ManagerData.SalesByTypeChartDataJson)');
+                    </text>
+            }
+            else
+            {
+                    <text>
+                    revenueChartData = JSON.parse('@Html.Raw(Model.StaffData.RevenueChartDataJson)');
+                    salesByTypeChartData = JSON.parse('@Html.Raw(Model.StaffData.SalesByTypeChartDataJson)');
+                    </text>
+            }
+
+            // --- 1. Vẽ Biểu đồ Doanh thu (Line Chart) ---
+            var ctxRevenue = document.getElementById('revenueChart').getContext('2d');
+            new Chart(ctxRevenue, {
+                type: 'line', // 'line' or 'bar'
+                data: revenueChartData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value, index, values) {
+                                    return value + ' Tr';
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+
+            // --- 2. Vẽ Biểu đồ Tỷ lệ xe (Doughnut Chart) ---
+            var ctxSalesType = document.getElementById('salesByTypeChart').getContext('2d');
+            new Chart(ctxSalesType, {
+                type: 'doughnut',
+                data: salesByTypeChartData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+
+        })();
+    </script>
+}
