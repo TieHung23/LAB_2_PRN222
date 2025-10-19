@@ -32,7 +32,7 @@ public class IndexModel : PageModel
         try
         {
             var customers = await _customerService.GetAllAsync();
-            var vehicles = await _vehicleModelService.GetAllAsync(null);
+            var vehicles = await _vehicleModelService.GetAllAsync();
             var orders = await _orderService.GetAllOrder();
             var accounts = await _accountService.GetAccounts(null!);
 
