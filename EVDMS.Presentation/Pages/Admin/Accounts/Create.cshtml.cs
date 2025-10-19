@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
-using System.Linq; // Cần cho .Where()
+using System.Linq;
 
 namespace EVDMS.Presentation.Pages.Admin.Accounts
 {
@@ -13,9 +13,7 @@ namespace EVDMS.Presentation.Pages.Admin.Accounts
         private readonly IRoleService _roleService;
         private readonly IDealerService _dealerService;
 
-        // --- Dùng hằng số để tránh lỗi chính tả ---
         private const string AdminRoleName = "Admin";
-        private const string EvmStaffRoleName = "EVM Staff";
         private const string DealerManagerRoleName = "Dealer Manager";
         private const string DealerStaffRoleName = "Dealer Staff";
 
@@ -33,7 +31,7 @@ namespace EVDMS.Presentation.Pages.Admin.Accounts
         [BindProperty]
         [Required(ErrorMessage = "Password is required.")]
         [DataType(DataType.Password)]
-        [MinLength(6, ErrorMessage = "Password must be at least 6 characters long.")] // Thêm validation độ dài
+        [MinLength(6, ErrorMessage = "Password must be at least 6 characters long.")]
         public string Password { get; set; }
 
         public SelectList Roles { get; set; }
@@ -48,43 +46,59 @@ namespace EVDMS.Presentation.Pages.Admin.Accounts
 
         public async Task<IActionResult> OnPostAsync()
         {
-            await LoadDropdownData(); 
+            await LoadDropdownData();
 
             var selectedRole = (await _roleService.GetAllAsync()).FirstOrDefault(r => r.Id == Account.RoleId);
+            EVDMS.Core.Entities.Dealer? selectedDealer = null;
 
-            // --- LOGIC VALIDATION  ---
+            // --- VALIDATION NÂNG CAO (Giữ nguyên) ---
+            if (Account.DealerId.HasValue)
+            {
+                selectedDealer = await _dealerService.GetDealerByIdAsync(Account.DealerId.Value);
+                if (selectedDealer == null || !selectedDealer.IsActive)
+                {
+                    ModelState.AddModelError("Account.DealerId", "Selected dealer is invalid or inactive.");
+                    Account.DealerId = null;
+                }
+            }
             if (selectedRole != null)
             {
-                // 1. Không cho phép tạo Admin
                 if (selectedRole.Name.Equals(AdminRoleName, StringComparison.OrdinalIgnoreCase))
                 {
                     ModelState.AddModelError("Account.RoleId", "Cannot create Admin accounts using this form.");
                 }
-                // 2. Bắt buộc chọn Dealer cho vai trò Dealer
                 else if ((selectedRole.Name.Equals(DealerManagerRoleName, StringComparison.OrdinalIgnoreCase) ||
                          selectedRole.Name.Equals(DealerStaffRoleName, StringComparison.OrdinalIgnoreCase))
                          && Account.DealerId == null)
                 {
-                    ModelState.AddModelError("Account.DealerId", "Dealer selection is required for Dealer roles.");
+                    if (!ModelState.ContainsKey("Account.DealerId"))
+                    {
+                        ModelState.AddModelError("Account.DealerId", "Active Dealer selection is required for Dealer roles.");
+                    }
                 }
-                // 3. Tự động set DealerId = null cho vai trò không thuộc Dealer
                 else if (!selectedRole.Name.Equals(DealerManagerRoleName, StringComparison.OrdinalIgnoreCase) &&
                          !selectedRole.Name.Equals(DealerStaffRoleName, StringComparison.OrdinalIgnoreCase))
                 {
-                    Account.DealerId = null; 
+                    Account.DealerId = null;
                 }
             }
             else if (Account.RoleId != Guid.Empty)
             {
                 ModelState.AddModelError("Account.RoleId", "Invalid Role selected.");
             }
-            // (Validation Email )
             if (await _accountService.EmailExistsAsync(Account.Email))
             {
                 ModelState.AddModelError("Account.Email", "This email address is already in use.");
             }
-          
+            // --- KẾT THÚC VALIDATION NÂNG CAO ---
 
+            // *** THÊM KIỂM TRA PASSWORD RỖNG TRƯỚC KHI HASH ***
+            if (string.IsNullOrWhiteSpace(Password))
+            {
+                // Thêm lỗi này dù đã có [Required], để chắc chắn
+                ModelState.AddModelError("Password", "Password cannot be empty.");
+            }
+            // ************************************************
 
             if (!ModelState.IsValid)
             {
@@ -93,7 +107,19 @@ namespace EVDMS.Presentation.Pages.Admin.Accounts
 
             try
             {
-                Account.HashedPassword = BCrypt.Net.BCrypt.HashPassword(Password);
+                // Chỉ hash nếu Password không rỗng (dù ModelState đã valid)
+                if (!string.IsNullOrWhiteSpace(Password))
+                {
+                    Account.HashedPassword = BCrypt.Net.BCrypt.HashPassword(Password);
+                }
+                else
+                {
+                    // Trường hợp này không nên xảy ra nếu ModelState.IsValid,
+                    // nhưng thêm để phòng ngừa
+                    ModelState.AddModelError(string.Empty, "Password hashing failed due to empty input.");
+                    return Page();
+                }
+
                 await _accountService.CreateAccountAsync(Account);
 
                 TempData["SuccessMessage"] = $"Account '{Account.Email}' created successfully!";
@@ -101,7 +127,6 @@ namespace EVDMS.Presentation.Pages.Admin.Accounts
             }
             catch (Exception ex)
             {
-              
                 ModelState.AddModelError(string.Empty, $"An error occurred: {ex.Message}");
                 return Page();
             }
@@ -109,15 +134,14 @@ namespace EVDMS.Presentation.Pages.Admin.Accounts
 
         private async Task LoadDropdownData()
         {
-            
             var allRoles = await _roleService.GetAllAsync();
             var creatableRoles = allRoles.Where(r => !r.Name.Equals(AdminRoleName, StringComparison.OrdinalIgnoreCase));
 
-            var dealers = await _dealerService.GetAllAsync();
+            var allDealers = await _dealerService.GetAllAsync();
+            var activeDealers = allDealers.Where(d => d.IsActive);
 
-            
             Roles = new SelectList(creatableRoles, "Id", "Name", Account?.RoleId);
-            Dealers = new SelectList(dealers, "Id", "Name", Account?.DealerId);
+            Dealers = new SelectList(activeDealers, "Id", "Name", Account?.DealerId);
         }
     }
 }

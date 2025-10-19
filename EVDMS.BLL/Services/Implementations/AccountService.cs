@@ -18,20 +18,26 @@ namespace EVDMS.BLL.Services.Implementations
 
         public async Task<Account> Login(string email, string password)
         {
+            
             var account = await _accountRepository.GetByEmail(email);
             if (account == null)
             {
-                return null;
+                return null; 
             }
 
+            
             bool isPasswordVerified = BCrypt.Net.BCrypt.Verify(password, account.HashedPassword);
+
+           
             if (isPasswordVerified)
             {
                 if (account.IsDeleted == false && account.IsActive == true)
                 {
-                    return account;
+                    return account; 
                 }
             }
+
+            
             return null;
         }
 
