@@ -14,10 +14,9 @@ namespace EVDMS.DAL.Repositories.Implementations
             _context = context;
         }
 
+        // ... (Các hàm GetAllAsync, GetByIdAsync, GetByVersionNameAsync giữ nguyên) ...
         public async Task<IEnumerable<VehicleConfig>> GetAllAsync()
         {
-            // Do VehicleConfig không có VehicleModelId, chúng ta phải include ngược từ VehicleModel
-            // để biết nó đang được gán cho Model nào.
             return await _context.VehicleConfigs
                 .Include(vc => vc.VehicleModel)
                 .Where(vc => !vc.IsDeleted)
@@ -35,9 +34,11 @@ namespace EVDMS.DAL.Repositories.Implementations
         public async Task<VehicleConfig?> GetByVersionNameAsync(string versionName)
         {
             return await _context.VehicleConfigs
-                .FirstOrDefaultAsync(vc => vc.VersionName.Equals(versionName, StringComparison.OrdinalIgnoreCase) && !vc.IsDeleted);
+                .FirstOrDefaultAsync(vc => vc.VersionName.ToUpper() == versionName.ToUpper() && !vc.IsDeleted); 
         }
 
+
+        // Hàm CreateAsync cũ (nếu có)
         public async Task<VehicleConfig> CreateAsync(VehicleConfig vehicleConfig)
         {
             await _context.VehicleConfigs.AddAsync(vehicleConfig);
@@ -45,6 +46,18 @@ namespace EVDMS.DAL.Repositories.Implementations
             return vehicleConfig;
         }
 
+        // --- THÊM PHẦN TRIỂN KHAI CHO HÀM MỚI ---
+        public async Task<VehicleConfig?> AddAndReturnAsync(VehicleConfig config)
+        {
+            if (config == null) return null;
+
+            await _context.VehicleConfigs.AddAsync(config);
+            await _context.SaveChangesAsync();
+            return config; // Trả về đối tượng đã được thêm (với ID được gán)
+        }
+        // ------------------------------------------
+
+        // ... (Các hàm UpdateAsync, DeleteAsync, IsInUse... giữ nguyên) ...
         public async Task UpdateAsync(VehicleConfig vehicleConfig)
         {
             _context.VehicleConfigs.Update(vehicleConfig);
@@ -54,20 +67,34 @@ namespace EVDMS.DAL.Repositories.Implementations
         public async Task DeleteAsync(VehicleConfig vehicleConfig)
         {
             // Thực hiện soft-delete
+            vehicleConfig.IsDeleted = true; // Đảm bảo flag IsDeleted được set
             _context.VehicleConfigs.Update(vehicleConfig);
             await _context.SaveChangesAsync();
         }
 
         public async Task<bool> IsInUseByVehicleModel(Guid configId)
         {
-            // Kiểm tra xem có VehicleModel nào đang dùng VehicleConfigId này không
             return await _context.VehicleModels.AnyAsync(vm => vm.VehicleConfigId == configId && !vm.IsDeleted);
         }
 
         public async Task<bool> IsInUseByInventory(Guid configId)
         {
-            // Giả sử bảng Inventory có cột VehicleConfigId
-            return await _context.Inventories.AnyAsync(i => i.VehicleConfigId == configId);
+            // Sửa lại theo cấu trúc Inventory: Kiểm tra qua VehicleModelId
+            // Lấy danh sách Model ID dùng Config này
+            var modelIdsUsingConfig = await _context.VehicleModels
+                                              .Where(vm => vm.VehicleConfigId == configId && !vm.IsDeleted)
+                                              .Select(vm => vm.Id)
+                                              .ToListAsync();
+
+            if (!modelIdsUsingConfig.Any())
+            {
+                return false; // Không có Model nào dùng Config này thì chắc chắn không có trong Kho
+            }
+
+            // Kiểm tra xem có Inventory nào dùng các Model ID này không
+            return await _context.Inventories
+                                 .AnyAsync(i => modelIdsUsingConfig.Contains(i.VehicleModelId));
         }
+
     }
 }

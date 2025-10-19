@@ -15,5 +15,9 @@ namespace EVDMS.DAL.Repositories.Abstractions
         Task<VehicleModel> CreateAsync(VehicleModel vehicleModel);
         Task UpdateAsync(VehicleModel vehicleModel);
         Task DeleteAsync(VehicleModel vehicleModel);
+
+        Task<VehicleModel?> GetModelWithConfigByIdAsync(Guid id);
+
+        Task<VehicleModel?> GetByModelAndVersionAsync(string modelName, string versionName);
     }
 }

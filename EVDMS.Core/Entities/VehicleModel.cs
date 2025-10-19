@@ -1,7 +1,8 @@
-using System;
+﻿using EVDMS.Core.CommonEntities; 
 using System.ComponentModel.DataAnnotations;
 
 namespace EVDMS.Core.Entities;
+
 
 public class VehicleModel : CreatedCommon
 {
@@ -28,7 +29,5 @@ public class VehicleModel : CreatedCommon
 
     public VehicleConfig? VehicleConfig { get; set; }
 
-    public ICollection<Guid>? FeatureIds { get; set; }
-
-    public ICollection<Feature>? Features { get; set; }
+    // Xóa tất cả các dòng liên quan đến Feature
 }

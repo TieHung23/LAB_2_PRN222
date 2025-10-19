@@ -21,5 +21,7 @@ namespace EVDMS.DAL.Repositories.Abstractions
 
         // Kiểm tra xem Config có đang tồn tại trong kho không
         Task<bool> IsInUseByInventory(Guid configId);
+
+        Task<VehicleConfig?> AddAndReturnAsync(VehicleConfig config);
     }
 }

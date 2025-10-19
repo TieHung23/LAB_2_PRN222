@@ -4,6 +4,7 @@ using EVDMS.DAL.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EVDMS.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251019110005_FinalModelSync_WithFeatures")]
+    partial class FinalModelSync_WithFeatures
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -76,7 +79,7 @@ namespace EVDMS.DAL.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("Accounts", (string)null);
+                    b.ToTable("Accounts");
 
                     b.HasData(
                         new
@@ -320,7 +323,7 @@ namespace EVDMS.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Customers", (string)null);
+                    b.ToTable("Customers");
 
                     b.HasData(
                         new
@@ -441,7 +444,7 @@ namespace EVDMS.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Dealers", (string)null);
+                    b.ToTable("Dealers");
 
                     b.HasData(
                         new
@@ -572,7 +575,7 @@ namespace EVDMS.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Features", (string)null);
+                    b.ToTable("Features");
                 });
 
             modelBuilder.Entity("EVDMS.Core.Entities.Feedback", b =>
@@ -592,7 +595,7 @@ namespace EVDMS.DAL.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.ToTable("Feedbacks", (string)null);
+                    b.ToTable("Feedbacks");
                 });
 
             modelBuilder.Entity("EVDMS.Core.Entities.Inventory", b =>
@@ -639,7 +642,7 @@ namespace EVDMS.DAL.Migrations
 
                     b.HasIndex("VehicleModelId");
 
-                    b.ToTable("Inventories", (string)null);
+                    b.ToTable("Inventories");
 
                     b.HasData(
                         new
@@ -1731,7 +1734,7 @@ namespace EVDMS.DAL.Migrations
 
                     b.HasIndex("PromotionId");
 
-                    b.ToTable("Orders", (string)null);
+                    b.ToTable("Orders");
 
                     b.HasData(
                         new
@@ -1852,7 +1855,7 @@ namespace EVDMS.DAL.Migrations
                     b.HasIndex("OrderId")
                         .IsUnique();
 
-                    b.ToTable("Payments", (string)null);
+                    b.ToTable("Payments");
 
                     b.HasData(
                         new
@@ -1986,7 +1989,7 @@ namespace EVDMS.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Promotions", (string)null);
+                    b.ToTable("Promotions");
 
                     b.HasData(
                         new
@@ -2085,7 +2088,7 @@ namespace EVDMS.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles", (string)null);
+                    b.ToTable("Roles");
 
                     b.HasData(
                         new
@@ -2168,7 +2171,7 @@ namespace EVDMS.DAL.Migrations
 
                     b.HasIndex("VehicleModelId");
 
-                    b.ToTable("TestDrives", (string)null);
+                    b.ToTable("TestDrives");
 
                     b.HasData(
                         new
@@ -2271,7 +2274,7 @@ namespace EVDMS.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("VehicleConfigs", (string)null);
+                    b.ToTable("VehicleConfigs");
 
                     b.HasData(
                         new
@@ -2641,7 +2644,7 @@ namespace EVDMS.DAL.Migrations
                     b.HasIndex("VehicleConfigId")
                         .IsUnique();
 
-                    b.ToTable("VehicleModels", (string)null);
+                    b.ToTable("VehicleModels");
 
                     b.HasData(
                         new
@@ -3000,7 +3003,7 @@ namespace EVDMS.DAL.Migrations
 
                     b.HasIndex("VehicleModelsId");
 
-                    b.ToTable("VehicleModelFeature", (string)null);
+                    b.ToTable("VehicleModelFeature");
                 });
 
             modelBuilder.Entity("EVDMS.Core.Entities.Account", b =>

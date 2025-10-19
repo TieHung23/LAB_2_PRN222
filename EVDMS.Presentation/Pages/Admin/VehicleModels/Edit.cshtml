@@ -1,0 +1,103 @@
+﻿@page "{id:guid?}"
+@model EVDMS.Presentation.Pages.Admin.VehicleModels.EditModel
+@{
+    ViewData["Title"] = "Chỉnh sửa Mẫu xe";
+    Layout = "/Pages/Shared/_AdminLayout.cshtml"; // Sử dụng layout Admin
+}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">@ViewData["Title"]: @Model.Input.ModelName (@Model.Input.VersionName)</h6>
+    </div>
+    <div class="card-body">
+        <form method="post">
+            <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+            <input type="hidden" asp-for="Input.Id" />
+            <input type="hidden" asp-for="Input.VehicleConfigId" />
+
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Thông tin Mẫu xe (VehicleModel)</h5>
+                    <hr />
+                    <div class="mb-3">
+                        <label asp-for="Input.ModelName" class="form-label"></label>
+                        <input asp-for="Input.ModelName" class="form-control" />
+                        <span asp-validation-for="Input.ModelName" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Input.Brand" class="form-label"></label>
+                        <input asp-for="Input.Brand" class="form-control" />
+                        <span asp-validation-for="Input.Brand" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Input.VehicleType" class="form-label"></label>
+                        <input asp-for="Input.VehicleType" class="form-control" />
+                        <span asp-validation-for="Input.VehicleType" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Input.ReleaseYear" class="form-label"></label>
+                        <input asp-for="Input.ReleaseYear" type="number" class="form-control" />
+                        <span asp-validation-for="Input.ReleaseYear" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Input.ImgUrl" class="form-label"></label>
+                        <input asp-for="Input.ImgUrl" class="form-control" />
+                        <span asp-validation-for="Input.ImgUrl" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Input.Description" class="form-label"></label>
+                        <textarea asp-for="Input.Description" class="form-control" rows="3"></textarea>
+                        <span asp-validation-for="Input.Description" class="text-danger"></span>
+                    </div>
+                    <div class="form-check mb-3">
+                        <input asp-for="Input.IsActive" type="checkbox" class="form-check-input" />
+                        <label asp-for="Input.IsActive" class="form-check-label"></label>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <h5>Thông tin Cấu hình (VehicleConfig)</h5>
+                    <hr />
+                    <div class="mb-3">
+                        <label asp-for="Input.VersionName" class="form-label"></label>
+                        <input asp-for="Input.VersionName" class="form-control" />
+                        <span asp-validation-for="Input.VersionName" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Input.Color" class="form-label"></label>
+                        <input asp-for="Input.Color" class="form-control" />
+                        <span asp-validation-for="Input.Color" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Input.InteriorType" class="form-label"></label>
+                        <input asp-for="Input.InteriorType" class="form-control" />
+                        <span asp-validation-for="Input.InteriorType" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Input.BasePrice" class="form-label"></label>
+                        <input asp-for="Input.BasePrice" type="number" step="1000" class="form-control" />
+                        <span asp-validation-for="Input.BasePrice" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Input.WarrantyPeriod" class="form-label"></label>
+                        <input asp-for="Input.WarrantyPeriod" type="number" class="form-control" />
+                        <span asp-validation-for="Input.WarrantyPeriod" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <hr />
+            <div class="d-flex justify-content-end">
+                <a asp-page="../VehicleModels" class="btn btn-secondary me-2">Hủy</a>
+                <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
