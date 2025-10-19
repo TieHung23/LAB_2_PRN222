@@ -243,6 +243,16 @@
                                     </a>
                                 </li>
                             }
+                            @if (User.IsInRole("Dealer Staff") || User.IsInRole("Dealer Manager"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-success fw-bold" asp-page="/Dealer/Index">
+                                        Bảng điều khiển Đại lý
+                                    </a>
+                                </li>
+
+                            @* Bạn có thể thêm link cho EVM Staff ở đây nếu cần *@
+                        }
                         }
                     </ul>
 

@@ -16,7 +16,7 @@ namespace EVDMS.Presentation.Pages.Admin.Dealers
         }
 
         [BindProperty]
-        public Dealer Dealer { get; set; } = new();
+        public EVDMS.Core.Entities.Dealer Dealer { get; set; } = new();
 
         // Hàm OnGet để tải dữ liệu dealer cần sửa
         public async Task<IActionResult> OnGetAsync(Guid? id)

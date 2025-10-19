@@ -7,12 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <_ContentIncludedByDefault Remove="wwwroot\assets\favicon.ico"/>
-        <_ContentIncludedByDefault Remove="wwwroot\assets\img\bg-masthead.jpg"/>
-        <_ContentIncludedByDefault Remove="wwwroot\assets\img\bg-signup.jpg"/>
-        <_ContentIncludedByDefault Remove="wwwroot\assets\img\demo-image-01.jpg"/>
-        <_ContentIncludedByDefault Remove="wwwroot\assets\img\demo-image-02.jpg"/>
-        <_ContentIncludedByDefault Remove="wwwroot\assets\img\ipad.png"/>
+        <_ContentIncludedByDefault Remove="wwwroot\assets\favicon.ico" />
+        <_ContentIncludedByDefault Remove="wwwroot\assets\img\bg-masthead.jpg" />
+        <_ContentIncludedByDefault Remove="wwwroot\assets\img\bg-signup.jpg" />
+        <_ContentIncludedByDefault Remove="wwwroot\assets\img\demo-image-01.jpg" />
+        <_ContentIncludedByDefault Remove="wwwroot\assets\img\demo-image-02.jpg" />
+        <_ContentIncludedByDefault Remove="wwwroot\assets\img\ipad.png" />
     </ItemGroup>
 
     <ItemGroup>
@@ -23,7 +23,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\EVDMS.BLL\EVDMS.BLL.csproj"/>
+        <ProjectReference Include="..\EVDMS.BLL\EVDMS.BLL.csproj" />
     </ItemGroup>
 
 </Project>
