@@ -1,18 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="../EVDMS.Core/EVDMS.Core.csproj" />
-    <ProjectReference Include="../EVDMS.DAL/EVDMS.DAL.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="../EVDMS.Core/EVDMS.Core.csproj"/>
+        <ProjectReference Include="../EVDMS.DAL/EVDMS.DAL.csproj"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="BCrypt.Net-Next" Version="4.0.3"/>
+        <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.2.0"/>
+    </ItemGroup>
 
 </Project>
