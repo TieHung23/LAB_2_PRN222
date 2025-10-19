@@ -41,7 +41,21 @@ namespace EVDMS.DAL.Repositories.Implementations
                                  .Include(td => td.VehicleModel)
                                  .FirstOrDefaultAsync(td => td.Id == id);
         }
+        public async Task<IEnumerable<TestDrive>> GetByDealerAsync(Guid dealerId)
+        {
+            var vehicleModelIdsAtDealer = await _context.Inventories
+                .Where(i => i.DealerId == dealerId)
+                .Select(i => i.VehicleModelId)
+                .Distinct()
+                .ToListAsync();
 
+            return await _context.TestDrives
+                .Where(td => vehicleModelIdsAtDealer.Contains(td.VehicleModelId))
+                .Include(td => td.Customer)
+                .Include(td => td.VehicleModel)
+                .OrderByDescending(td => td.ScheduledDateTime)
+                .ToListAsync();
+        }
         public async Task UpdateAsync(TestDrive testDrive)
         {
             _context.TestDrives.Update(testDrive);

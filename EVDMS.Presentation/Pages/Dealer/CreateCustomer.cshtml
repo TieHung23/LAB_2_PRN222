@@ -1,0 +1,59 @@
+﻿@page
+@model EVDMS.Presentation.Pages.Dealer.CreateCustomerModel
+@{
+    ViewData["Title"] = "Tạo Khách hàng mới";
+    Layout = "_DealerLayout";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h4 class="mb-0">Thông tin Khách hàng mới</h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="Input.FullName" class="form-label"></label>
+                        <input asp-for="Input.FullName" class="form-control" />
+                        <span asp-validation-for="Input.FullName" class="text-danger"></span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Input.PhoneNumber" class="form-label"></label>
+                            <input asp-for="Input.PhoneNumber" class="form-control" />
+                            <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Input.Email" class="form-label"></label>
+                            <input asp-for="Input.Email" class="form-control" />
+                            <span asp-validation-for="Input.Email" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Input.Address" class="form-label"></label>
+                        <input asp-for="Input.Address" class="form-control" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Input.IdCardNumber" class="form-label"></label>
+                        <input asp-for="Input.IdCardNumber" class="form-control" />
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <a asp-page="/Dealer/Customers" class="btn btn-secondary">Hủy bỏ</a>
+                        <button type-="submit" class="btn btn-primary">Lưu Khách hàng</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

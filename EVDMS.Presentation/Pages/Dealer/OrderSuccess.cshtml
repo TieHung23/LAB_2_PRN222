@@ -1,0 +1,27 @@
+﻿@page
+@model EVDMS.Presentation.Pages.Dealer.OrderSuccessModel
+@{
+    ViewData["Title"] = "Order Created Successfully";
+    Layout = "_DealerLayout";
+}
+
+<div class="text-center">
+    <h1 class="display-4 text-success">Order Created!</h1>
+    <p class="lead">Order <strong>@Model.Order.Id.ToString().Substring(0, 8)...</strong> for customer <strong>@Model.Order.Customer.FullName</strong> has been created.</p>
+
+    <hr class="my-4">
+
+    <h3>Payment QR Code</h3>
+    <p>Please ask the customer to scan the QR code below for payment.</p>
+
+    <div class="my-3">
+        <img src="data:image/png;base64,@Model.QrCodeAsBase64" alt="Payment QR Code" />
+    </div>
+
+    <h4>Total Amount: @Model.Order.Payment.FinalPrice.ToString("C")</h4>
+
+    <div classs="mt-5">
+        <a asp-page="/Dealer/Index" class="btn btn-secondary">Back to Dashboard</a>
+        <a asp-page="/Dealer/Vehicles" class="btn btn-primary">Create Another Order</a>
+    </div>
+</div>

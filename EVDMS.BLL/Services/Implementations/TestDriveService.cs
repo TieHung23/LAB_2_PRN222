@@ -40,5 +40,15 @@ namespace EVDMS.BLL.Services.Implementations
                 await _testDriveRepository.UpdateAsync(testDrive);
             }
         }
+
+        public async Task<IEnumerable<TestDrive>> GetByDealerAsync(Guid dealerId)
+        {
+            return await _testDriveRepository.GetByDealerAsync(dealerId);
+        }
+
+        public async Task<TestDrive> CreateAsync(TestDrive testDrive)
+        {
+            return await _testDriveRepository.AddAsync(testDrive);
+        }
     }
 }

@@ -11,5 +11,7 @@ namespace EVDMS.DAL.Repositories.Abstractions
     {
         Task<IEnumerable<Promotion>> GetActivePromotionsAsync();
         Task<Promotion> GetByIdAsync(Guid id);
+
+        Task<IEnumerable<Promotion>> GetAllAsync();
     }
 }

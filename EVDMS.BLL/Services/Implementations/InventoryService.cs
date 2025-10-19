@@ -21,5 +21,15 @@ namespace EVDMS.BLL.Services.Implementations
         {
             return await _inventoryRepository.GetAvailableStockAsync(dealerId);
         }
+
+        public async Task<IEnumerable<Inventory>> GetByDealerIdAsync(Guid dealerId)
+        {
+            return await _inventoryRepository.GetByDealerIdAsync(dealerId);
+        }
+
+        public async Task<Inventory> GetByIdAsync(Guid id)
+        {
+            return await _inventoryRepository.GetByIdAsync(id);
+        }
     }
 }
