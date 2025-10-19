@@ -16,14 +16,15 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.9">
-        <PrivateAssets>all</PrivateAssets>
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      </PackageReference>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.9">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="QRCoder" Version="1.7.0" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\EVDMS.BLL\EVDMS.BLL.csproj" />
+        <ProjectReference Include="..\EVDMS.BLL\EVDMS.BLL.csproj" />
     </ItemGroup>
 
 </Project>

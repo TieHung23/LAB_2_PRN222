@@ -16,7 +16,17 @@ namespace EVDMS.DAL.Repositories.Implementations
             _context = context;
         }
 
-  
+        public async Task<IEnumerable<Inventory>> GetByDealerIdAsync(Guid dealerId)
+        {
+            return await _context.Inventories
+                .Where(i => i.DealerId == dealerId && i.IsSale == true)
+                .Include(i => i.VehicleModel)
+                .ThenInclude(vm => vm.VehicleConfig)
+                .OrderBy(i => i.VehicleModel.Brand)
+                .ThenBy(i => i.VehicleModel.ModelName)
+                .ToListAsync();
+        }
+
         public async Task<IEnumerable<Inventory>> GetAvailableStockAsync(Guid dealerId)
         {
             return await _context.Inventories

@@ -1,0 +1,52 @@
+﻿@page
+@model EVDMS.Presentation.Pages.Dealer.CreateTestDriveModel
+@{
+    ViewData["Title"] = "Đặt Lịch Lái thử";
+    Layout = "_DealerLayout";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h4 class="mb-0">Thông tin Lịch Lái thử mới</h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Khách hàng</label>
+                        <select asp-for="Input.SelectedCustomerId" asp-items="Model.CustomerOptions" class="form-control">
+                            <option value="">-- Chọn khách hàng --</option>
+                        </select>
+                        <span asp-validation-for="Input.SelectedCustomerId" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Mẫu xe</label>
+                        <select asp-for="Input.SelectedVehicleModelId" asp-items="Model.VehicleModelOptions" class="form-control">
+                            <option value="">-- Chọn mẫu xe --</option>
+                        </select>
+                        <span asp-validation-for="Input.SelectedVehicleModelId" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Input.ScheduledDateTime" class="form-label"></label>
+                        <input asp-for="Input.ScheduledDateTime" type="datetime-local" class="form-control" />
+                        <span asp-validation-for="Input.ScheduledDateTime" class="text-danger"></span>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <a asp-page="/Dealer/TestDrives" class="btn btn-secondary">Hủy bỏ</a>
+                        <button type="submit" class="btn btn-primary">Đặt lịch</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

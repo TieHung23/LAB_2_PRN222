@@ -1,41 +1,31 @@
-﻿using EVDMS.Core.Entities; // Đảm bảo bạn đã tham chiếu (using) Entities
+﻿using EVDMS.BLL.Services.Abstractions;
+using EVDMS.Core.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace EVDMS.Presentation.Pages.Admin
 {
+    [Authorize(Roles = "Admin")]
     public class VehicleConfigsModel : PageModel
     {
-        // Danh sách để hiển thị lên giao diện
-        public IEnumerable<VehicleConfig> Configs { get; set; }
+        private readonly IVehicleConfigService _vehicleConfigService;
 
-        // Bạn có thể inject service của mình ở đây khi sẵn sàng
-        // private readonly IVehicleConfigService _configService;
-        // public VehicleConfigsModel(IVehicleConfigService configService)
-        // {
-        //     _configService = configService;
-        // }
-
-        public VehicleConfigsModel()
+        public VehicleConfigsModel(IVehicleConfigService vehicleConfigService)
         {
-            // Khởi tạo danh sách trống
-            Configs = new List<VehicleConfig>();
+            _vehicleConfigService = vehicleConfigService;
         }
 
-        public void OnGet()
-        {
-            // Khi bạn có service, bạn sẽ gọi:
-            // Configs = _configService.GetAll();
+        public IEnumerable<VehicleConfig> VehicleConfigs { get; set; } = new List<VehicleConfig>();
 
-            // Bây giờ, chúng ta sẽ dùng dữ liệu giả để giao diện hiển thị
-            // (Dữ liệu này sẽ KHÔNG được hiển thị vì giao diện đang hard-code,
-            // nhưng đây là cách làm đúng)
-            Configs = new List<VehicleConfig>
-            {
-                new VehicleConfig { Id = Guid.NewGuid(), VersionName = "VF8 Eco", Color = "Deep Blue", InteriorType = "Beige Vegan Leather", BasePrice = 45000, WarrantyPeriod = 120 },
-                new VehicleConfig { Id = Guid.NewGuid(), VersionName = "VF9 Plus", Color = "Crimson Red", InteriorType = "Black Vegan Leather", BasePrice = 62000, WarrantyPeriod = 120 },
-                new VehicleConfig { Id = Guid.NewGuid(), VersionName = "VFe34", Color = "White", InteriorType = "Black Fabric", BasePrice = 30000, WarrantyPeriod = 84 }
-            };
+        [TempData]
+        public string SuccessMessage { get; set; }
+        [TempData]
+        public string ErrorMessage { get; set; }
+
+        public async Task OnGetAsync()
+        {
+            VehicleConfigs = await _vehicleConfigService.GetAllAsync();
         }
     }
 }

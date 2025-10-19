@@ -1,0 +1,34 @@
+﻿@page
+@model EVDMS.Presentation.Pages.Dealer.VehiclesModel
+@{
+    ViewData["Title"] = "Vehicle Inventory";
+    Layout = "_DealerLayout";
+}
+
+<h1 class="mb-4">Vehicle Inventory</h1>
+
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    @foreach (var item in Model.Vehicles)
+    {
+        <div class="col">
+            <div class="card h-100">
+                <img src="@item.VehicleModel.ImgUrl" class="card-img-top" alt="@item.VehicleModel.ModelName" style="height: 200px; object-fit: cover;">
+                <div class="card-body">
+                    <h5 class="card-title">@item.VehicleModel.Brand @item.VehicleModel.ModelName</h5>
+                    <p class="card-text">@item.VehicleModel.Description</p>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><strong>Price:</strong> @item.VehicleModel.VehicleConfig.BasePrice.ToString("C")</li>
+                        <li class="list-group-item"><strong>Color:</strong> @item.VehicleModel.VehicleConfig.Color</li>
+                        <li class="list-group-item"><strong>Interior:</strong> @item.VehicleModel.VehicleConfig.InteriorType</li>
+                        <li class="list-group-item"><strong>Warranty:</strong> @item.VehicleModel.VehicleConfig.WarrantyPeriod months</li>
+                    </ul>
+                </div>
+                <div class="card-footer text-center">
+                    <a asp-page="/Dealer/CreateOrder" asp-route-inventoryId="@item.Id" class="btn btn-primary">
+                        Create Order
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

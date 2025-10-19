@@ -21,5 +21,11 @@ namespace EVDMS.BLL.Services.Implementations
         {
             return await _promotionRepository.GetActivePromotionsAsync();
         }
+
+        public async Task<IEnumerable<Promotion>> GetAllAsync()
+        {
+        
+            return await _promotionRepository.GetAllAsync();
+        }
     }
 }
