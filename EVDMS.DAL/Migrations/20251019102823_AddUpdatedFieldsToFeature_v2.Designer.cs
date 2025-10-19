@@ -4,6 +4,7 @@ using EVDMS.DAL.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EVDMS.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251019102823_AddUpdatedFieldsToFeature_v2")]
+    partial class AddUpdatedFieldsToFeature_v2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -76,7 +79,7 @@ namespace EVDMS.DAL.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("Accounts", (string)null);
+                    b.ToTable("Accounts");
 
                     b.HasData(
                         new
@@ -320,7 +323,7 @@ namespace EVDMS.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Customers", (string)null);
+                    b.ToTable("Customers");
 
                     b.HasData(
                         new
@@ -441,7 +444,7 @@ namespace EVDMS.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Dealers", (string)null);
+                    b.ToTable("Dealers");
 
                     b.HasData(
                         new
@@ -572,7 +575,7 @@ namespace EVDMS.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Features", (string)null);
+                    b.ToTable("Features");
                 });
 
             modelBuilder.Entity("EVDMS.Core.Entities.Feedback", b =>
@@ -592,7 +595,7 @@ namespace EVDMS.DAL.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.ToTable("Feedbacks", (string)null);
+                    b.ToTable("Feedbacks");
                 });
 
             modelBuilder.Entity("EVDMS.Core.Entities.Inventory", b =>
@@ -639,7 +642,7 @@ namespace EVDMS.DAL.Migrations
 
                     b.HasIndex("VehicleModelId");
 
-                    b.ToTable("Inventories", (string)null);
+                    b.ToTable("Inventories");
 
                     b.HasData(
                         new
@@ -1731,7 +1734,7 @@ namespace EVDMS.DAL.Migrations
 
                     b.HasIndex("PromotionId");
 
-                    b.ToTable("Orders", (string)null);
+                    b.ToTable("Orders");
 
                     b.HasData(
                         new
@@ -1852,7 +1855,7 @@ namespace EVDMS.DAL.Migrations
                     b.HasIndex("OrderId")
                         .IsUnique();
 
-                    b.ToTable("Payments", (string)null);
+                    b.ToTable("Payments");
 
                     b.HasData(
                         new
@@ -1986,7 +1989,7 @@ namespace EVDMS.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Promotions", (string)null);
+                    b.ToTable("Promotions");
 
                     b.HasData(
                         new
@@ -2085,7 +2088,7 @@ namespace EVDMS.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles", (string)null);
+                    b.ToTable("Roles");
 
                     b.HasData(
                         new
@@ -2168,7 +2171,7 @@ namespace EVDMS.DAL.Migrations
 
                     b.HasIndex("VehicleModelId");
 
-                    b.ToTable("TestDrives", (string)null);
+                    b.ToTable("TestDrives");
 
                     b.HasData(
                         new
@@ -2271,7 +2274,7 @@ namespace EVDMS.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("VehicleConfigs", (string)null);
+                    b.ToTable("VehicleConfigs");
 
                     b.HasData(
                         new
@@ -2603,6 +2606,9 @@ namespace EVDMS.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.PrimitiveCollection<string>("FeatureIds")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ImgUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -2620,15 +2626,6 @@ namespace EVDMS.DAL.Migrations
                     b.Property<int>("ReleaseYear")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long>("UpdatedAtTick")
-                        .HasColumnType("bigint");
-
-                    b.Property<Guid?>("UpdatedById")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid>("VehicleConfigId")
                         .HasColumnType("uniqueidentifier");
 
@@ -2641,7 +2638,7 @@ namespace EVDMS.DAL.Migrations
                     b.HasIndex("VehicleConfigId")
                         .IsUnique();
 
-                    b.ToTable("VehicleModels", (string)null);
+                    b.ToTable("VehicleModels");
 
                     b.HasData(
                         new
@@ -2657,8 +2654,6 @@ namespace EVDMS.DAL.Migrations
                             IsDeleted = false,
                             ModelName = "Model 1",
                             ReleaseYear = 2022,
-                            UpdatedAt = new DateTime(2025, 10, 19, 18, 0, 4, 736, DateTimeKind.Local).AddTicks(6347),
-                            UpdatedAtTick = 638964936047366346L,
                             VehicleConfigId = new Guid("00000004-0001-0000-0000-000000000000"),
                             VehicleType = "Sedan"
                         },
@@ -2675,8 +2670,6 @@ namespace EVDMS.DAL.Migrations
                             IsDeleted = false,
                             ModelName = "Model 2",
                             ReleaseYear = 2022,
-                            UpdatedAt = new DateTime(2025, 10, 19, 18, 0, 4, 736, DateTimeKind.Local).AddTicks(9047),
-                            UpdatedAtTick = 638964936047369047L,
                             VehicleConfigId = new Guid("00000004-0002-0000-0000-000000000000"),
                             VehicleType = "Sedan"
                         },
@@ -2693,8 +2686,6 @@ namespace EVDMS.DAL.Migrations
                             IsDeleted = false,
                             ModelName = "Model 3",
                             ReleaseYear = 2022,
-                            UpdatedAt = new DateTime(2025, 10, 19, 18, 0, 4, 736, DateTimeKind.Local).AddTicks(9074),
-                            UpdatedAtTick = 638964936047369073L,
                             VehicleConfigId = new Guid("00000004-0003-0000-0000-000000000000"),
                             VehicleType = "Sedan"
                         },
@@ -2711,8 +2702,6 @@ namespace EVDMS.DAL.Migrations
                             IsDeleted = false,
                             ModelName = "Model 4",
                             ReleaseYear = 2022,
-                            UpdatedAt = new DateTime(2025, 10, 19, 18, 0, 4, 736, DateTimeKind.Local).AddTicks(9086),
-                            UpdatedAtTick = 638964936047369086L,
                             VehicleConfigId = new Guid("00000004-0004-0000-0000-000000000000"),
                             VehicleType = "Sedan"
                         },
@@ -2729,8 +2718,6 @@ namespace EVDMS.DAL.Migrations
                             IsDeleted = false,
                             ModelName = "Model 5",
                             ReleaseYear = 2022,
-                            UpdatedAt = new DateTime(2025, 10, 19, 18, 0, 4, 736, DateTimeKind.Local).AddTicks(9098),
-                            UpdatedAtTick = 638964936047369097L,
                             VehicleConfigId = new Guid("00000004-0005-0000-0000-000000000000"),
                             VehicleType = "Sedan"
                         },
@@ -2747,8 +2734,6 @@ namespace EVDMS.DAL.Migrations
                             IsDeleted = false,
                             ModelName = "VF 8",
                             ReleaseYear = 2023,
-                            UpdatedAt = new DateTime(2025, 10, 19, 18, 0, 4, 736, DateTimeKind.Local).AddTicks(9409),
-                            UpdatedAtTick = 638964936047369408L,
                             VehicleConfigId = new Guid("00000004-0006-0000-0000-000000000000"),
                             VehicleType = "Hatchback"
                         },
@@ -2765,8 +2750,6 @@ namespace EVDMS.DAL.Migrations
                             IsDeleted = false,
                             ModelName = "VF 9",
                             ReleaseYear = 2023,
-                            UpdatedAt = new DateTime(2025, 10, 19, 18, 0, 4, 736, DateTimeKind.Local).AddTicks(9474),
-                            UpdatedAtTick = 638964936047369473L,
                             VehicleConfigId = new Guid("00000004-0007-0000-0000-000000000000"),
                             VehicleType = "Crossover"
                         },
@@ -2783,8 +2766,6 @@ namespace EVDMS.DAL.Migrations
                             IsDeleted = false,
                             ModelName = "VF e34",
                             ReleaseYear = 2023,
-                            UpdatedAt = new DateTime(2025, 10, 19, 18, 0, 4, 736, DateTimeKind.Local).AddTicks(9496),
-                            UpdatedAtTick = 638964936047369495L,
                             VehicleConfigId = new Guid("00000004-0008-0000-0000-000000000000"),
                             VehicleType = "SUV"
                         },
@@ -2801,8 +2782,6 @@ namespace EVDMS.DAL.Migrations
                             IsDeleted = false,
                             ModelName = "VF 5",
                             ReleaseYear = 2023,
-                            UpdatedAt = new DateTime(2025, 10, 19, 18, 0, 4, 736, DateTimeKind.Local).AddTicks(9536),
-                            UpdatedAtTick = 638964936047369535L,
                             VehicleConfigId = new Guid("00000004-0009-0000-0000-000000000000"),
                             VehicleType = "Sedan"
                         },
@@ -2819,8 +2798,6 @@ namespace EVDMS.DAL.Migrations
                             IsDeleted = false,
                             ModelName = "VF 6",
                             ReleaseYear = 2023,
-                            UpdatedAt = new DateTime(2025, 10, 19, 18, 0, 4, 736, DateTimeKind.Local).AddTicks(9557),
-                            UpdatedAtTick = 638964936047369557L,
                             VehicleConfigId = new Guid("00000004-000a-0000-0000-000000000000"),
                             VehicleType = "Hatchback"
                         },
@@ -2837,8 +2814,6 @@ namespace EVDMS.DAL.Migrations
                             IsDeleted = false,
                             ModelName = "VF 7",
                             ReleaseYear = 2023,
-                            UpdatedAt = new DateTime(2025, 10, 19, 18, 0, 4, 736, DateTimeKind.Local).AddTicks(9577),
-                            UpdatedAtTick = 638964936047369577L,
                             VehicleConfigId = new Guid("00000004-000b-0000-0000-000000000000"),
                             VehicleType = "Crossover"
                         },
@@ -2855,8 +2830,6 @@ namespace EVDMS.DAL.Migrations
                             IsDeleted = false,
                             ModelName = "iX",
                             ReleaseYear = 2023,
-                            UpdatedAt = new DateTime(2025, 10, 19, 18, 0, 4, 736, DateTimeKind.Local).AddTicks(9648),
-                            UpdatedAtTick = 638964936047369647L,
                             VehicleConfigId = new Guid("00000004-000c-0000-0000-000000000000"),
                             VehicleType = "SUV"
                         },
@@ -2873,8 +2846,6 @@ namespace EVDMS.DAL.Migrations
                             IsDeleted = false,
                             ModelName = "i4",
                             ReleaseYear = 2023,
-                            UpdatedAt = new DateTime(2025, 10, 19, 18, 0, 4, 736, DateTimeKind.Local).AddTicks(9672),
-                            UpdatedAtTick = 638964936047369671L,
                             VehicleConfigId = new Guid("00000004-000d-0000-0000-000000000000"),
                             VehicleType = "Sedan"
                         },
@@ -2891,8 +2862,6 @@ namespace EVDMS.DAL.Migrations
                             IsDeleted = false,
                             ModelName = "i7",
                             ReleaseYear = 2023,
-                            UpdatedAt = new DateTime(2025, 10, 19, 18, 0, 4, 736, DateTimeKind.Local).AddTicks(9693),
-                            UpdatedAtTick = 638964936047369692L,
                             VehicleConfigId = new Guid("00000004-000e-0000-0000-000000000000"),
                             VehicleType = "Hatchback"
                         },
@@ -2909,8 +2878,6 @@ namespace EVDMS.DAL.Migrations
                             IsDeleted = false,
                             ModelName = "iX3",
                             ReleaseYear = 2023,
-                            UpdatedAt = new DateTime(2025, 10, 19, 18, 0, 4, 736, DateTimeKind.Local).AddTicks(9712),
-                            UpdatedAtTick = 638964936047369712L,
                             VehicleConfigId = new Guid("00000004-000f-0000-0000-000000000000"),
                             VehicleType = "Crossover"
                         },
@@ -2927,8 +2894,6 @@ namespace EVDMS.DAL.Migrations
                             IsDeleted = false,
                             ModelName = "iX1",
                             ReleaseYear = 2023,
-                            UpdatedAt = new DateTime(2025, 10, 19, 18, 0, 4, 736, DateTimeKind.Local).AddTicks(9798),
-                            UpdatedAtTick = 638964936047369798L,
                             VehicleConfigId = new Guid("00000004-0010-0000-0000-000000000000"),
                             VehicleType = "SUV"
                         },
@@ -2945,8 +2910,6 @@ namespace EVDMS.DAL.Migrations
                             IsDeleted = false,
                             ModelName = "Ioniq 5",
                             ReleaseYear = 2023,
-                            UpdatedAt = new DateTime(2025, 10, 19, 18, 0, 4, 736, DateTimeKind.Local).AddTicks(9822),
-                            UpdatedAtTick = 638964936047369821L,
                             VehicleConfigId = new Guid("00000004-0011-0000-0000-000000000000"),
                             VehicleType = "Sedan"
                         },
@@ -2963,8 +2926,6 @@ namespace EVDMS.DAL.Migrations
                             IsDeleted = false,
                             ModelName = "Ioniq 6",
                             ReleaseYear = 2023,
-                            UpdatedAt = new DateTime(2025, 10, 19, 18, 0, 4, 736, DateTimeKind.Local).AddTicks(9846),
-                            UpdatedAtTick = 638964936047369846L,
                             VehicleConfigId = new Guid("00000004-0012-0000-0000-000000000000"),
                             VehicleType = "Hatchback"
                         },
@@ -2981,14 +2942,12 @@ namespace EVDMS.DAL.Migrations
                             IsDeleted = false,
                             ModelName = "Kona Electric",
                             ReleaseYear = 2023,
-                            UpdatedAt = new DateTime(2025, 10, 19, 18, 0, 4, 736, DateTimeKind.Local).AddTicks(9914),
-                            UpdatedAtTick = 638964936047369914L,
                             VehicleConfigId = new Guid("00000004-0013-0000-0000-000000000000"),
                             VehicleType = "Crossover"
                         });
                 });
 
-            modelBuilder.Entity("VehicleModelFeature", b =>
+            modelBuilder.Entity("FeatureVehicleModel", b =>
                 {
                     b.Property<Guid>("FeaturesId")
                         .HasColumnType("uniqueidentifier");
@@ -3000,7 +2959,7 @@ namespace EVDMS.DAL.Migrations
 
                     b.HasIndex("VehicleModelsId");
 
-                    b.ToTable("VehicleModelFeature", (string)null);
+                    b.ToTable("FeatureVehicleModel");
                 });
 
             modelBuilder.Entity("EVDMS.Core.Entities.Account", b =>
@@ -3126,7 +3085,7 @@ namespace EVDMS.DAL.Migrations
                     b.Navigation("VehicleConfig");
                 });
 
-            modelBuilder.Entity("VehicleModelFeature", b =>
+            modelBuilder.Entity("FeatureVehicleModel", b =>
                 {
                     b.HasOne("EVDMS.Core.Entities.Feature", null)
                         .WithMany()

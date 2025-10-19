@@ -2,7 +2,22 @@
 @model EVDMS.Presentation.Pages.Admin.VehicleModelsModel
 @{
     ViewData["Title"] = "Quản lý Mẫu xe";
-    Layout = "_AdminLayout";
+    Layout = "_AdminLayout"; // Đảm bảo dùng đúng Layout Admin
+}
+
+@if (!string.IsNullOrEmpty(Model.SuccessMessage))
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @Model.SuccessMessage
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @Model.ErrorMessage
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
 }
 
 <div class="container-fluid pt-4 px-4">
@@ -12,79 +27,79 @@
                 <h4 class="mb-4">@ViewData["Title"]</h4>
 
                 <div class="d-flex align-items-center justify-content-between mb-4">
-                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modelModal" id="add-new-model-btn">
+                    <a asp-page="./VehicleModels/Create" class="btn btn-success">
                         <i class="fa fa-plus me-2"></i>Thêm Mẫu xe
-                    </button>
+                    </a>
                     <form method="get" class="d-flex ms-auto">
                         <input class="form-control bg-dark border-0 me-2" type="search" placeholder="Tìm kiếm..." asp-for="SearchTerm">
                         <button class="btn btn-primary" type="submit">Tìm</button>
                     </form>
                 </div>
 
-                @if (!string.IsNullOrEmpty(Model.SuccessMessage))
-                {
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        <i class="fa fa-exclamation-circle me-2"></i>@Model.SuccessMessage
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                }
-                @if (!string.IsNullOrEmpty(Model.ErrorMessage))
-                {
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <i class="fa fa-exclamation-circle me-2"></i>@Model.ErrorMessage
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                }
-
                 <div class="table-responsive">
-                    <table class="table table-dark table-hover text-center">
+                    <table class="table table-hover">
                         <thead>
-                            <tr class="text-white">
-                                <th scope="col">#</th>
-                                <th scope="col">Hình ảnh</th>
+                            <tr>
+                                <th scope="col">Ảnh</th>
                                 <th scope="col">Tên Mẫu xe</th>
-                                <th scope="col">Thương hiệu</th>
+                                <th scope="col">Hãng</th>
                                 <th scope="col">Loại xe</th>
-                                <th scope="col">Năm ra mắt</th>
+                                <th scope="col">Năm SX</th>
+                                <th scope="col">Cấu hình</th>
+                                <th scope="col">Giá cơ bản</th>
                                 <th scope="col">Trạng thái</th>
                                 <th scope="col">Hành động</th>
                             </tr>
                         </thead>
-                        <tbody class="align-middle">
-                            @if (Model.VehicleModels.Any())
-                            {
-                                @foreach (var (model, index) in Model.VehicleModels.Select((value, i) => (value, i)))
-                                {
-                                    <tr>
-                                        <td>@(index + 1)</td>
-                                        <td><img class="rounded" src="@(string.IsNullOrEmpty(model.ImgUrl) ? "/assets/logo-vinfast-inkythuatso.png" : model.ImgUrl)" alt="" style="width: 120px; height: 67px; object-fit: cover;"></td>
-                                        <td>@(model.ModelName)</td>
-                                        <td>@(model.Brand)</td>
-                                        <td>@(model.VehicleType)</td>
-                                        <td>@(model.ReleaseYear)</td>
-                                        <td>
-                                            @if (model.IsActive)
-                                            {
-                                                <span class="badge bg-success">Hoạt động</span>
-                                            }
-                                            else
-                                            {
-                                                <span class="badge bg-danger">Ngưng</span>
-                                            }
-                                        </td>
-                                        <td>
-                                            <button type="button" class="btn btn-sm btn-warning edit-btn" data-id="@(model.Id)">Sửa</button>
-                                            <form method="post" asp-page-handler="Delete" asp-route-id="@(model.Id)" onsubmit="return confirm('Bạn có chắc chắn muốn xóa mẫu xe này?');" style="display:inline;">
-                                                <button type="submit" class="btn btn-sm btn-danger">Xóa</button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                }
-                            }
-                            else
+                        <tbody>
+                            @foreach (var item in Model.VehicleModels)
                             {
                                 <tr>
-                                    <td colspan="8" class="text-center py-4">Không có dữ liệu để hiển thị.</td>
+                                    <td>
+                                        <img src="@item.ImgUrl" alt="@item.ModelName" style="max-width: 80px; height: auto; border-radius: 4px;" />
+                                    </td>
+                                    <td>@Html.DisplayFor(modelItem => item.ModelName)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Brand)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.VehicleType)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.ReleaseYear)</td>
+                                    <td>
+                                        @if (item.VehicleConfig != null)
+                                        {
+                                            <small>
+                                                Phiên bản: @item.VehicleConfig.VersionName <br />
+                                                Màu: @item.VehicleConfig.Color <br />
+                                                Nội thất: @item.VehicleConfig.InteriorType
+                                            </small>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted small">Chưa có</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @(item.VehicleConfig?.BasePrice.ToString("C0") ?? "N/A")
+                                    </td>
+                                    <td>
+                                        @if (item.IsActive)
+                                        {
+                                            <span class="badge bg-success">Hoạt động</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger">Ngừng</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <a asp-page="./VehicleModels/Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning me-1" title="Sửa">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+
+                                        <form method="post" asp-page-handler="Delete" asp-route-id="@item.Id" onsubmit="return confirm('Bạn có chắc chắn muốn xóa mẫu xe này?');" style="display:inline;">
+                                            <button type="submit" class="btn btn-sm btn-danger" title="Xóa">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </form>
+                                    </td>
                                 </tr>
                             }
                         </tbody>
@@ -94,95 +109,3 @@
         </div>
     </div>
 </div>
-
-<div class="modal fade" id="modelModal" tabindex="-1" aria-labelledby="modelModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content bg-secondary">
-            <form id="modal-form" method="post">
-                <div class="modal-header border-bottom-0">
-                    <h5 class="modal-title" id="modelModalLabel">Thêm Mẫu xe mới</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <input type="hidden" asp-for="VmModel.Id" />
-                    <div class="form-floating mb-3">
-                        <input asp-for="VmModel.ModelName" class="form-control bg-dark border-0" placeholder=" " required>
-                        <label asp-for="VmModel.ModelName">Tên Mẫu xe</label>
-                    </div>
-                    <div class="form-floating mb-3">
-                        <input asp-for="VmModel.Brand" class="form-control bg-dark border-0" placeholder=" " required>
-                        <label asp-for="VmModel.Brand">Thương hiệu</label>
-                    </div>
-                    <div class="form-floating mb-3">
-                        <input asp-for="VmModel.VehicleType" class="form-control bg-dark border-0" placeholder=" " required>
-                        <label asp-for="VmModel.VehicleType">Loại xe</label>
-                    </div>
-                    <div class="form-floating mb-3">
-                        <input type="number" asp-for="VmModel.ReleaseYear" class="form-control bg-dark border-0" placeholder=" " required>
-                        <label asp-for="VmModel.ReleaseYear">Năm ra mắt</label>
-                    </div>
-                    <div class="form-floating mb-3">
-                        <input asp-for="VmModel.ImgUrl" class="form-control bg-dark border-0" placeholder=" ">
-                        <label asp-for="VmModel.ImgUrl">URL Hình ảnh</label>
-                    </div>
-                    <div class="form-floating mb-3">
-                        <textarea asp-for="VmModel.Description" class="form-control bg-dark border-0" placeholder=" " style="height: 100px"></textarea>
-                        <label asp-for="VmModel.Description">Mô tả</label>
-                    </div>
-                    <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" role="switch" asp-for="VmModel.IsActive">
-                        <label class="form-check-label" asp-for="VmModel.IsActive">Đang hoạt động</label>
-                    </div>
-                </div>
-                <div class="modal-footer border-top-0">
-                    <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Hủy</button>
-                    <button type="submit" class="btn btn-primary" id="modal-submit-btn">Lưu</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-    <script>
-        $(document).ready(function () {
-            const modelModal = new bootstrap.Modal(document.getElementById('modelModal'));
-            const modalForm = $('#modal-form');
-            const modalTitle = $('#modelModalLabel');
-            
-            function clearModal() {
-                modalForm.trigger('reset');
-                modalForm.find('input[type="hidden"]').val('');
-                $('#VmModel_IsActive').prop('checked', true); // Mặc định là active khi thêm mới
-            }
-
-            $('#add-new-model-btn').on('click', function () {
-                modalTitle.text('Thêm Mẫu xe mới');
-                modalForm.attr('action', '?handler=Create');
-                clearModal();
-            });
-
-            $('.edit-btn').on('click', function () {
-                const modelId = $(this).data('id');
-                modalTitle.text('Chỉnh sửa Mẫu xe');
-                modalForm.attr('action', '?handler=Edit');
-                clearModal();
-
-                $.get(`?handler=ModelJson&id=${modelId}`, function (data) {
-                    if(data) {
-                        $('#VmModel_Id').val(data.id);
-                        $('#VmModel_ModelName').val(data.modelName);
-                        $('#VmModel_Brand').val(data.brand);
-                        $('#VmModel_VehicleType').val(data.vehicleType);
-                        $('#VmModel_ReleaseYear').val(data.releaseYear);
-                        $('#VmModel_ImgUrl').val(data.imgUrl);
-                        $('#VmModel_Description').val(data.description);
-                        $('#VmModel_IsActive').prop('checked', data.isActive);
-                        modelModal.show();
-                    }
-                });
-            });
-        });
-    </script>
-}

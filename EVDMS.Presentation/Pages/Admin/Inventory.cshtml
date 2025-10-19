@@ -42,16 +42,7 @@
                         {
                             @foreach (var item in Model.Inventories)
                             {
-                                <tr>
-                                    <td class="fw-semibold">@(item.VehicleConfig?.VehicleModel.ModelName) - @(item.VehicleConfig?.VersionName) (@(item.VehicleConfig?.Color))</td>
-                                    <td>@(item.Dealer?.Name ?? "Central Warehouse")</td>
-                                    <td>@item.StockQuantity</td>
-                                    <td class="text-end">
-                                        <button class="btn btn-sm btn-outline-primary" title="Edit Stock">
-                                            <i class="fas fa-pencil-alt"></i>
-                                        </button>
-                                    </td>
-                                </tr>
+                               
                             }
                         }
                     </tbody>
@@ -71,22 +62,14 @@
                 </div>
                 <div class="modal-body">
                     <input type="hidden" asp-for="Inventory.Id" />
-                    <div class="mb-3">
-                        <label asp-for="Inventory.VehicleConfigId" class="form-label">Vehicle Configuration</label>
-                        <select asp-for="Inventory.VehicleConfigId" class="form-select">
-                            <option value="">-- Select Config --</option>
-                        </select>
-                    </div>
+                    
                     <div class="mb-3">
                         <label asp-for="Inventory.DealerId" class="form-label">Dealer</label>
                         <select asp-for="Inventory.DealerId" class="form-select">
                             <option value="">-- Central Warehouse (No Dealer) --</option>
                         </select>
                     </div>
-                    <div class="mb-3">
-                        <label asp-for="Inventory.StockQuantity" class="form-label">Stock Quantity</label>
-                        <input asp-for="Inventory.StockQuantity" type="number" class="form-control" />
-                    </div>
+                    
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

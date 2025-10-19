@@ -23,6 +23,8 @@ builder.Services.AddScoped<IVehicleModelService, VehicleModelService>();
 builder.Services.AddScoped<IVehicleConfigRepository, VehicleConfigRepository>();
 builder.Services.AddScoped<IVehicleConfigService, VehicleConfigService>();
 builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
+
+
 // Đăng ký các Service của BLL cho Presentation Layer
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<ICustomerService, CustomerService>();
@@ -34,6 +36,7 @@ builder.Services.AddScoped<IPromotionService, PromotionService>();
 builder.Services.AddScoped<ITestDriveService, TestDriveService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IAIService, AIService>();
+
 
 builder.Services.AddAuthentication("MyCookieAuth").AddCookie("MyCookieAuth", options =>
 {

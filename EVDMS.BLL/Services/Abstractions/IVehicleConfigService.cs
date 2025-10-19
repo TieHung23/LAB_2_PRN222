@@ -14,5 +14,7 @@ namespace EVDMS.BLL.Services.Abstractions
         Task<VehicleConfig> CreateAndAssignAsync(VehicleConfig vehicleConfig, Guid vehicleModelId);
         Task UpdateAsync(Guid id, VehicleConfig vehicleConfig);
         Task DeleteAsync(Guid id);
+        Task<VehicleConfig?> AddAndReturnAsync(VehicleConfig config);
+        Task UpdateVehicleConfigAsync(VehicleConfig config);
     }
 }
