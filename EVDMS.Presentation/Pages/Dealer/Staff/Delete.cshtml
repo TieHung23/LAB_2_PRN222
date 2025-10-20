@@ -1,0 +1,23 @@
+﻿@page "{id:guid}"
+@model EVDMS.Presentation.Pages.Dealer.Staff.DeleteModel
+@{
+    ViewData["Title"] = "Xóa nhân viên";
+    Layout = "~/Pages/Shared/_DealerLayout.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="card border-danger shadow-sm">
+        <div class="card-header bg-danger text-white">
+            <h4><i class="fas fa-user-times"></i> Xóa nhân viên</h4>
+        </div>
+        <div class="card-body">
+            <p>Bạn có chắc muốn xóa nhân viên <strong>@Model.Staff.FullName</strong> không?</p>
+
+            <form method="post">
+                <input type="hidden" asp-for="Staff.Id" />
+                <button type="submit" class="btn btn-danger">Xóa</button>
+                <a asp-page="/Dealer/Staff/Index" class="btn btn-secondary ms-2">Hủy</a>
+            </form>
+        </div>
+    </div>
+</div>
