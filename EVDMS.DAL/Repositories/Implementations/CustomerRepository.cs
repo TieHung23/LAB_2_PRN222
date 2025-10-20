@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions; // Thêm
-using System.Text;
-using System.Threading.Tasks;
-using EVDMS.Core.Entities;
+﻿using EVDMS.Core.Entities;
 using EVDMS.DAL.Database;
 using EVDMS.DAL.Repositories.Abstractions;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions; // Thêm
 
 namespace EVDMS.DAL.Repositories.Implementations
 {

@@ -1,9 +1,9 @@
 ﻿using EVDMS.BLL.Services.Abstractions;
 using EVDMS.BLL.Services.Implementations;
+using EVDMS.BLL.SignalR;
 using EVDMS.BLL.WrapConfiguration;
 using EVDMS.DAL.Repositories.Abstractions;
 using EVDMS.DAL.Repositories.Implementations;
-using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 var passwordToHash = "admin123";
@@ -36,6 +36,7 @@ builder.Services.AddScoped<IPromotionService, PromotionService>();
 builder.Services.AddScoped<ITestDriveService, TestDriveService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IAIService, AIService>();
+builder.Services.AddSignalR();
 
 
 builder.Services.AddAuthentication("MyCookieAuth").AddCookie("MyCookieAuth", options =>
@@ -57,14 +58,14 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-
+app.MapHub<NotificationHub>("/chatHub");
 app.UseHttpsRedirection();
 
 app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.UseStaticFiles();
 app.MapStaticAssets();
 app.MapRazorPages()
     .WithStaticAssets();

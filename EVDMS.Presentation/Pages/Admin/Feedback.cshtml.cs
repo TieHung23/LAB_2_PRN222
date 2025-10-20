@@ -1,5 +1,4 @@
-﻿using EVDMS.BLL.Services.Abstractions;
-using EVDMS.Core.Entities;
+﻿using EVDMS.Core.Entities;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace EVDMS.Presentation.Pages.Admin

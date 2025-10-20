@@ -1,11 +1,12 @@
 ﻿using EVDMS.BLL.Services.Abstractions;
+using EVDMS.BLL.SignalR;
 using EVDMS.Core.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.SignalR;
 using System.Security.Claims;
-using System.Linq;
 
 namespace EVDMS.Presentation.Pages.Dealer
 {
@@ -16,13 +17,14 @@ namespace EVDMS.Presentation.Pages.Dealer
         private readonly IInventoryService _inventoryService;
         private readonly ICustomerService _customerService;
         private readonly IPromotionService _promotionService;
-
-        public CreateOrderModel(IOrderService orderService, IInventoryService inventoryService, ICustomerService customerService, IPromotionService promotionService)
+        private readonly IHubContext<NotificationHub> _hub;
+        public CreateOrderModel(IOrderService orderService, IInventoryService inventoryService, ICustomerService customerService, IPromotionService promotionService, IHubContext<NotificationHub> hub)
         {
             _orderService = orderService;
             _inventoryService = inventoryService;
             _customerService = customerService;
             _promotionService = promotionService;
+            _hub = hub;
         }
 
         [BindProperty]
@@ -77,6 +79,8 @@ namespace EVDMS.Presentation.Pages.Dealer
             };
 
             var createdOrder = await _orderService.CreateOrderAsync(newOrder);
+
+            await _hub.Clients.All.SendAsync("SendMessage", $"{createdOrder.Account!.DealerId}", $"{createdOrder.CreatedAt}");
 
             return RedirectToPage("/Dealer/OrderSuccess", new { orderId = createdOrder.Id });
         }

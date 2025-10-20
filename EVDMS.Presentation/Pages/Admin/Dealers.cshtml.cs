@@ -1,5 +1,4 @@
 ﻿using EVDMS.BLL.Services.Abstractions;
-using EVDMS.Core.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -40,9 +39,9 @@ namespace EVDMS.Presentation.Pages.Admin
             // --- Bắt các lỗi khác ---
             catch (Exception ex)
             {
-               
+
                 TempData["ErrorMessage"] = "An unexpected error occurred while deleting the dealer. Check logs for details.";
-                
+
             }
             return RedirectToPage("./Dealers");
         }

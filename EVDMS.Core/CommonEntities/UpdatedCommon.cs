@@ -1,6 +1,5 @@
-using System;
-using System.ComponentModel.DataAnnotations.Schema;
 using EVDMS.Core.Entities;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EVDMS.Core.CommonEntities;
 

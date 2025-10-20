@@ -9,7 +9,7 @@ public class Inventory : UpdatedCommon
     public Guid Id { get; set; } = Guid.NewGuid();
 
     [Required]
-    public Guid VehicleModelId { get; set; } 
+    public Guid VehicleModelId { get; set; }
 
     [Required]
     public Guid DealerId { get; set; }

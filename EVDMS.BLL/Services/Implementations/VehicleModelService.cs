@@ -1,9 +1,6 @@
 ﻿using EVDMS.BLL.Services.Abstractions;
 using EVDMS.Core.Entities;
 using EVDMS.DAL.Repositories.Abstractions;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace EVDMS.BLL.Services.Implementations
 {
@@ -11,16 +8,16 @@ namespace EVDMS.BLL.Services.Implementations
     {
         private readonly IVehicleModelRepository _vehicleModelRepository;
         private readonly IInventoryRepository _inventoryRepository;
-        private readonly IVehicleConfigRepository _vehicleConfigRepository; 
+        private readonly IVehicleConfigRepository _vehicleConfigRepository;
 
         public VehicleModelService(
             IVehicleModelRepository vehicleModelRepository,
             IInventoryRepository inventoryRepository,
-            IVehicleConfigRepository vehicleConfigRepository) 
+            IVehicleConfigRepository vehicleConfigRepository)
         {
             _vehicleModelRepository = vehicleModelRepository;
             _inventoryRepository = inventoryRepository;
-            _vehicleConfigRepository = vehicleConfigRepository; 
+            _vehicleConfigRepository = vehicleConfigRepository;
         }
 
         public async Task<IEnumerable<VehicleModel>> GetAllAsync()
