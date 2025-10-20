@@ -1,0 +1,61 @@
+﻿@page
+@model EVDMS.Presentation.Pages.Dealer.Staff.IndexModel
+@{
+    ViewData["Title"] = "Staff Manament";
+    Layout = "~/Pages/Shared/_DealerLayout.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="card shadow-lg border-0">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h4 class="mb-0"><i class="fas fa-users"></i> Danh sách nhân viên đại lý</h4>
+            <a asp-page="Create" class="btn btn-light"><i class="fas fa-plus"></i> Thêm nhân viên</a>
+        </div>
+        <div class="card-body">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Full Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th class="text-center"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.StaffList != null && Model.StaffList.Any())
+                    {
+                        foreach (var staff in Model.StaffList)
+                        {
+                            <tr>
+                                <td>@staff.FullName</td>
+                                <td>@staff.Email</td>
+                                <td>@staff.Role?.Name</td>
+                                <td>
+                                    @if (staff.IsActive)
+                                    {
+                                        <span class="badge bg-success">Active</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">Stopped</span>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    <a asp-page="Edit" asp-route-id="@staff.Id" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a>
+                                    <a asp-page="Delete" asp-route-id="@staff.Id" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center text-muted">No Staff in this branch</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

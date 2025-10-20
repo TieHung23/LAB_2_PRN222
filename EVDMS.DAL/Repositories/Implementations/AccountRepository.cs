@@ -115,4 +115,8 @@ public class AccountRepository : IAccountRepository
         // Optionally add .Where(a => !a.IsDeleted) if checks should ignore deleted accounts
         return await _context.Accounts.AnyAsync(predicate);
     }
+    public async Task<Role?> GetRoleByNameAsync(string roleName)
+    {
+        return await _context.Roles.FirstOrDefaultAsync(r => r.Name == roleName);
+    }
 }
