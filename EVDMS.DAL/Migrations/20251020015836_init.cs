@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -8,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace EVDMS.DAL.Migrations
 {
     /// <inheritdoc />
-    public partial class FinalModelSync_WithFeatures : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -62,14 +61,11 @@ namespace EVDMS.DAL.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Descripsion = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Descripsion = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedAtTick = table.Column<long>(type: "bigint", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    UpdatedAtTick = table.Column<long>(type: "bigint", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -208,10 +204,7 @@ namespace EVDMS.DAL.Migrations
                     VehicleConfigId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedAtTick = table.Column<long>(type: "bigint", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    UpdatedAtTick = table.Column<long>(type: "bigint", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -281,30 +274,6 @@ namespace EVDMS.DAL.Migrations
                     table.ForeignKey(
                         name: "FK_TestDrives_VehicleModels_VehicleModelId",
                         column: x => x.VehicleModelId,
-                        principalTable: "VehicleModels",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "VehicleModelFeature",
-                columns: table => new
-                {
-                    FeaturesId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    VehicleModelsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_VehicleModelFeature", x => new { x.FeaturesId, x.VehicleModelsId });
-                    table.ForeignKey(
-                        name: "FK_VehicleModelFeature_Features_FeaturesId",
-                        column: x => x.FeaturesId,
-                        principalTable: "Features",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_VehicleModelFeature_VehicleModels_VehicleModelsId",
-                        column: x => x.VehicleModelsId,
                         principalTable: "VehicleModels",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -478,28 +447,28 @@ namespace EVDMS.DAL.Migrations
 
             migrationBuilder.InsertData(
                 table: "VehicleModels",
-                columns: new[] { "Id", "Brand", "CreatedAt", "CreatedAtTick", "CreatedById", "Description", "ImgUrl", "IsActive", "IsDeleted", "ModelName", "ReleaseYear", "UpdatedAt", "UpdatedAtTick", "UpdatedById", "VehicleConfigId", "VehicleType" },
+                columns: new[] { "Id", "Brand", "CreatedAt", "CreatedAtTick", "CreatedById", "Description", "ImgUrl", "IsActive", "IsDeleted", "ModelName", "ReleaseYear", "VehicleConfigId", "VehicleType" },
                 values: new object[,]
                 {
-                    { new Guid("00000005-0001-0000-0000-000000000000"), "Tesla", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 638396640000000000L, new Guid("00000000-0000-0000-0000-000000000000"), "Description", "https://digitalassets.tesla.com/tesla-contents/image/upload/h_1800,w_2880,q_auto:best,f_auto,dpr_2.0/v1/content/dam/tesla/CAR_ASSETS/MODEL_S/U004_Paint_S_desktop.png", true, false, "Model 1", 2022, new DateTime(2025, 10, 19, 18, 0, 4, 736, DateTimeKind.Local).AddTicks(6347), 638964936047366346L, null, new Guid("00000004-0001-0000-0000-000000000000"), "Sedan" },
-                    { new Guid("00000005-0002-0000-0000-000000000000"), "Tesla", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 638396640000000000L, new Guid("00000000-0000-0000-0000-000000000000"), "Description", "https://digitalassets.tesla.com/tesla-contents/image/upload/h_1800,w_2880,q_auto:best,f_auto,dpr_2.0/v1/content/dam/tesla/CAR_ASSETS/MODEL_S/U004_Paint_S_desktop.png", true, false, "Model 2", 2022, new DateTime(2025, 10, 19, 18, 0, 4, 736, DateTimeKind.Local).AddTicks(9047), 638964936047369047L, null, new Guid("00000004-0002-0000-0000-000000000000"), "Sedan" },
-                    { new Guid("00000005-0003-0000-0000-000000000000"), "Tesla", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 638396640000000000L, new Guid("00000000-0000-0000-0000-000000000000"), "Description", "https://digitalassets.tesla.com/tesla-contents/image/upload/h_1800,w_2880,q_auto:best,f_auto,dpr_2.0/v1/content/dam/tesla/CAR_ASSETS/MODEL_S/U004_Paint_S_desktop.png", true, false, "Model 3", 2022, new DateTime(2025, 10, 19, 18, 0, 4, 736, DateTimeKind.Local).AddTicks(9074), 638964936047369073L, null, new Guid("00000004-0003-0000-0000-000000000000"), "Sedan" },
-                    { new Guid("00000005-0004-0000-0000-000000000000"), "Tesla", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 638396640000000000L, new Guid("00000000-0000-0000-0000-000000000000"), "Description", "https://digitalassets.tesla.com/tesla-contents/image/upload/h_1800,w_2880,q_auto:best,f_auto,dpr_2.0/v1/content/dam/tesla/CAR_ASSETS/MODEL_S/U004_Paint_S_desktop.png", true, false, "Model 4", 2022, new DateTime(2025, 10, 19, 18, 0, 4, 736, DateTimeKind.Local).AddTicks(9086), 638964936047369086L, null, new Guid("00000004-0004-0000-0000-000000000000"), "Sedan" },
-                    { new Guid("00000005-0005-0000-0000-000000000000"), "Tesla", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 638396640000000000L, new Guid("00000000-0000-0000-0000-000000000000"), "Description", "https://digitalassets.tesla.com/tesla-contents/image/upload/h_1800,w_2880,q_auto:best,f_auto,dpr_2.0/v1/content/dam/tesla/CAR_ASSETS/MODEL_S/U004_Paint_S_desktop.png", true, false, "Model 5", 2022, new DateTime(2025, 10, 19, 18, 0, 4, 736, DateTimeKind.Local).AddTicks(9098), 638964936047369097L, null, new Guid("00000004-0005-0000-0000-000000000000"), "Sedan" },
-                    { new Guid("00000005-0006-0000-0000-000000000000"), "VinFast", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 638396640000000000L, new Guid("00000000-0000-0000-0000-000000000000"), "A new electric car from VinFast", "https://shop.vinfastauto.com/on/demandware.static/-/Sites-app_vinfast_vn-Library/default/dw159f3640/images/v8/img-exterior.png", true, false, "VF 8", 2023, new DateTime(2025, 10, 19, 18, 0, 4, 736, DateTimeKind.Local).AddTicks(9409), 638964936047369408L, null, new Guid("00000004-0006-0000-0000-000000000000"), "Hatchback" },
-                    { new Guid("00000005-0007-0000-0000-000000000000"), "VinFast", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 638396640000000000L, new Guid("00000000-0000-0000-0000-000000000000"), "A new electric car from VinFast", "https://shop.vinfastauto.com/on/demandware.static/-/Sites-app_vinfast_vn-Library/default/dw053c0704/images/v9/img-exterior-v2.png", true, false, "VF 9", 2023, new DateTime(2025, 10, 19, 18, 0, 4, 736, DateTimeKind.Local).AddTicks(9474), 638964936047369473L, null, new Guid("00000004-0007-0000-0000-000000000000"), "Crossover" },
-                    { new Guid("00000005-0008-0000-0000-000000000000"), "VinFast", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 638396640000000000L, new Guid("00000000-0000-0000-0000-000000000000"), "A new electric car from VinFast", "https://via.placeholder.com/600x400.png?text=No+Image", true, false, "VF e34", 2023, new DateTime(2025, 10, 19, 18, 0, 4, 736, DateTimeKind.Local).AddTicks(9496), 638964936047369495L, null, new Guid("00000004-0008-0000-0000-000000000000"), "SUV" },
-                    { new Guid("00000005-0009-0000-0000-000000000000"), "VinFast", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 638396640000000000L, new Guid("00000000-0000-0000-0000-000000000000"), "A new electric car from VinFast", "https://via.placeholder.com/600x400.png?text=No+Image", true, false, "VF 5", 2023, new DateTime(2025, 10, 19, 18, 0, 4, 736, DateTimeKind.Local).AddTicks(9536), 638964936047369535L, null, new Guid("00000004-0009-0000-0000-000000000000"), "Sedan" },
-                    { new Guid("00000005-000a-0000-0000-000000000000"), "VinFast", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 638396640000000000L, new Guid("00000000-0000-0000-0000-000000000000"), "A new electric car from VinFast", "https://via.placeholder.com/600x400.png?text=No+Image", true, false, "VF 6", 2023, new DateTime(2025, 10, 19, 18, 0, 4, 736, DateTimeKind.Local).AddTicks(9557), 638964936047369557L, null, new Guid("00000004-000a-0000-0000-000000000000"), "Hatchback" },
-                    { new Guid("00000005-000b-0000-0000-000000000000"), "VinFast", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 638396640000000000L, new Guid("00000000-0000-0000-0000-000000000000"), "A new electric car from VinFast", "https://via.placeholder.com/600x400.png?text=No+Image", true, false, "VF 7", 2023, new DateTime(2025, 10, 19, 18, 0, 4, 736, DateTimeKind.Local).AddTicks(9577), 638964936047369577L, null, new Guid("00000004-000b-0000-0000-000000000000"), "Crossover" },
-                    { new Guid("00000005-000c-0000-0000-000000000000"), "BMW", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 638396640000000000L, new Guid("00000000-0000-0000-0000-000000000000"), "A new electric car from BMW", "https://www.bmw.vn/content/dam/bmw/common/all-models/i-series/ix/2021/navigation/bmw-i-series-ix-modelfinder.png", true, false, "iX", 2023, new DateTime(2025, 10, 19, 18, 0, 4, 736, DateTimeKind.Local).AddTicks(9648), 638964936047369647L, null, new Guid("00000004-000c-0000-0000-000000000000"), "SUV" },
-                    { new Guid("00000005-000d-0000-0000-000000000000"), "BMW", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 638396640000000000L, new Guid("00000000-0000-0000-0000-000000000000"), "A new electric car from BMW", "https://via.placeholder.com/600x400.png?text=No+Image", true, false, "i4", 2023, new DateTime(2025, 10, 19, 18, 0, 4, 736, DateTimeKind.Local).AddTicks(9672), 638964936047369671L, null, new Guid("00000004-000d-0000-0000-000000000000"), "Sedan" },
-                    { new Guid("00000005-000e-0000-0000-000000000000"), "BMW", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 638396640000000000L, new Guid("00000000-0000-0000-0000-000000000000"), "A new electric car from BMW", "https://via.placeholder.com/600x400.png?text=No+Image", true, false, "i7", 2023, new DateTime(2025, 10, 19, 18, 0, 4, 736, DateTimeKind.Local).AddTicks(9693), 638964936047369692L, null, new Guid("00000004-000e-0000-0000-000000000000"), "Hatchback" },
-                    { new Guid("00000005-000f-0000-0000-000000000000"), "BMW", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 638396640000000000L, new Guid("00000000-0000-0000-0000-000000000000"), "A new electric car from BMW", "https://via.placeholder.com/600x400.png?text=No+Image", true, false, "iX3", 2023, new DateTime(2025, 10, 19, 18, 0, 4, 736, DateTimeKind.Local).AddTicks(9712), 638964936047369712L, null, new Guid("00000004-000f-0000-0000-000000000000"), "Crossover" },
-                    { new Guid("00000005-0010-0000-0000-000000000000"), "BMW", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 638396640000000000L, new Guid("00000000-0000-0000-0000-000000000000"), "A new electric car from BMW", "https://via.placeholder.com/600x400.png?text=No+Image", true, false, "iX1", 2023, new DateTime(2025, 10, 19, 18, 0, 4, 736, DateTimeKind.Local).AddTicks(9798), 638964936047369798L, null, new Guid("00000004-0010-0000-0000-000000000000"), "SUV" },
-                    { new Guid("00000005-0011-0000-0000-000000000000"), "Hyundai", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 638396640000000000L, new Guid("00000000-0000-0000-0000-000000000000"), "A new electric car from Hyundai", "https://media.hatvan.com/uploads/2021/05/hyundai-ioniq-5-ev-2022-1620958197.png", true, false, "Ioniq 5", 2023, new DateTime(2025, 10, 19, 18, 0, 4, 736, DateTimeKind.Local).AddTicks(9822), 638964936047369821L, null, new Guid("00000004-0011-0000-0000-000000000000"), "Sedan" },
-                    { new Guid("00000005-0012-0000-0000-000000000000"), "Hyundai", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 638396640000000000L, new Guid("00000000-0000-0000-0000-000000000000"), "A new electric car from Hyundai", "https://via.placeholder.com/600x400.png?text=No+Image", true, false, "Ioniq 6", 2023, new DateTime(2025, 10, 19, 18, 0, 4, 736, DateTimeKind.Local).AddTicks(9846), 638964936047369846L, null, new Guid("00000004-0012-0000-0000-000000000000"), "Hatchback" },
-                    { new Guid("00000005-0013-0000-0000-000000000000"), "Hyundai", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 638396640000000000L, new Guid("00000000-0000-0000-0000-000000000000"), "A new electric car from Hyundai", "https://via.placeholder.com/600x400.png?text=No+Image", true, false, "Kona Electric", 2023, new DateTime(2025, 10, 19, 18, 0, 4, 736, DateTimeKind.Local).AddTicks(9914), 638964936047369914L, null, new Guid("00000004-0013-0000-0000-000000000000"), "Crossover" }
+                    { new Guid("00000005-0001-0000-0000-000000000000"), "Tesla", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 638396640000000000L, new Guid("00000000-0000-0000-0000-000000000000"), "Description", "https://digitalassets.tesla.com/tesla-contents/image/upload/h_1800,w_2880,q_auto:best,f_auto,dpr_2.0/v1/content/dam/tesla/CAR_ASSETS/MODEL_S/U004_Paint_S_desktop.png", true, false, "Model 1", 2022, new Guid("00000004-0001-0000-0000-000000000000"), "Sedan" },
+                    { new Guid("00000005-0002-0000-0000-000000000000"), "Tesla", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 638396640000000000L, new Guid("00000000-0000-0000-0000-000000000000"), "Description", "https://digitalassets.tesla.com/tesla-contents/image/upload/h_1800,w_2880,q_auto:best,f_auto,dpr_2.0/v1/content/dam/tesla/CAR_ASSETS/MODEL_S/U004_Paint_S_desktop.png", true, false, "Model 2", 2022, new Guid("00000004-0002-0000-0000-000000000000"), "Sedan" },
+                    { new Guid("00000005-0003-0000-0000-000000000000"), "Tesla", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 638396640000000000L, new Guid("00000000-0000-0000-0000-000000000000"), "Description", "https://digitalassets.tesla.com/tesla-contents/image/upload/h_1800,w_2880,q_auto:best,f_auto,dpr_2.0/v1/content/dam/tesla/CAR_ASSETS/MODEL_S/U004_Paint_S_desktop.png", true, false, "Model 3", 2022, new Guid("00000004-0003-0000-0000-000000000000"), "Sedan" },
+                    { new Guid("00000005-0004-0000-0000-000000000000"), "Tesla", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 638396640000000000L, new Guid("00000000-0000-0000-0000-000000000000"), "Description", "https://digitalassets.tesla.com/tesla-contents/image/upload/h_1800,w_2880,q_auto:best,f_auto,dpr_2.0/v1/content/dam/tesla/CAR_ASSETS/MODEL_S/U004_Paint_S_desktop.png", true, false, "Model 4", 2022, new Guid("00000004-0004-0000-0000-000000000000"), "Sedan" },
+                    { new Guid("00000005-0005-0000-0000-000000000000"), "Tesla", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 638396640000000000L, new Guid("00000000-0000-0000-0000-000000000000"), "Description", "https://digitalassets.tesla.com/tesla-contents/image/upload/h_1800,w_2880,q_auto:best,f_auto,dpr_2.0/v1/content/dam/tesla/CAR_ASSETS/MODEL_S/U004_Paint_S_desktop.png", true, false, "Model 5", 2022, new Guid("00000004-0005-0000-0000-000000000000"), "Sedan" },
+                    { new Guid("00000005-0006-0000-0000-000000000000"), "VinFast", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 638396640000000000L, new Guid("00000000-0000-0000-0000-000000000000"), "A new electric car from VinFast", "https://shop.vinfastauto.com/on/demandware.static/-/Sites-app_vinfast_vn-Library/default/dw159f3640/images/v8/img-exterior.png", true, false, "VF 8", 2023, new Guid("00000004-0006-0000-0000-000000000000"), "Hatchback" },
+                    { new Guid("00000005-0007-0000-0000-000000000000"), "VinFast", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 638396640000000000L, new Guid("00000000-0000-0000-0000-000000000000"), "A new electric car from VinFast", "https://shop.vinfastauto.com/on/demandware.static/-/Sites-app_vinfast_vn-Library/default/dw053c0704/images/v9/img-exterior-v2.png", true, false, "VF 9", 2023, new Guid("00000004-0007-0000-0000-000000000000"), "Crossover" },
+                    { new Guid("00000005-0008-0000-0000-000000000000"), "VinFast", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 638396640000000000L, new Guid("00000000-0000-0000-0000-000000000000"), "A new electric car from VinFast", "https://via.placeholder.com/600x400.png?text=No+Image", true, false, "VF e34", 2023, new Guid("00000004-0008-0000-0000-000000000000"), "SUV" },
+                    { new Guid("00000005-0009-0000-0000-000000000000"), "VinFast", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 638396640000000000L, new Guid("00000000-0000-0000-0000-000000000000"), "A new electric car from VinFast", "https://via.placeholder.com/600x400.png?text=No+Image", true, false, "VF 5", 2023, new Guid("00000004-0009-0000-0000-000000000000"), "Sedan" },
+                    { new Guid("00000005-000a-0000-0000-000000000000"), "VinFast", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 638396640000000000L, new Guid("00000000-0000-0000-0000-000000000000"), "A new electric car from VinFast", "https://via.placeholder.com/600x400.png?text=No+Image", true, false, "VF 6", 2023, new Guid("00000004-000a-0000-0000-000000000000"), "Hatchback" },
+                    { new Guid("00000005-000b-0000-0000-000000000000"), "VinFast", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 638396640000000000L, new Guid("00000000-0000-0000-0000-000000000000"), "A new electric car from VinFast", "https://via.placeholder.com/600x400.png?text=No+Image", true, false, "VF 7", 2023, new Guid("00000004-000b-0000-0000-000000000000"), "Crossover" },
+                    { new Guid("00000005-000c-0000-0000-000000000000"), "BMW", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 638396640000000000L, new Guid("00000000-0000-0000-0000-000000000000"), "A new electric car from BMW", "https://www.bmw.vn/content/dam/bmw/common/all-models/i-series/ix/2021/navigation/bmw-i-series-ix-modelfinder.png", true, false, "iX", 2023, new Guid("00000004-000c-0000-0000-000000000000"), "SUV" },
+                    { new Guid("00000005-000d-0000-0000-000000000000"), "BMW", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 638396640000000000L, new Guid("00000000-0000-0000-0000-000000000000"), "A new electric car from BMW", "https://via.placeholder.com/600x400.png?text=No+Image", true, false, "i4", 2023, new Guid("00000004-000d-0000-0000-000000000000"), "Sedan" },
+                    { new Guid("00000005-000e-0000-0000-000000000000"), "BMW", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 638396640000000000L, new Guid("00000000-0000-0000-0000-000000000000"), "A new electric car from BMW", "https://via.placeholder.com/600x400.png?text=No+Image", true, false, "i7", 2023, new Guid("00000004-000e-0000-0000-000000000000"), "Hatchback" },
+                    { new Guid("00000005-000f-0000-0000-000000000000"), "BMW", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 638396640000000000L, new Guid("00000000-0000-0000-0000-000000000000"), "A new electric car from BMW", "https://via.placeholder.com/600x400.png?text=No+Image", true, false, "iX3", 2023, new Guid("00000004-000f-0000-0000-000000000000"), "Crossover" },
+                    { new Guid("00000005-0010-0000-0000-000000000000"), "BMW", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 638396640000000000L, new Guid("00000000-0000-0000-0000-000000000000"), "A new electric car from BMW", "https://via.placeholder.com/600x400.png?text=No+Image", true, false, "iX1", 2023, new Guid("00000004-0010-0000-0000-000000000000"), "SUV" },
+                    { new Guid("00000005-0011-0000-0000-000000000000"), "Hyundai", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 638396640000000000L, new Guid("00000000-0000-0000-0000-000000000000"), "A new electric car from Hyundai", "https://media.hatvan.com/uploads/2021/05/hyundai-ioniq-5-ev-2022-1620958197.png", true, false, "Ioniq 5", 2023, new Guid("00000004-0011-0000-0000-000000000000"), "Sedan" },
+                    { new Guid("00000005-0012-0000-0000-000000000000"), "Hyundai", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 638396640000000000L, new Guid("00000000-0000-0000-0000-000000000000"), "A new electric car from Hyundai", "https://via.placeholder.com/600x400.png?text=No+Image", true, false, "Ioniq 6", 2023, new Guid("00000004-0012-0000-0000-000000000000"), "Hatchback" },
+                    { new Guid("00000005-0013-0000-0000-000000000000"), "Hyundai", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 638396640000000000L, new Guid("00000000-0000-0000-0000-000000000000"), "A new electric car from Hyundai", "https://via.placeholder.com/600x400.png?text=No+Image", true, false, "Kona Electric", 2023, new Guid("00000004-0013-0000-0000-000000000000"), "Crossover" }
                 });
 
             migrationBuilder.InsertData(
@@ -682,11 +651,6 @@ namespace EVDMS.DAL.Migrations
                 column: "VehicleModelId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_VehicleModelFeature_VehicleModelsId",
-                table: "VehicleModelFeature",
-                column: "VehicleModelsId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_VehicleModels_VehicleConfigId",
                 table: "VehicleModels",
                 column: "VehicleConfigId",
@@ -697,6 +661,9 @@ namespace EVDMS.DAL.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "Features");
+
+            migrationBuilder.DropTable(
                 name: "Feedbacks");
 
             migrationBuilder.DropTable(
@@ -706,13 +673,7 @@ namespace EVDMS.DAL.Migrations
                 name: "TestDrives");
 
             migrationBuilder.DropTable(
-                name: "VehicleModelFeature");
-
-            migrationBuilder.DropTable(
                 name: "Orders");
-
-            migrationBuilder.DropTable(
-                name: "Features");
 
             migrationBuilder.DropTable(
                 name: "Accounts");

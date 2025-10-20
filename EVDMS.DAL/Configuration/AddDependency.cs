@@ -1,4 +1,3 @@
-using System;
 using EVDMS.DAL.Database;
 using EVDMS.DAL.Repositories.Abstractions;
 using EVDMS.DAL.Repositories.Implementations;

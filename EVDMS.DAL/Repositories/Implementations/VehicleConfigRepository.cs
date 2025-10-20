@@ -34,7 +34,7 @@ namespace EVDMS.DAL.Repositories.Implementations
         public async Task<VehicleConfig?> GetByVersionNameAsync(string versionName)
         {
             return await _context.VehicleConfigs
-                .FirstOrDefaultAsync(vc => vc.VersionName.ToUpper() == versionName.ToUpper() && !vc.IsDeleted); 
+                .FirstOrDefaultAsync(vc => vc.VersionName.ToUpper() == versionName.ToUpper() && !vc.IsDeleted);
         }
 
 

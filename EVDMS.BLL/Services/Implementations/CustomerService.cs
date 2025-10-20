@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks; 
-using EVDMS.BLL.Services.Abstractions;
+﻿using EVDMS.BLL.Services.Abstractions;
 using EVDMS.Core.Entities;
 using EVDMS.DAL.Repositories.Abstractions;
 
@@ -47,7 +44,7 @@ namespace EVDMS.BLL.Services.Implementations
 
         public async Task<bool> EmailExistsAsync(string email, Guid? excludeId = null)
         {
-            if (string.IsNullOrWhiteSpace(email)) return false; 
+            if (string.IsNullOrWhiteSpace(email)) return false;
             return await _customerRepository.AnyAsync(c => c.Email.ToLower() == email.ToLower() && c.Id != excludeId);
         }
 

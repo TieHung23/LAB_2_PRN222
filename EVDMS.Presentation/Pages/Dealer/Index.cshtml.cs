@@ -1,13 +1,12 @@
-﻿using EVDMS.BLL.Services.Abstractions; 
-using EVDMS.Core.Entities; 
-using Microsoft.AspNetCore.Authorization; 
-using Microsoft.AspNetCore.Mvc;
+﻿using EVDMS.BLL.Services.Abstractions;
+using EVDMS.Core.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Security.Claims; 
+using System.Security.Claims;
 
 namespace EVDMS.Presentation.Pages.Dealer
 {
-    [Authorize(Roles = "Dealer Staff, Dealer Manager")] 
+    [Authorize(Roles = "Dealer Staff, Dealer Manager")]
     public class IndexModel : PageModel
     {
         private readonly IOrderService _orderService;

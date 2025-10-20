@@ -1,17 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - EVDMS Admin</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
-    <link rel="stylesheet" href="~/EVDMS.Presentation.styles.css" asp-append-version="true"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/EVDMS.Presentation.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-          rel="stylesheet"/>
-
+          rel="stylesheet" />
     @await RenderSectionAsync("Styles", required: false)
+    <style>
+        #notification-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+
+        .toast {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background-color: #333;
+            color: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            min-width: 260px;
+            font-size: 14px;
+            /* Trạng thái ban đầu: ẩn và lệch ra ngoài */
+            opacity: 0;
+            transform: translateX(100%);
+            /* Hiệu ứng chuyển động */
+            transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.4s ease;
+        }
+
+            .toast i {
+                font-size: 18px;
+            }
+
+            /* Trạng thái hiển thị */
+            .toast.show {
+                opacity: 1;
+                transform: translateX(0);
+            }
+    </style>
+
+
     <style>
         * {
             font-family: 'Inter', sans-serif;
@@ -48,26 +89,26 @@
             margin: 0;
         }
 
-        .admin-brand h4 {
-            color: #fff;
-            margin: 0;
-            font-weight: 700;
-            font-size: 1.4rem;
-            letter-spacing: -0.5px;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-        }
+            .admin-brand h4 {
+                color: #fff;
+                margin: 0;
+                font-weight: 700;
+                font-size: 1.4rem;
+                letter-spacing: -0.5px;
+                text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            }
 
-        .admin-brand .logo-icon {
-            width: 40px;
-            height: 40px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 12px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 0.5rem;
-            font-size: 1.2rem;
-        }
+            .admin-brand .logo-icon {
+                width: 40px;
+                height: 40px;
+                background: rgba(255, 255, 255, 0.2);
+                border-radius: 12px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 0.5rem;
+                font-size: 1.2rem;
+            }
 
         .admin-nav {
             padding: 1.5rem 0;
@@ -75,18 +116,18 @@
             overflow-y: auto;
         }
 
-        .admin-nav::-webkit-scrollbar {
-            width: 4px;
-        }
+            .admin-nav::-webkit-scrollbar {
+                width: 4px;
+            }
 
-        .admin-nav::-webkit-scrollbar-track {
-            background: transparent;
-        }
+            .admin-nav::-webkit-scrollbar-track {
+                background: transparent;
+            }
 
-        .admin-nav::-webkit-scrollbar-thumb {
-            background: rgba(102, 126, 234, 0.3);
-            border-radius: 2px;
-        }
+            .admin-nav::-webkit-scrollbar-thumb {
+                background: rgba(102, 126, 234, 0.3);
+                border-radius: 2px;
+            }
 
         .nav-section-title {
             padding: 0 1.5rem;
@@ -98,9 +139,9 @@
             letter-spacing: 1px;
         }
 
-        .nav-section-title:first-child {
-            margin-top: 0;
-        }
+            .nav-section-title:first-child {
+                margin-top: 0;
+            }
 
         .admin-nav-item {
             margin: 0.25rem 1rem;
@@ -120,49 +161,49 @@
             overflow: hidden;
         }
 
-        .admin-nav-link::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            border-radius: 12px;
-        }
+            .admin-nav-link::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                opacity: 0;
+                transition: opacity 0.3s ease;
+                border-radius: 12px;
+            }
 
-        .admin-nav-link:hover {
-            color: #fff;
-            text-decoration: none;
-            transform: translateX(4px);
-            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
-        }
+            .admin-nav-link:hover {
+                color: #fff;
+                text-decoration: none;
+                transform: translateX(4px);
+                box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+            }
 
-        .admin-nav-link:hover::before {
-            opacity: 1;
-        }
+                .admin-nav-link:hover::before {
+                    opacity: 1;
+                }
 
-        .admin-nav-link.active {
-            color: #fff;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
-        }
+            .admin-nav-link.active {
+                color: #fff;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+            }
 
-        .admin-nav-link i {
-            width: 20px;
-            margin-right: 12px;
-            text-align: center;
-            position: relative;
-            z-index: 1;
-            font-size: 1rem;
-        }
+            .admin-nav-link i {
+                width: 20px;
+                margin-right: 12px;
+                text-align: center;
+                position: relative;
+                z-index: 1;
+                font-size: 1rem;
+            }
 
-        .admin-nav-link span {
-            position: relative;
-            z-index: 1;
-        }
+            .admin-nav-link span {
+                position: relative;
+                z-index: 1;
+            }
 
         /* Main Content Area */
         .admin-content {
@@ -190,23 +231,23 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        .page-header h1 {
-            margin: 0;
-            font-weight: 700;
-            font-size: 2.5rem;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: -1px;
-        }
+            .page-header h1 {
+                margin: 0;
+                font-weight: 700;
+                font-size: 2.5rem;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                letter-spacing: -1px;
+            }
 
-        .page-header p {
-            margin: 0.5rem 0 0;
-            color: #64748b;
-            font-size: 1.1rem;
-            font-weight: 400;
-        }
+            .page-header p {
+                margin: 0.5rem 0 0;
+                color: #64748b;
+                font-size: 1.1rem;
+                font-weight: 400;
+            }
 
         /* Cards */
         .admin-card {
@@ -220,10 +261,10 @@
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .admin-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-        }
+            .admin-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            }
 
         /* Responsive */
         @@media (max-width: 768px) {
@@ -232,9 +273,9 @@
                 transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             }
 
-            .admin-sidebar.show {
-                transform: translateX(0);
-            }
+                .admin-sidebar.show {
+                    transform: translateX(0);
+                }
 
             .admin-content {
                 margin-left: 0;
@@ -285,179 +326,222 @@
     </style>
 </head>
 <body>
-<!-- Mobile Menu Button -->
-<button class="mobile-menu-btn" onclick="toggleSidebar()">
-    <i class="fas fa-bars"></i>
-</button>
+    <div id="notification-container"></div>
 
-<!-- Admin Sidebar -->
-<div class="admin-sidebar" id="adminSidebar">
-    <div class="admin-brand">
-        <div class="logo-icon">
-            <i class="fas fa-bolt"></i>
+
+
+    <!-- Mobile Menu Button -->
+    <button class="mobile-menu-btn" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Admin Sidebar -->
+    <div class="admin-sidebar" id="adminSidebar">
+        <div class="admin-brand">
+            <div class="logo-icon">
+                <i class="fas fa-bolt"></i>
+            </div>
+            <h4>EVDMS Admin</h4>
         </div>
-        <h4>EVDMS Admin</h4>
+
+        <nav class="admin-nav">
+            <!-- Dashboard -->
+            <div class="nav-section-title">Dashboard</div>
+            <div class="admin-nav-item">
+                <a href="/Admin" class="admin-nav-link">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Overview</span>
+                </a>
+            </div>
+
+            <!-- User Management -->
+            <div class="nav-section-title">User Management</div>
+            <div class="admin-nav-item">
+                <a href="/Admin/Accounts" class="admin-nav-link">
+                    <i class="fas fa-users"></i>
+                    <span>Accounts</span>
+                </a>
+            </div>
+
+            <div class="admin-nav-item">
+                <a href="/Admin/Customers" class="admin-nav-link">
+                    <i class="fas fa-user-friends"></i>
+                    <span>Customers</span>
+                </a>
+            </div>
+
+            <div class="admin-nav-item">
+                <a href="/Admin/Dealers" class="admin-nav-link">
+                    <i class="fas fa-store"></i>
+                    <span>Dealers</span>
+                </a>
+            </div>
+
+            <!-- Vehicle Management -->
+            <div class="nav-section-title">Vehicle Management</div>
+
+            <div class="admin-nav-item">
+                <a href="/Admin/VehicleModels" class="admin-nav-link">
+                    <i class="fas fa-car"></i>
+                    <span>Car Models</span>
+                </a>
+            </div>
+
+            <div class="admin-nav-item">
+                <a href="/Admin/VehicleConfigs" class="admin-nav-link">
+                    <i class="fas fa-cogs"></i>
+                    <span>Vehicle Configs</span>
+                </a>
+            </div>
+
+            <div class="admin-nav-item">
+                <a href="/Admin/Features" class="admin-nav-link">
+                    <i class="fas fa-star"></i>
+                    <span>Features</span>
+                </a>
+            </div>
+
+            <div class="admin-nav-item">
+                <a href="/Admin/Inventory" class="admin-nav-link">
+                    <i class="fas fa-warehouse"></i>
+                    <span>Inventory</span>
+                </a>
+            </div>
+
+            <!-- Business Operations -->
+            <div class="nav-section-title">Business Operations</div>
+
+            <div class="admin-nav-item">
+                <a href="/Admin/Orders" class="admin-nav-link">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Orders</span>
+                </a>
+            </div>
+
+            <div class="admin-nav-item">
+                <a href="/Admin/Payments" class="admin-nav-link">
+                    <i class="fas fa-credit-card"></i>
+                    <span>Payments</span>
+                </a>
+            </div>
+
+            <div class="admin-nav-item">
+                <a href="/Admin/TestDrives" class="admin-nav-link">
+                    <i class="fas fa-road"></i>
+                    <span>Test Drives</span>
+                </a>
+            </div>
+
+            <div class="admin-nav-item">
+                <a href="/Admin/Promotions" class="admin-nav-link">
+                    <i class="fas fa-tags"></i>
+                    <span>Promotions</span>
+                </a>
+            </div>
+
+            <div class="admin-nav-item">
+                <a href="/Admin/Feedback" class="admin-nav-link">
+                    <i class="fas fa-comments"></i>
+                    <span>Feedback</span>
+                </a>
+            </div>
+
+            <!-- System -->
+            <div class="nav-section-title">System</div>
+
+            <div class="admin-nav-item">
+                <a href="/" class="admin-nav-link">
+                    <i class="fas fa-home"></i>
+                    <span>Back to Website</span>
+                </a>
+            </div>
+
+            <div class="admin-nav-item">
+                <a href="/Account/Logout" class="admin-nav-link">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </nav>
     </div>
 
-    <nav class="admin-nav">
-        <!-- Dashboard -->
-        <div class="nav-section-title">Dashboard</div>
-        <div class="admin-nav-item">
-            <a href="/Admin" class="admin-nav-link">
-                <i class="fas fa-tachometer-alt"></i>
-                <span>Overview</span>
-            </a>
-        </div>
+    <!-- Main Content -->
+    <div class="admin-content">
+        <main role="main">
+            @RenderBody()
+        </main>
+    </div>
 
-        <!-- User Management -->
-        <div class="nav-section-title">User Management</div>
-        <div class="admin-nav-item">
-            <a href="/Admin/Accounts" class="admin-nav-link">
-                <i class="fas fa-users"></i>
-                <span>Accounts</span>
-            </a>
-        </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/microsoft-signalr/signalr.js"></script>
+    <script>
+        const connection = new signalR.HubConnectionBuilder()
+        .withUrl("/chatHub")
+        .build();
 
-        <div class="admin-nav-item">
-            <a href="/Admin/Customers" class="admin-nav-link">
-                <i class="fas fa-user-friends"></i>
-                <span>Customers</span>
-            </a>
-        </div>
 
-        <div class="admin-nav-item">
-            <a href="/Admin/Dealers" class="admin-nav-link">
-                <i class="fas fa-store"></i>
-                <span>Dealers</span>
-            </a>
-        </div>
+        connection.start().then(() => console.log("SignalR connected"));
 
-        <!-- Vehicle Management -->
-        <div class="nav-section-title">Vehicle Management</div>
 
-        <div class="admin-nav-item">
-            <a href="/Admin/VehicleModels" class="admin-nav-link">
-                <i class="fas fa-car"></i>
-                <span>Car Models</span>
-            </a>
-        </div>
+        connection.on("SendMessage", (user, message) => {
+        showNotification(`New order from dealer ${user}`, message);
+        console.log(`New order from dealer ${user}`, message);
+        });
 
-        <div class="admin-nav-item">
-            <a href="/Admin/VehicleConfigs" class="admin-nav-link">
-                <i class="fas fa-cogs"></i>
-                <span>Vehicle Configs</span>
-            </a>
-        </div>
 
-        <div class="admin-nav-item">
-            <a href="/Admin/Features" class="admin-nav-link">
-                <i class="fas fa-star"></i>
-                <span>Features</span>
-            </a>
-        </div>
+                function showNotification(title, message) {
+            const container = document.getElementById("notification-container");
+            const notification = document.createElement("div");
 
-        <div class="admin-nav-item">
-            <a href="/Admin/Inventory" class="admin-nav-link">
-                <i class="fas fa-warehouse"></i>
-                <span>Inventory</span>
-            </a>
-        </div>
+            // 1. Thêm class ban đầu
+            notification.className = "toast";
+            notification.innerHTML = `<i class="fa-solid fa-bell"></i><div><strong>${title}</strong><br/><span>${message}</span></div>`;
 
-        <!-- Business Operations -->
-        <div class="nav-section-title">Business Operations</div>
+            // 2. Thêm vào DOM
+            container.appendChild(notification);
 
-        <div class="admin-nav-item">
-            <a href="/Admin/Orders" class="admin-nav-link">
-                <i class="fas fa-shopping-cart"></i>
-                <span>Orders</span>
-            </a>
-        </div>
+            // 3. Dùng setTimeout để thêm class 'show' -> trình duyệt sẽ kích hoạt transition/animation
+            setTimeout(() => {
+                notification.classList.add("show");
+            }, 10); // Một khoảng trễ nhỏ để trình duyệt "thở"
 
-        <div class="admin-nav-item">
-            <a href="/Admin/Payments" class="admin-nav-link">
-                <i class="fas fa-credit-card"></i>
-                <span>Payments</span>
-            </a>
-        </div>
+            // 4. Lên lịch xóa class 'show' để toast mờ đi
+            setTimeout(() => {
+                notification.classList.remove("show");
+                // 5. Xóa hẳn phần tử khỏi DOM sau khi animation kết thúc
+                notification.addEventListener('transitionend', () => notification.remove());
+            }, 3500); // Thời gian hiển thị toast
+        }
+    </script>
 
-        <div class="admin-nav-item">
-            <a href="/Admin/TestDrives" class="admin-nav-link">
-                <i class="fas fa-road"></i>
-                <span>Test Drives</span>
-            </a>
-        </div>
+    <script>
+        // Add active class to current page
+        $(document).ready(function () {
+            var currentPath = window.location.pathname;
+            $('.admin-nav-link').each(function () {
+                var linkPath = $(this).attr('href');
+                if (currentPath === linkPath || (linkPath !== '/Admin' && currentPath.startsWith(linkPath))) {
+                    $(this).addClass('active');
+                }
+            });
+        });
 
-        <div class="admin-nav-item">
-            <a href="/Admin/Promotions" class="admin-nav-link">
-                <i class="fas fa-tags"></i>
-                <span>Promotions</span>
-            </a>
-        </div>
+        // Mobile sidebar toggle
+        function toggleSidebar() {
+            $('#adminSidebar').toggleClass('show');
+        }
 
-        <div class="admin-nav-item">
-            <a href="/Admin/Feedback" class="admin-nav-link">
-                <i class="fas fa-comments"></i>
-                <span>Feedback</span>
-            </a>
-        </div>
-
-        <!-- System -->
-        <div class="nav-section-title">System</div>
-
-        <div class="admin-nav-item">
-            <a href="/" class="admin-nav-link">
-                <i class="fas fa-home"></i>
-                <span>Back to Website</span>
-            </a>
-        </div>
-
-        <div class="admin-nav-item">
-            <a href="/Account/Logout" class="admin-nav-link">
-                <i class="fas fa-sign-out-alt"></i>
-                <span>Logout</span>
-            </a>
-        </div>
-    </nav>
-</div>
-
-<!-- Main Content -->
-<div class="admin-content">
-    <main role="main">
-        @RenderBody()
-    </main>
-</div>
-
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-@* <script src="~/js/site.js" asp-append-version="true"></script> *@
-
-<script>
-    // Add active class to current page
-    $(document).ready(function () {
-        var currentPath = window.location.pathname;
-        $('.admin-nav-link').each(function () {
-            var linkPath = $(this).attr('href');
-            if (currentPath === linkPath || (linkPath !== '/Admin' && currentPath.startsWith(linkPath))) {
-                $(this).addClass('active');
+        // Close sidebar when clicking outside on mobile
+        $(document).click(function (event) {
+            if ($(window).width() <= 768) {
+                if (!$(event.target).closest('#adminSidebar, .mobile-menu-btn').length) {
+                    $('#adminSidebar').removeClass('show');
+                }
             }
         });
-    });
-
-    // Mobile sidebar toggle
-    function toggleSidebar() {
-        $('#adminSidebar').toggleClass('show');
-    }
-
-    // Close sidebar when clicking outside on mobile
-    $(document).click(function (event) {
-        if ($(window).width() <= 768) {
-            if (!$(event.target).closest('#adminSidebar, .mobile-menu-btn').length) {
-                $('#adminSidebar').removeClass('show');
-            }
-        }
-    });
-</script>
-
-@await RenderSectionAsync("Scripts", false)
+    </script>
+    @await RenderSectionAsync("Scripts", false)
 </body>
 </html>
+

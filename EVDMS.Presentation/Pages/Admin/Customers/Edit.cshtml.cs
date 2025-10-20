@@ -2,7 +2,7 @@
 using EVDMS.Core.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore; 
+using Microsoft.EntityFrameworkCore;
 
 namespace EVDMS.Presentation.Pages.Admin.Customers
 {
@@ -59,7 +59,7 @@ namespace EVDMS.Presentation.Pages.Admin.Customers
             // --- LOGIC UPDATE ---
             try
             {
-                
+
                 await _customerService.UpdateCustomerAsync(Customer);
 
 

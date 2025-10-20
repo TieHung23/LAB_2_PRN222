@@ -1,8 +1,6 @@
 ﻿using EVDMS.BLL.Services.Abstractions;
-using EVDMS.Core.Entities; 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.ComponentModel.DataAnnotations; 
 
 namespace EVDMS.Presentation.Pages.Admin.Dealers
 {
@@ -44,7 +42,7 @@ namespace EVDMS.Presentation.Pages.Admin.Dealers
 
             if (!ModelState.IsValid)
             {
-                return Page(); 
+                return Page();
             }
 
             try

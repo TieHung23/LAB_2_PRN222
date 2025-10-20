@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using EVDMS.Core.Entities;
+﻿using EVDMS.Core.Entities;
 using EVDMS.DAL.Database;
 using EVDMS.DAL.Repositories.Abstractions;
 using Microsoft.EntityFrameworkCore;
@@ -62,7 +57,7 @@ namespace EVDMS.DAL.Repositories.Implementations
         public async Task<VehicleModel?> GetByNameAsync(string modelName)
         {
             return await _context.VehicleModels
-        .FirstOrDefaultAsync(vm => vm.ModelName.ToUpper() == modelName.ToUpper() && !vm.IsDeleted); 
+        .FirstOrDefaultAsync(vm => vm.ModelName.ToUpper() == modelName.ToUpper() && !vm.IsDeleted);
         }
 
         public async Task<VehicleModel> CreateAsync(VehicleModel vehicleModel)

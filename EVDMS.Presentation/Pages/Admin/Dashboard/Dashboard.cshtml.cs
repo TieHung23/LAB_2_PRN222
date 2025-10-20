@@ -6,6 +6,6 @@ public class Dashboard : PageModel
 {
     public void OnGet()
     {
-        
+
     }
 }

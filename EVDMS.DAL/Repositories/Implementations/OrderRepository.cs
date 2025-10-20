@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using EVDMS.Core.Entities;
+﻿using EVDMS.Core.Entities;
 using EVDMS.DAL.Database;
 using EVDMS.DAL.Repositories.Abstractions;
 using Microsoft.EntityFrameworkCore;
@@ -36,7 +31,7 @@ namespace EVDMS.DAL.Repositories.Implementations
                 _context.Inventories.Update(inventoryItem);
             }
             await _context.SaveChangesAsync();
-            return order;
+            return await GetByIdAsync(order.Id);
         }
 
         public async Task<Order> GetByIdAsync(Guid id)
@@ -44,6 +39,7 @@ namespace EVDMS.DAL.Repositories.Implementations
             return await _context.Orders
                 .Include(o => o.Payment)
                 .Include(o => o.Customer)
+                .Include(o => o.Account)
                 .Include(o => o.Inventory)
                     .ThenInclude(i => i.VehicleModel)
                 .FirstOrDefaultAsync(x => x.Id == id);

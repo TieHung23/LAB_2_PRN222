@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using EVDMS.BLL.Services.Abstractions;
+﻿using EVDMS.BLL.Services.Abstractions;
 using EVDMS.Core.Entities;
 using EVDMS.DAL.Repositories.Abstractions;
 

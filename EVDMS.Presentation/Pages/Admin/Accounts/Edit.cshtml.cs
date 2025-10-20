@@ -2,8 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore; 
-using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace EVDMS.Presentation.Pages.Admin.Accounts
 {
@@ -105,7 +104,7 @@ namespace EVDMS.Presentation.Pages.Admin.Accounts
                 if (originalAccount != null)
                 {
                     Account.Email = originalAccount.Email; // Đảm bảo email đúng
-                    Account.HashedPassword = originalAccount.HashedPassword; 
+                    Account.HashedPassword = originalAccount.HashedPassword;
                 }
                 return Page();
             }
@@ -130,22 +129,22 @@ namespace EVDMS.Presentation.Pages.Admin.Accounts
                 }
 
 
-                
+
                 accountToUpdate.FullName = Account.FullName;
                 accountToUpdate.RoleId = Account.RoleId;
-                accountToUpdate.DealerId = Account.DealerId; 
+                accountToUpdate.DealerId = Account.DealerId;
                 accountToUpdate.IsActive = Account.IsActive;
-               
+
 
                 await _accountService.UpdateAccountAsync(accountToUpdate);
 
                 TempData["SuccessMessage"] = $"Account '{accountToUpdate.Email}' updated successfully!";
                 return RedirectToPage("../Accounts"); // Redirect về danh sách
             }
-            catch (DbUpdateConcurrencyException) 
+            catch (DbUpdateConcurrencyException)
             {
                 ModelState.AddModelError(string.Empty, "The account was modified by another user. Please reload and try again.");
-              
+
                 Account = await _accountService.GetAccountByIdWithDetailsAsync(Account.Id);
                 if (Account == null) return NotFound();
                 await LoadDropdownData();
@@ -153,7 +152,7 @@ namespace EVDMS.Presentation.Pages.Admin.Accounts
             }
             catch (Exception ex)
             {
-               
+
                 ModelState.AddModelError(string.Empty, $"An error occurred: {ex.Message}");
                 // Tải lại dữ liệu gốc
                 Account = await _accountService.GetAccountByIdWithDetailsAsync(Account.Id);
@@ -163,11 +162,11 @@ namespace EVDMS.Presentation.Pages.Admin.Accounts
             }
         }
 
-        
+
         private async Task LoadDropdownData()
         {
             var allRoles = await _roleService.GetAllAsync();
-            
+
             var creatableRoles = allRoles.Where(r => !r.Name.Equals(AdminRoleName, StringComparison.OrdinalIgnoreCase));
 
             var dealers = await _dealerService.GetAllAsync();

@@ -13,7 +13,7 @@ namespace EVDMS.Presentation.Pages.Admin.VehicleModels
     public class CreateModel : PageModel
     {
         private readonly IVehicleModelService _vehicleModelService;
-        private readonly IVehicleConfigService _vehicleConfigService; 
+        private readonly IVehicleConfigService _vehicleConfigService;
         private readonly IVehicleModelRepository _vehicleModelRepository;
         public CreateModel(
     IVehicleModelService vehicleModelService,
@@ -22,7 +22,7 @@ namespace EVDMS.Presentation.Pages.Admin.VehicleModels
         {
             _vehicleModelService = vehicleModelService;
             _vehicleConfigService = vehicleConfigService;
-            _vehicleModelRepository = vehicleModelRepository; 
+            _vehicleModelRepository = vehicleModelRepository;
         }
 
         // Tạo một ViewModel để chứa cả Model và Config

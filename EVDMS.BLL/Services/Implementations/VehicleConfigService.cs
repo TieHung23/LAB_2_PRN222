@@ -1,10 +1,7 @@
 ﻿using EVDMS.BLL.Services.Abstractions;
 using EVDMS.Core.CommonEntities;
 using EVDMS.Core.Entities;
-using EVDMS.DAL.Repositories.Abstractions; 
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using EVDMS.DAL.Repositories.Abstractions;
 
 namespace EVDMS.BLL.Services.Implementations
 {
@@ -72,26 +69,26 @@ namespace EVDMS.BLL.Services.Implementations
                 throw new InvalidOperationException($"Another config with Version Name '{config.VersionName}' already exists.");
             }
 
-            await _vehicleConfigRepository.UpdateAsync(config); 
+            await _vehicleConfigRepository.UpdateAsync(config);
         }
 
-   
+
         public async Task DeleteAsync(Guid id)
         {
-            var configToDelete = await _vehicleConfigRepository.GetByIdAsync(id); 
+            var configToDelete = await _vehicleConfigRepository.GetByIdAsync(id);
             if (configToDelete == null)
             {
                 throw new KeyNotFoundException($"Lỗi: Không tìm thấy cấu hình với ID '{id}'.");
             }
 
             // Kiểm tra xem config có đang được gán cho model nào không
-            if (await _vehicleConfigRepository.IsInUseByVehicleModel(id)) 
+            if (await _vehicleConfigRepository.IsInUseByVehicleModel(id))
             {
                 throw new InvalidOperationException($"Không thể xóa cấu hình '{configToDelete.VersionName}' vì nó đang được gán cho một mẫu xe.");
             }
 
             // Kiểm tra xem config có trong kho không
-            if (await _vehicleConfigRepository.IsInUseByInventory(id)) 
+            if (await _vehicleConfigRepository.IsInUseByInventory(id))
             {
                 throw new InvalidOperationException($"Không thể xóa cấu hình '{configToDelete.VersionName}' vì đang có xe trong kho.");
             }

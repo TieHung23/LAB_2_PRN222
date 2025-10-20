@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using QRCoder; // <--- SỬ DỤNG THƯ VIỆN QR CHÚNG TA ĐÃ CÀI
-using System.IO;
 
 namespace EVDMS.Presentation.Pages.Dealer
 {

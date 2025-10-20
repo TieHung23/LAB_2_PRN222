@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using EVDMS.Core.Entities;
+﻿using EVDMS.Core.Entities;
 using EVDMS.DAL.Database;
 using EVDMS.DAL.Repositories.Abstractions;
 using Microsoft.EntityFrameworkCore;
