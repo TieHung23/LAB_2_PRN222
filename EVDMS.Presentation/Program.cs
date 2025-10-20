@@ -37,7 +37,6 @@ builder.Services.AddScoped<ITestDriveService, TestDriveService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IAIService, AIService>();
 
-
 builder.Services.AddAuthentication("MyCookieAuth").AddCookie("MyCookieAuth", options =>
 {
     options.Cookie.Name = "MyCookieAuth";

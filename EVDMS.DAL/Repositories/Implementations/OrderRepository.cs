@@ -49,18 +49,21 @@ namespace EVDMS.DAL.Repositories.Implementations
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        // 2. THAY THẾ HÀM GetOrdersByStaffIdAsync HIỆN TẠI BẰNG HÀM NÀY
         public async Task<IEnumerable<Order>> GetOrdersByStaffIdAsync(Guid staffId)
         {
             return await _context.Orders
                 .Where(o => o.AccountId == staffId)
                 .Include(o => o.Customer)
+                .Include(o => o.Account)
                 .Include(o => o.Payment)
-                .Include(o => o.Inventory).ThenInclude(i => i.VehicleModel)
+                .Include(o => o.Promotion)
+                .Include(o => o.Inventory)
+                    .ThenInclude(i => i.VehicleModel)
+                .Include(o => o.Inventory)
+                    .ThenInclude(i => i.Dealer)
                 .OrderByDescending(o => o.CreatedAt)
                 .ToListAsync();
         }
-
 
         public async Task<decimal> GetTotalRevenueByDealerIdAsync(Guid dealerId)
         {
@@ -72,14 +75,17 @@ namespace EVDMS.DAL.Repositories.Implementations
         public async Task<IEnumerable<Order>> GetOrdersByDealerIdAsync(Guid dealerId)
         {
             return await _context.Orders
-                                 .Where(o => o.Account.DealerId == dealerId)
-                                 .Include(o => o.Customer)
-                                 .Include(o => o.Inventory)
-                                    .ThenInclude(i => i.VehicleModel)
-                                 .Include(o => o.Promotion)
-                                 .Include(o => o.Payment)
-                                 .ToListAsync();
+                .Where(o => o.Account.DealerId == dealerId)
+                .Include(o => o.Customer)
+                .Include(o => o.Account) 
+                .Include(o => o.Inventory)
+                    .ThenInclude(i => i.VehicleModel)
+                .Include(o => o.Promotion)
+                .Include(o => o.Payment)
+                .OrderByDescending(o => o.CreatedAt)
+                .ToListAsync();
         }
+
         public async Task<List<(Account Staff, decimal Revenue)>> GetStaffRevenuesByDealerAsync(Guid dealerId)
         {
             var query = from a in _context.Accounts
