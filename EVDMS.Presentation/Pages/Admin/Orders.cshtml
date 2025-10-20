@@ -1,60 +1,132 @@
 ﻿@page
-@model OrdersModel
+@model EVDMS.Presentation.Pages.Admin.OrdersModel
 @{
     Layout = "Shared/_AdminLayout";
     ViewData["Title"] = "Order Management";
 }
 
 <div class="page-header">
-    <h1><i class="fas fa-shopping-cart me-3"></i>@ViewData["Title"]</h1>
-    <p>View and manage all sales orders from all dealerships.</p>
+    <div class="container">
+        <h1><i class="fas fa-shopping-cart me-3"></i>@ViewData["Title"]</h1>
+        <p>View and manage all sales orders from all dealerships.</p>
+    </div>
 </div>
 
 <div class="admin-page-content">
-    <div class="admin-card">
-        <div class="card-header d-flex align-items-center justify-content-between">
-            <h5 class="mb-0 fw-bold"><i class="fas fa-list-ul me-2"></i>Order List</h5>
+    @if( TempData["SuccessMessage"] != null )
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-        <div class="card-body">
+    }
+
+    <div class="admin-card">
+        <div class="card-header d-flex align-items-center justify-content-between p-3">
+            <h5 class="mb-0 fw-bold"><i class="fas fa-list-ul me-2"></i>Order List</h5>
+
+            <form method="get" class="d-flex align-items-center">
+                <select name="statusFilter" class="form-select form-select-sm me-2" onchange="this.form.submit()">
+                    <option value="">All Statuses</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Processing">Processing</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Cancelled">Cancelled</option>
+                </select>
+                <div class="input-group input-group-sm">
+                    <input class="form-control" type="search" placeholder="Search by ID or Customer..." name="searchTerm">
+                    <button class="btn btn-outline-secondary" type="submit">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div class="card-body p-4">
             <div class="table-responsive">
-                <table class="table table-hover align-middle">
+                <table class="table table-hover table-striped admin-table align-middle">
                     <thead class="table-light">
-                    <tr>
-                        <th>Order ID</th>
-                        <th>Customer</th>
-                        <th>Dealer</th>
-                        <th>Vehicle</th>
-                        <th>Total Amount</th>
-                        <th class="text-end">Actions</th>
-                    </tr>
+                        <tr>
+                            <th>Order Info</th>
+                            <th>Customer</th>
+                            <th>Dealer</th>
+                            <th>Vehicle</th>
+                            <th>Total Amount</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    @if (Model.Orders == null || !Model.Orders.Any())
-                    {
-                        <tr>
-                            <td colspan="6" class="text-center text-muted">
-                                <i class="fas fa-info-circle me-2"></i>No orders found.
-                            </td>
-                        </tr>
-                    }
-                    else
-                    {
-                        @foreach (var order in Model.Orders)
+                        @if( Model.Orders == null || !Model.Orders.Any() )
                         {
                             <tr>
-                                <td class="fw-semibold">@order.Id</td>
-                                <td>@order.Customer?.FullName</td>
-                                <td class="text-end">
-                                    <button class="btn btn-sm btn-outline-primary" title="View Details">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
+                                <td colspan="7" class="text-center text-muted py-4">
+                                    <i class="fas fa-info-circle me-2"></i>No orders found.
                                 </td>
                             </tr>
                         }
-                    }
+                        else
+                        {
+                            @foreach( var order in Model.Orders )
+                            {
+                                <tr>
+                                    <td>
+                                        <a asp-page="./Orders/Details" asp-route-id="@order.Id" class="fw-bold">
+                                            #@order.Id.ToString( "D6" )
+                                        </a>
+                                        @* NEW: Added Order Date for more context *@
+                                        <small class="d-block text-muted">@order.CreatedAt.ToString( "dd MMM yyyy" )</small>
+                                    </td>
+                                    <td>
+                                        <div class="fw-bold">@order.Customer?.FullName</div>
+                                        <small class="text-muted">@order.Customer?.Email</small>
+                                    </td>
+                                    <td>@order.Account?.Dealer.Name</td>
+                                    <td>
+                                        <div>@order.Inventory?.VehicleModel.ModelName</div>
+                                        <small class="text-muted">@order.Inventory?.VehicleModel.VehicleConfig.Color</small>
+                                    </td>
+                                    <td class="text-center">
+                                        <a asp-page="./Orders/Details" asp-route-id="@order.Id" class="btn btn-sm btn-outline-primary" title="View Details">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        }
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 </div>
+
+@section Styles {
+    <style>
+        .admin-table th {
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: #475569;
+        }
+
+        .admin-table td {
+            vertical-align: middle;
+            font-size: 0.875rem;
+        }
+
+        .admin-table .btn-sm {
+            width: 32px;
+            height: 32px;
+            line-height: 1.5;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+        }
+
+        .badge {
+            font-size: 0.75rem;
+            padding: 0.4em 0.7em;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+    </style>
+}

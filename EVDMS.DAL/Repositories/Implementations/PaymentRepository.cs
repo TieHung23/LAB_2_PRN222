@@ -16,7 +16,7 @@ namespace EVDMS.DAL.Repositories.Implementations
 
         public async Task<List<Payment>> GetAllPaymentAsync()
         {
-            return await _context.Payments.Include( p => p.Order ).ThenInclude( o => o.Account ).ThenInclude( a => a.Dealer ).ToListAsync();
+            return await _context.Payments.Where( x => x.IsSuccess == true ).Include( p => p.Order ).ThenInclude( o => o.Account ).ThenInclude( a => a.Dealer ).ToListAsync();
         }
 
         public async Task<Payment> GetPaymentByOrderIdAsync( Guid orderId )

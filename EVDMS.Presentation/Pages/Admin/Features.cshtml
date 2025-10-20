@@ -5,52 +5,78 @@
     ViewData["Title"] = "Feature Management";
 }
 
+@* Add Anti-Forgery Token for AJAX security *@
+@Html.AntiForgeryToken()
+
 <div class="page-header">
-    <h1><i class="fas fa-star me-3"></i>@ViewData["Title"]</h1>
-    <p>Manage features that can be associated with vehicle configurations.</p>
+    <div class="container">
+        <h1><i class="fas fa-star me-3"></i>@ViewData["Title"]</h1>
+        <p>Manage features that can be associated with vehicle configurations.</p>
+    </div>
 </div>
 
 <div class="admin-page-content">
+    @* Add TempData alerts for user feedback *@
+    @if( TempData["SuccessMessage"] != null )
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if( TempData["ErrorMessage"] != null )
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
     <div class="admin-card">
-        <div class="card-header d-flex align-items-center justify-content-between">
+        <div class="card-header d-flex align-items-center justify-content-between p-3">
             <h5 class="mb-0 fw-bold"><i class="fas fa-list-ul me-2"></i>Feature List</h5>
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#featureModal">
-                <i class="fas fa-plus me-2"></i>Add New Feature
+            <button id="addFeatureBtn" class="btn btn-sm btn-primary bg-gradient">
+                <i class="fas fa-plus me-1"></i>Add New Feature
             </button>
         </div>
-        <div class="card-body">
+        <div class="card-body p-4">
             <div class="table-responsive">
-                <table class="table table-hover align-middle">
+                <table class="table table-hover table-striped admin-table align-middle">
                     <thead class="table-light">
                         <tr>
                             <th>Feature Name</th>
                             <th>Description</th>
-                            <th class="text-end">Actions</th>
+                            <th class="text-center">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @if (Model.Features == null || !Model.Features.Any())
+                        @if( Model.Features == null || !Model.Features.Any() )
                         {
                             <tr>
-                                <td colspan="3" class="text-center text-muted">
+                                <td colspan="3" class="text-center text-muted py-4">
                                     <i class="fas fa-info-circle me-2"></i>No features found.
                                 </td>
                             </tr>
                         }
                         else
                         {
-                            @foreach (var feature in Model.Features)
+                            @foreach( var feature in Model.Features )
                             {
                                 <tr>
-                                    <td>@feature.Name</td>
+                                    <td class="fw-bold">@feature.Name</td>
                                     <td>@feature.Descripsion</td>
-                                    <td class="text-end">
-                                        <button class="btn btn-sm btn-outline-primary" title="Edit">
-                                            <i class="fas fa-pencil-alt"></i>
+                                    <td class="text-center">
+                                        <button class="btn btn-sm btn-outline-warning edit-btn" data-id="@feature.Id" title="Edit">
+                                            <i class="fas fa-edit"></i>
                                         </button>
-                                        <button class="btn btn-sm btn-outline-danger" title="Delete">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
+
+                                        <form method="post" asp-page-handler="Delete" asp-route-id="@feature.Id" style="display: inline;"
+                                              onsubmit="return confirm('Are you sure you want to delete this feature?');">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                            @Html.AntiForgeryToken()
+                                        </form>
                                     </td>
                                 </tr>
                             }
@@ -62,10 +88,11 @@
     </div>
 </div>
 
+@* Modal for Add/Edit Feature *@
 <div class="modal fade" id="featureModal" tabindex="-1" aria-labelledby="featureModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form method="post">
+            <form id="featureForm" method="post">
                 <div class="modal-header bg-primary text-white">
                     <h5 class="modal-title" id="featureModalLabel"><i class="fas fa-star me-2"></i>Create/Edit Feature</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -73,12 +100,14 @@
                 <div class="modal-body">
                     <input type="hidden" asp-for="Feature.Id" />
                     <div class="mb-3">
-                        <label asp-for="Feature.Name" class="form-label">Feature Name</label>
-                        <input asp-for="Feature.Name" class="form-control" />
+                        <label asp-for="Feature.Name" class="form-label fw-bold">Feature Name</label>
+                        <input asp-for="Feature.Name" class="form-control" placeholder="e.g., Panoramic Sunroof" />
+                        <span asp-validation-for="Feature.Name" class="text-danger"></span>
                     </div>
                     <div class="mb-3">
-                        <label asp-for="Feature.Descripsion" class="form-label">Description</label>
-                        <textarea asp-for="Feature.Descripsion" class="form-control" rows="3"></textarea>
+                        <label asp-for="Feature.Descripsion" class="form-label fw-bold">Description</label>
+                        <textarea asp-for="Feature.Descripsion" class="form-control" rows="3" placeholder="Provide a brief description of the feature..."></textarea>
+                        <span asp-validation-for="Feature.Descripsion" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -89,3 +118,71 @@
         </div>
     </div>
 </div>
+
+@section Styles {
+    <style>
+        .admin-table th {
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: #475569;
+        }
+
+        .admin-table td {
+            vertical-align: middle;
+            font-size: 0.875rem;
+        }
+
+        .admin-table .btn-sm {
+            width: 32px;
+            height: 32px;
+            line-height: 1.5;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            const featureModal = new bootstrap.Modal(document.getElementById('featureModal'));
+            const form = $('#featureForm');
+            const modalLabel = $('#featureModalLabel');
+
+            // --- Handle Add Button Click ---
+            $('#addFeatureBtn').on('click', function () {
+                modalLabel.html('<i class="fas fa-star me-2"></i> Add New Feature');
+                form[0].reset();
+                $('#Feature_Id').val('0'); // Set ID to 0 for creation
+                featureModal.show();
+            });
+
+            // --- Handle Edit Button Click ---
+            $('.edit-btn').on('click', function () {
+                const featureId = $(this).data('id');
+                modalLabel.html('<i class="fas fa-edit me-2"></i> Edit Feature');
+
+                // You will need a handler in your PageModel to fetch the data
+                $.ajax({
+                    url: `?handler=FeatureForEdit&id=${featureId}`,
+                    type: 'GET',
+                    headers: {
+                        'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                    },
+                    success: function (data) {
+                        // Populate the form fields in the modal
+                        $('#Feature_Id').val(data.id);
+                        $('#Feature_Name').val(data.name);
+                        $('#Feature_Descripsion').val(data.descripsion); // Make sure property name matches your backend
+
+                        featureModal.show();
+                    },
+                    error: function () {
+                        alert('Error fetching feature data.');
+                    }
+                });
+            });
+        });
+    </script>
+}

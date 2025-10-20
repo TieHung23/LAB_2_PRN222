@@ -1,92 +1,111 @@
 ﻿@page
 @model EVDMS.Presentation.Pages.Admin.VehicleConfigsModel
 @{
-    ViewData["Title"] = "Quản lý Cấu hình xe";
+    ViewData["Title"] = "Vehicle Configuration Management";
     Layout = "_AdminLayout";
 }
 
-@if (!string.IsNullOrEmpty(Model.SuccessMessage))
-{
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        @Model.SuccessMessage
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+<div class="page-header">
+    <div class="container">
+        <h1><i class="fas fa-cogs me-3"></i>@ViewData["Title"]</h1>
+        <p>View all available vehicle configurations in the system.</p>
     </div>
-}
-@if (!string.IsNullOrEmpty(Model.ErrorMessage))
-{
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        @Model.ErrorMessage
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-}
+</div>
 
-<div class="container-fluid pt-4 px-4">
-    <div class="row g-4">
-        <div class="col-12">
-            <div class="bg-secondary rounded h-100 p-4">
-                <h4 class="mb-4">@ViewData["Title"]</h4>
+<div class="admin-page-content">
+    @if( !string.IsNullOrEmpty( Model.SuccessMessage ) )
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @Model.SuccessMessage
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if( !string.IsNullOrEmpty( Model.ErrorMessage ) )
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @Model.ErrorMessage
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
 
-                <div class="d-flex align-items-center justify-content-between mb-4">
-                    <p class="mb-0">
-                        Xem danh sách tất cả các cấu hình xe trong hệ thống.
-                        <br />
-                        <span class="text-warning small">Lưu ý: Chức năng Thêm/Sửa cấu hình được thực hiện tại trang "Quản lý Mẫu xe".</span>
-                    </p>
-                    <a asp-page="./VehicleModels" class="btn btn-info">
-                        <i class="fa fa-car me-2"></i>Đi đến Mẫu xe
-                    </a>
-                </div>
-
-                <div class="table-responsive">
-                    <table class="table text-start align-middle table-bordered table-hover mb-0">
-                        <thead>
-                            <tr class="text-white">
-                                <th scope="col">Mẫu xe liên kết</th>
-                                <th scope="col">Tên Phiên bản</th>
-                                <th scope="col">Giá cơ bản</th>
-                                <th scope="col">Màu sắc</th>
-                                <th scope="col">Nội thất</th>
-                                <th scope="col">Bảo hành (tháng)</th>
-                                
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @if (Model.VehicleConfigs.Any())
-                            {
-                                @foreach (var item in Model.VehicleConfigs)
-                                {
-                                    <tr>
-                                        <td>
-                                            @if (item.VehicleModel != null)
-                                            {
-                                                <a asp-page="./VehicleModels/Edit" asp-route-id="@item.VehicleModel.Id">
-                                                    <strong>@item.VehicleModel.ModelName</strong>
-                                                </a>
-                                            }
-                                            else
-                                            {
-                                                <span class="text-danger">Không có </span>
-                                            }
-                                        </td>
-                                        <td>@item.VersionName</td>
-                                        <td>@item.BasePrice.ToString("N0") VNĐ</td>
-                                        <td>@item.Color</td>
-                                        <td>@item.InteriorType</td>
-                                        <td>@item.WarrantyPeriod</td>
-                                        
-                                    </tr>
-                                }
-                            }
-                            else
+    <div class="admin-card">
+        <div class="card-header d-flex align-items-center justify-content-between p-3">
+            <h5 class="mb-0 fw-bold"><i class="fas fa-list-ul me-2"></i>Configuration List</h5>
+            <div class="d-flex align-items-center">
+                <span class="text-muted small me-3">
+                    <i class="fas fa-info-circle me-1 text-warning"></i>Note: Configurations are managed via the Vehicle Models page.
+                </span>
+                <a asp-page="./VehicleModels" class="btn btn-sm btn-primary bg-gradient">
+                    <i class="fas fa-car me-1"></i>Go to Vehicle Models
+                </a>
+            </div>
+        </div>
+        <div class="card-body p-4">
+            <div class="table-responsive">
+                <table class="table table-hover table-striped admin-table align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Linked Model</th>
+                            <th>Version Name</th>
+                            <th>Base Price</th>
+                            <th>Color</th>
+                            <th>Interior</th>
+                            <th class="text-center">Warranty (Months)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if( Model.VehicleConfigs != null && Model.VehicleConfigs.Any() )
+                        {
+                            @foreach( var item in Model.VehicleConfigs )
                             {
                                 <tr>
-                                    <td colspan="7" class="text-center">Không tìm thấy cấu hình nào.</td>
+                                    <td>
+                                        @if( item.VehicleModel != null )
+                                        {
+                                            <a asp-page="./VehicleModels/Edit" asp-route-id="@item.VehicleModel.Id" class="fw-bold">
+                                                @item.VehicleModel.ModelName
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-danger fst-italic">Not Linked</span>
+                                        }
+                                    </td>
+                                    <td>@item.VersionName</td>
+                                    <td class="fw-semibold">@item.BasePrice.ToString( "C0" )</td>
+                                    <td>@item.Color</td>
+                                    <td>@item.InteriorType</td>
+                                    <td class="text-center">@item.WarrantyPeriod</td>
                                 </tr>
                             }
-                        </tbody>
-                    </table>
-                </div>
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center text-muted py-4">
+                                    <i class="fas fa-info-circle me-2"></i>No vehicle configurations found.
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 </div>
+
+@section Styles {
+    <style>
+        .admin-table th {
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: #475569;
+        }
+
+        .admin-table td {
+            vertical-align: middle;
+            font-size: 0.875rem;
+        }
+    </style>
+}
