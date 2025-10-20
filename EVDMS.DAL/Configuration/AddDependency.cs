@@ -9,16 +9,16 @@ namespace EVDMS.DAL.Configuration;
 
 public static class AddDependency
 {
-    public static void AddDatabase(this IServiceCollection services, IConfiguration config)
+    public static void AddDatabase( this IServiceCollection services, IConfiguration config )
     {
-        services.AddDbContext<ApplicationDbContext>(options =>
+        services.AddDbContext<ApplicationDbContext>( options =>
             {
-                options.UseSqlServer(config.GetConnectionString("DefaultConnection"));
-            });
+                options.UseSqlServer( config.GetConnectionString( "DefaultConnection" ) );
+            } );
     }
 
     // Add repo DI here
-    public static void AddRepositories(this IServiceCollection services)
+    public static void AddRepositories( this IServiceCollection services )
     {
         services.AddScoped<IAccountRepository, AccountRepository>();
         services.AddScoped<IRoleRepository, RoleRepository>();
@@ -30,5 +30,6 @@ public static class AddDependency
         services.AddScoped<IInventoryRepository, InventoryRepository>();
         services.AddScoped<IPromotionRepository, PromotionRepository>();
         services.AddScoped<IRawSQL, RawSQL>();
+        services.AddScoped<IPaymentRepository, PaymentRepository>();
     }
 }

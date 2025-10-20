@@ -1,0 +1,119 @@
+﻿@page
+@model EVDMS.Presentation.Pages.Admin.ReportsModel
+@{
+    ViewData["Title"] = "Reports";
+    Layout = "Shared/_AdminLayout";
+}
+
+@* Section to add custom CSS for this page *@
+@section Styles {
+    <style>
+        /* CSS to ensure the chart does not overflow on small screens */
+        .chart-container {
+            position: relative;
+            height: 50vh; /* Height is 50% of the viewport height */
+            width: 100%; /* Width is 100% of the card-body */
+        }
+    </style>
+}
+
+@* CORRECTED LAYOUT PART 1: The page header is now OUTSIDE the main content div *@
+<div class="page-header">
+    <div class="container">
+        <h1><i class="fas fa-chart-bar me-3"></i>@ViewData["Title"]</h1>
+        <p>An overview of business performance across the system.</p>
+    </div>
+</div>
+
+<div class="admin-page-content">
+
+    @* CORRECTED LAYOUT PART 2: The card now has a separate header and body *@
+    <div class="admin-card">
+        <div class="card-header d-flex align-items-center justify-content-between p-3">
+            <h5 class="mb-0 fw-bold"><i class="fas fa-dollar-sign me-2"></i>Revenue by Dealer</h5>
+            @* You could add action buttons here if needed, like an "Export" button *@
+        </div>
+        <div class="card-body p-4">
+            <div class="chart-container">
+                @* This canvas is where Chart.js will draw the chart *@
+                <canvas id="revenueChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    @* You can add other report cards here if you have more charts or data tables *@
+
+</div>
+
+
+@* This section contains the JavaScript and remains unchanged *@
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            // Get the data prepared by the C# Model
+            const chartLabels = @Json.Serialize( Model.DealerRevenueChart.Labels );
+            const chartData = @Json.Serialize( Model.DealerRevenueChart.Data );
+
+            // Chart configuration
+            const config = {
+                type: 'bar',
+                data: {
+                    labels: chartLabels,
+                    datasets: [{
+                        label: 'Revenue',
+                        data: chartData,
+                        backgroundColor: 'rgba(118, 75, 162, 0.6)',
+                        borderColor: 'rgba(118, 75, 162, 1)',
+                        borderWidth: 1.5,
+                        borderRadius: 5,
+                        hoverBackgroundColor: 'rgba(102, 126, 234, 0.7)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function (value, index, values) {
+                                    if (value >= 1e9) {
+                                        return '$' + (value / 1e9) + 'B';
+                                    }
+                                    if (value >= 1e6) {
+                                        return '$' + (value / 1e6) + 'M';
+                                    }
+                                    return '$' + value;
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: '#1c1e2f',
+                            titleFont: { size: 14, weight: 'bold' },
+                            bodyFont: { size: 12 },
+                            padding: 10,
+                            callbacks: {
+                                label: function (context) {
+                                    let value = context.parsed.y || 0;
+                                    return ' Revenue: ' + new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            // Get the canvas and draw the chart
+            const ctx = document.getElementById('revenueChart').getContext('2d');
+            new Chart(ctx, config);
+        });
+    </script>
+}

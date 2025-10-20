@@ -19,5 +19,6 @@ namespace EVDMS.DAL.Repositories.Abstractions
 
         // --- ADD THIS METHOD SIGNATURE ---
         Task<bool> AnyAsync(Expression<Func<Account, bool>> predicate);
+        Task<Role?> GetRoleByNameAsync(string roleName);
     }
 }

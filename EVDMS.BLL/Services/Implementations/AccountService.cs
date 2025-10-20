@@ -1,6 +1,10 @@
 ﻿using EVDMS.BLL.Services.Abstractions;
 using EVDMS.Core.Entities;
 using EVDMS.DAL.Repositories.Abstractions;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace EVDMS.BLL.Services.Implementations
 {
@@ -95,6 +99,10 @@ namespace EVDMS.BLL.Services.Implementations
         public async Task<IEnumerable<Account>> GetAccountsByDealerAsync(Guid dealerId)
         {
             return await _accountRepository.GetAccountsByDealerAsync(dealerId);
+        }
+        public async Task<Role?> GetRoleByNameAsync(string roleName)
+        {
+            return await _accountRepository.GetRoleByNameAsync(roleName);
         }
     }
 }
