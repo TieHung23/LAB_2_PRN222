@@ -9,40 +9,46 @@ namespace EVDMS.Presentation.Pages.Dealer
     {
         private readonly IOrderService _orderService;
 
-        public OrderModel(IOrderService orderService)
+        public OrderModel( IOrderService orderService )
         {
             _orderService = orderService;
         }
 
         public IList<OrderViewModel> Orders { get; set; } = new List<OrderViewModel>();
-        public int TotalOrders { get; set; }
-        public decimal TotalRevenue { get; set; }
+        public int TotalOrders
+        {
+            get; set;
+        }
+        public decimal TotalRevenue
+        {
+            get; set;
+        }
 
 
         public async Task OnGetAsync()
         {
-            var accountIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var dealerIdClaim = User.FindFirst("DealerId")?.Value;
-            var roleClaim = User.FindFirst(ClaimTypes.Role)?.Value;
+            var accountIdClaim = User.FindFirst( ClaimTypes.NameIdentifier )?.Value;
+            var dealerIdClaim = User.FindFirst( "DealerId" )?.Value;
+            var roleClaim = User.FindFirst( ClaimTypes.Role )?.Value;
 
-            if (accountIdClaim == null || dealerIdClaim == null)
+            if( accountIdClaim == null || dealerIdClaim == null )
                 return;
 
-            Guid.TryParse(accountIdClaim, out Guid accountId);
-            Guid.TryParse(dealerIdClaim, out Guid dealerId);
+            Guid.TryParse( accountIdClaim, out Guid accountId );
+            Guid.TryParse( dealerIdClaim, out Guid dealerId );
 
             IEnumerable<Order> orders;
 
-            if (roleClaim == "Dealer Manager")
+            if( roleClaim == "Dealer Manager" )
             {
-                orders = await _orderService.GetOrdersByDealerIdAsync(dealerId);
+                orders = await _orderService.GetOrdersByDealerIdAsync( dealerId );
             }
             else
             {
-                orders = await _orderService.GetOrdersByStaffIdAsync(accountId);
+                orders = await _orderService.GetOrdersByStaffIdAsync( accountId );
             }
 
-            Orders = orders.Select(o => new OrderViewModel
+            Orders = orders.Select( o => new OrderViewModel
             {
                 Id = o.Id,
                 CustomerName = o.Customer?.FullName ?? "(Không có)",
@@ -51,26 +57,41 @@ namespace EVDMS.Presentation.Pages.Dealer
                 FinalPrice = o.Payment?.FinalPrice ?? 0,
                 StaffName = o.Account?.FullName ?? "(N/A)",
                 CreatedAt = o.CreatedAt
-            }).OrderByDescending(x => x.CreatedAt).ToList();
+            } ).OrderByDescending( x => x.CreatedAt ).ToList();
 
-            if (roleClaim == "Dealer Manager")
+            if( roleClaim == "Dealer Manager" )
             {
                 TotalOrders = Orders.Count;
-                TotalRevenue = Orders.Sum(x => x.FinalPrice);
+                TotalRevenue = Orders.Sum( x => x.FinalPrice );
             }
         }
 
         public class OrderViewModel
         {
-            public Guid Id { get; set; }
+            public Guid Id
+            {
+                get; set;
+            }
             public string CustomerName { get; set; } = string.Empty;
             public string VehicleModel { get; set; } = string.Empty;
             public string StaffName { get; set; } = string.Empty;
             public string PaymentStatus { get; set; } = string.Empty;
-            public decimal FinalPrice { get; set; }
-            public DateTime CreatedAt { get; set; }
-            public decimal TotalRevenue { get; set; }
-            public int TotalOrders { get; set; }
+            public decimal FinalPrice
+            {
+                get; set;
+            }
+            public DateTime CreatedAt
+            {
+                get; set;
+            }
+            public decimal TotalRevenue
+            {
+                get; set;
+            }
+            public int TotalOrders
+            {
+                get; set;
+            }
 
         }
     }

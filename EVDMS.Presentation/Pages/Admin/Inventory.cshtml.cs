@@ -1,42 +1,70 @@
 ﻿using EVDMS.BLL.Services.Abstractions;
-using EVDMS.Core.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace EVDMS.Presentation.Pages.Admin
 {
     public class InventoryModel : PageModel
     {
         private readonly IInventoryService _inventoryService;
-        // Inject IVehicleModelService và IDealerService để lấy dropdowns
 
-        public InventoryModel(IInventoryService inventoryService)
+        public InventoryModel( IInventoryService inventoryService )
         {
             _inventoryService = inventoryService;
         }
 
-        public IEnumerable<Inventory> Inventories { get; set; }
+        public List<InventoryViewModel> Inventories { get; set; } = new();
 
-        [BindProperty]
-        public Inventory Inventory { get; set; }
-
-        // public IEnumerable<VehicleConfig> VehicleConfigs { get; set; }
-        // public IEnumerable<Dealer> Dealers { get; set; }
-
-        public async Task OnGetAsync()
+        // Properties for dropdown lists in the modal
+        public SelectList VehicleConfigs
         {
-            // Placeholder:
-            // Inventories = await _inventoryService.GetAllAsync();
-            // VehicleConfigs = await _vehicleModelService.GetAllConfigsAsync();
-            // Dealers = await _dealerService.GetAllAsync();
-            Inventories = new List<Inventory>();
+            get; set;
+        }
+        public SelectList Dealers
+        {
+            get; set;
         }
 
-        public async Task<IActionResult> OnPostAsync()
+
+        public async Task<IActionResult> OnGetAsync()
         {
-            // Placeholder:
-            // await _inventoryService.SaveStockAsync(Inventory);
-            return RedirectToPage();
+            var result = await _inventoryService.GetAllInventoryAsync();
+
+            Inventories = result
+                .Select( i => new InventoryViewModel
+                {
+                    Id = i.Id,
+                    VehicleName = i.VehicleModel.ModelName,
+                    VehicleModel = i.VehicleModel.VehicleType,
+                    Color = i.VehicleModel.VehicleConfig.Color,
+                    DealerName = i.Dealer != null ? i.Dealer.Name : null
+                } ).ToList();
+
+            return Page();
+        }
+        public class InventoryViewModel
+        {
+            public Guid Id
+            {
+                get; set;
+            }
+            public string VehicleName
+            {
+                get; set;
+            }
+            public string VehicleModel
+            {
+                get; set;
+            }
+            public string Color
+            {
+                get; set;
+            }
+            public string? DealerName
+            {
+                get; set;
+            } // Nullable for Central Warehouse
         }
     }
 }

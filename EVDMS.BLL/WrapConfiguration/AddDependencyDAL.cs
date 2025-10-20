@@ -33,5 +33,7 @@ public static class AddDependencyDAL
         services.AddScoped<IPromotionService, PromotionService>();
         services.AddScoped<IAIService, AIService>();
         services.AddScoped<IPaymentService, PaymentService>();
+        services.AddScoped<IFeatureService, FeatureService>();
+        services.AddScoped<IVehicleConfigService, VehicleConfigService>();
     }
 }

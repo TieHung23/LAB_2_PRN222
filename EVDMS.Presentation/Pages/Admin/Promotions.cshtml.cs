@@ -9,27 +9,32 @@ namespace EVDMS.Presentation.Pages.Admin
     {
         private readonly IPromotionService _promotionService;
 
-        public PromotionsModel(IPromotionService promotionService)
+        public PromotionsModel( IPromotionService promotionService )
         {
             _promotionService = promotionService;
         }
 
-        public IEnumerable<Promotion> Promotions { get; set; }
+        public IEnumerable<Promotion> Promotions
+        {
+            get; set;
+        }
 
         [BindProperty]
-        public Promotion Promotion { get; set; }
+        public Promotion Promotion
+        {
+            get; set;
+        }
 
         public async Task OnGetAsync()
         {
             // Placeholder:
             // Promotions = await _promotionService.GetAllAsync();
-            Promotions = new List<Promotion>();
+            Promotions = await _promotionService.GetAllAsync();
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
-            // Placeholder:
-            // await _promotionService.SaveAsync(Promotion);
+            //await _promotionService.A( Promotion );
             return RedirectToPage();
         }
     }

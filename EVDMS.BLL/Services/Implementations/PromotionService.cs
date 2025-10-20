@@ -7,7 +7,7 @@ namespace EVDMS.BLL.Services.Implementations
     public class PromotionService : IPromotionService
     {
         private readonly IPromotionRepository _promotionRepository;
-        public PromotionService(IPromotionRepository promotionRepository)
+        public PromotionService( IPromotionRepository promotionRepository )
         {
             _promotionRepository = promotionRepository;
         }
