@@ -25,6 +25,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\EVDMS.BLL\EVDMS.BLL.csproj" />
+        <ProjectReference Include="..\EVDMS.Core\EVDMS.Core.csproj" />
     </ItemGroup>
 
 </Project>
