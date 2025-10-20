@@ -8,19 +8,19 @@ namespace EVDMS.BLL.WrapConfiguration;
 
 public static class AddDependencyDAL
 {
-    public static void AddDatabaseDAL(this IServiceCollection services, IConfiguration config)
+    public static void AddDatabaseDAL( this IServiceCollection services, IConfiguration config )
     {
-        services.AddDatabase(config);
+        services.AddDatabase( config );
     }
 
     // Add repo in DAL
-    public static void AddRepositoryDAL(this IServiceCollection services)
+    public static void AddRepositoryDAL( this IServiceCollection services )
     {
         services.AddRepositories();
     }
 
     // Add services
-    public static void AddServices(this IServiceCollection services)
+    public static void AddServices( this IServiceCollection services )
     {
         services.AddScoped<IRoleService, RoleService>();
         services.AddScoped<IDealerService, DealerService>();
@@ -32,5 +32,6 @@ public static class AddDependencyDAL
         services.AddScoped<IInventoryService, InventoryService>();
         services.AddScoped<IPromotionService, PromotionService>();
         services.AddScoped<IAIService, AIService>();
+        services.AddScoped<IPaymentService, PaymentService>();
     }
 }
