@@ -1,0 +1,72 @@
+﻿@page
+@model EVDMS.Presentation.Pages.Admin.Inventory.CreateModel
+@{
+    Layout = "Shared/_AdminLayout";
+    ViewData["Title"] = "Create New Stock";
+}
+
+<div class="page-header">
+    <div class="container">
+        <h1><i class="fas fa-plus-circle me-3"></i>@ViewData["Title"]</h1>
+        <p>Add a new vehicle stock record for a dealer or the central warehouse.</p>
+    </div>
+</div>
+
+<div class="admin-page-content">
+    <div class="admin-card">
+        <form method="post">
+            <div class="card-body p-4">
+                <h5 class="mb-4">Stock Details</h5>
+
+                @* Hiển thị lỗi validation chung *@
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Input.VehicleConfigurationId" class="form-label fw-bold">Vehicle Model & Color</label>
+                        <select asp-for="Input.VehicleConfigurationId" asp-items="Model.VehicleConfigs" class="form-select">
+                            <option value="">-- Select a vehicle configuration --</option>
+                        </select>
+                        <span asp-validation-for="Input.VehicleConfigurationId" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Input.DealerId" class="form-label fw-bold">Dealer / Warehouse</label>
+                        <select asp-for="Input.DealerId" asp-items="Model.Dealers" class="form-select">
+                            <option value="">-- Central Warehouse (No Dealer) --</option>
+                        </select>
+                        <span asp-validation-for="Input.DealerId" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Input.StockQuantity" class="form-label fw-bold">Stock Quantity</label>
+                        <input type="number" asp-for="Input.StockQuantity" class="form-control" min="0" placeholder="Enter stock quantity" />
+                        <span asp-validation-for="Input.StockQuantity" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Input.Description" class="form-label fw-bold">Description</label>
+                    <textarea asp-for="Input.Description" class="form-control" rows="3" placeholder="Add any notes or descriptions for this stock entry..."></textarea>
+                    <span asp-validation-for="Input.Description" class="text-danger small"></span>
+                </div>
+
+            </div>
+            <div class="card-footer bg-light text-end p-3">
+                <a asp-page="/Admin/Inventory" class="btn btn-secondary">
+                    <i class="fas fa-times me-2"></i>Cancel
+                </a>
+                <button type="submit" class="btn btn-primary bg-gradient">
+                    <i class="fas fa-save me-2"></i>Save Stock
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync( "_ValidationScriptsPartial" );
+    }
+}

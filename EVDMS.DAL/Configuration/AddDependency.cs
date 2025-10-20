@@ -31,5 +31,7 @@ public static class AddDependency
         services.AddScoped<IPromotionRepository, PromotionRepository>();
         services.AddScoped<IRawSQL, RawSQL>();
         services.AddScoped<IPaymentRepository, PaymentRepository>();
+        services.AddScoped<IFeatureRepository, FeatureRepository>();
+        services.AddScoped<IVehicleConfigRepository, VehicleConfigRepository>();
     }
 }

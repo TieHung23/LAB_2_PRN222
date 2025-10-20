@@ -12,21 +12,58 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
           rel="stylesheet" />
 
-    @await RenderSectionAsync("Styles", required: false)
+    @await RenderSectionAsync( "Styles", required: false )
 
     <style>
+        /* --- CSS CHO NOTIFICATION --- */
+        #notification-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast-notification {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background-color: #2c2f48; /* Màu nền toast */
+            color: #fff;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            min-width: 320px;
+            border-left: 4px solid #667eea; /* Màu nhấn mạnh */
+            opacity: 0;
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.4s ease;
+        }
+
+            .toast-notification.show {
+                opacity: 1;
+                transform: translateX(0);
+            }
+
+            .toast-notification i {
+                font-size: 20px;
+                color: #667eea;
+            }
+
+        /* --- CSS LAYOUT HIỆN TẠI CỦA BẠN --- */
         * {
             font-family: 'Inter', sans-serif;
         }
 
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #f0f2f5; /* Nền sáng hơn để dễ nhìn */
             min-height: 100vh;
             margin: 0;
             padding: 0;
         }
 
-        /* Modern Sidebar */
         .admin-sidebar {
             position: fixed;
             top: 0;
@@ -100,7 +137,6 @@
                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             }
 
-        /* Main Content */
         .admin-content {
             margin-left: 260px;
             padding: 30px;
@@ -138,7 +174,6 @@
             cursor: pointer;
         }
 
-        /* Responsive */
         @@media (max-width: 768px) {
             .admin-sidebar {
                 left: -260px;
@@ -160,11 +195,12 @@
 </head>
 <body>
 
+    <div id="notification-container"></div>
+
     <div class="admin-sidebar" id="adminSidebar">
         <div class="admin-sidebar-header">
             <a asp-page="/Dealer/Index" class="admin-sidebar-logo">EVDMS<span> Đại lý</span></a>
         </div>
-
         <nav class="admin-nav">
             <div class="admin-nav-group">
                 <span class="admin-nav-group-title">Main Menu</span>
@@ -200,7 +236,7 @@
                     </a>
                 </div>
 
-                @if (User.IsInRole("Dealer Manager"))
+                @if( User.IsInRole( "Dealer Manager" ) )
                 {
                     <div class="admin-nav-item">
                         <a class="admin-nav-link" asp-page="/Dealer/Staff/Index">
@@ -211,7 +247,7 @@
                 }
             </div>
 
-            @if (User.IsInRole("Dealer Manager"))
+            @if( User.IsInRole( "Dealer Manager" ) )
             {
                 <div class="admin-nav-group">
                     <span class="admin-nav-group-title">Quản lý</span>
@@ -245,7 +281,6 @@
     </div>
 
     <div class="admin-content">
-
         <header class="admin-header">
             <div>
                 <button class="mobile-toggle-btn" onclick="toggleSidebar()">
@@ -257,7 +292,6 @@
                 <span class="me-3">Xin chào, <strong>@User.Identity.Name</strong>!</span>
             </div>
         </header>
-
         <main role="main">
             @RenderBody()
         </main>
@@ -266,37 +300,87 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
+    <script src="~/lib/microsoft-signalr/signalr.js"></script>
+
     <script>
         $(document).ready(function () {
-            var currentPath = window.location.pathname;
-            // Chuẩn hóa
-            if (currentPath === "/Dealer") {
-                currentPath = "/Dealer/Index";
+
+            // --- LOGIC SIGNALR ĐỂ NHẬN NOTIFICATION ---
+
+            // 1. Tạo kết nối đến Hub của bạn
+            const connection = new signalR.HubConnectionBuilder()
+                .withUrl("/chatHub") // << QUAN TRỌNG: Đảm bảo đây là URL đúng của Hub
+                .withAutomaticReconnect() // Tự động kết nối lại nếu mất mạng
+                .build();
+
+            // 2. Lắng nghe sự kiện "AssignVehicleSuccess" từ server
+            connection.on("AssignVehicleSuccess", (message) => {
+                showNotification("New Vehicle Assigned", message);
+                console.log("SignalR Message Received:", message);
+            });
+
+            // 3. Hàm bắt đầu kết nối (và thử lại nếu thất bại)
+            async function start() {
+                try {
+                    await connection.start();
+                    console.log("SignalR Connected for notifications.");
+                } catch (err) {
+                    console.error("SignalR Connection failed: ", err);
+                    setTimeout(start, 5000); // Thử lại sau 5 giây
+                }
+            };
+
+            connection.onclose(async () => {
+                await start();
+            });
+
+            // Bắt đầu kết nối
+            start();
+
+            // --- HÀM HIỂN THỊ NOTIFICATION ---
+            function showNotification(title, message) {
+                const container = document.getElementById("notification-container");
+                if (!container) return; // Thoát nếu không tìm thấy container
+
+                const notification = document.createElement("div");
+                notification.className = "toast-notification";
+                notification.innerHTML = `<i class="fa-solid fa-bell"></i><div><strong>${title}</strong><br/><span>${message}</span></div>`;
+
+                container.appendChild(notification);
+
+                // Kích hoạt animation trượt vào
+                setTimeout(() => {
+                    notification.classList.add("show");
+                }, 10);
+
+                // Tự động ẩn và xóa đi sau 5 giây
+                setTimeout(() => {
+                    notification.classList.remove("show");
+                    notification.addEventListener('transitionend', () => notification.remove());
+                }, 5000);
             }
+
+            // --- CÁC SCRIPT HIỆN TẠI CỦA BẠN ---
+            var currentPath = window.location.pathname;
+            if (currentPath === "/Dealer") currentPath = "/Dealer/Index";
 
             $('.admin-nav-link').each(function () {
                 var linkPath = $(this).attr('href');
                 if (!linkPath) return;
-
-                // Logic tô sáng (active) mới
-                // 1. Nếu link là Dashboard:
                 if (linkPath === "/Dealer/Index") {
-                    if (currentPath === "/Dealer/Index") {
-                        $(this).addClass('active');
-                    }
-                }
-                // 2. Nếu là các link khác:
-                else if (currentPath.startsWith(linkPath)) {
+                    if (currentPath === "/Dealer/Index") $(this).addClass('active');
+                } else if (currentPath.startsWith(linkPath)) {
                     $(this).addClass('active');
                 }
             });
         });
 
-        // Giữ nguyên JS toggle sidebar
+        // Toggle sidebar
         function toggleSidebar() {
             $('#adminSidebar').toggleClass('show');
         }
 
+        // Đóng sidebar khi click ra ngoài trên mobile
         $(document).click(function (event) {
             if ($(window).width() <= 768) {
                 if (!$(event.target).closest('.admin-sidebar, .mobile-toggle-btn').length) {
@@ -306,7 +390,6 @@
         });
     </script>
 
-    @await RenderSectionAsync("Scripts", required: false)
-
+    @await RenderSectionAsync( "Scripts", required: false )
 </body>
 </html>
