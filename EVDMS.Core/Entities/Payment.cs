@@ -8,17 +8,35 @@ public class Payment : UpdatedCommon
     [Key]
     public Guid Id { get; set; } = Guid.NewGuid();
 
-    public Guid OrderId { get; set; }
+    public Guid OrderId
+    {
+        get; set;
+    }
 
-    public Order? Order { get; set; }
+    public Order? Order
+    {
+        get; set;
+    }
 
-    public decimal BasePrice { get; set; }
+    public decimal BasePrice
+    {
+        get; set;
+    }
 
-    public decimal DiscountPrice { get; set; }
+    public decimal DiscountPrice
+    {
+        get; set;
+    }
 
-    public decimal FinalPrice { get; set; }
+    public decimal FinalPrice
+    {
+        get; set;
+    }
 
-    public decimal Payed { get; set; }
+    public decimal Payed
+    {
+        get; set;
+    }
 
     public DateTime StartDate { get; set; } = DateTime.Now;
 
