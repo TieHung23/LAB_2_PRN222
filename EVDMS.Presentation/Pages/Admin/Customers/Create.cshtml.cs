@@ -2,7 +2,6 @@
 using EVDMS.Core.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.ComponentModel.DataAnnotations; 
 
 namespace EVDMS.Presentation.Pages.Admin.Customers
 {
@@ -43,7 +42,7 @@ namespace EVDMS.Presentation.Pages.Admin.Customers
 
             if (!ModelState.IsValid)
             {
-                return Page(); 
+                return Page();
             }
 
             try

@@ -1,6 +1,6 @@
 ﻿using EVDMS.BLL.Services.Abstractions;
 using EVDMS.Core.Entities;
-using Microsoft.AspNetCore.Mvc; 
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace EVDMS.Presentation.Pages.Admin
@@ -14,7 +14,7 @@ namespace EVDMS.Presentation.Pages.Admin
             _customerService = customerService;
         }
 
-        public IEnumerable<Customer> Customers { get; set; } = new List<Customer>(); 
+        public IEnumerable<Customer> Customers { get; set; } = new List<Customer>();
 
         public async Task OnGetAsync()
         {

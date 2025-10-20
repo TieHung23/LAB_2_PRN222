@@ -2,11 +2,6 @@
 using EVDMS.DAL.Database;
 using EVDMS.DAL.Repositories.Abstractions;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EVDMS.DAL.Repositories.Implementations
 {
@@ -27,10 +22,10 @@ namespace EVDMS.DAL.Repositories.Implementations
         public async Task<IEnumerable<TestDrive>> GetAllAsync()
         {
             return await _context.TestDrives
-                                 .Include(td => td.Customer) 
-                                 .Include(td => td.VehicleModel) 
+                                 .Include(td => td.Customer)
+                                 .Include(td => td.VehicleModel)
                                  .Where(td => !td.IsDeleted)
-                                 .OrderByDescending(td => td.ScheduledDateTime) 
+                                 .OrderByDescending(td => td.ScheduledDateTime)
                                  .ToListAsync();
         }
 

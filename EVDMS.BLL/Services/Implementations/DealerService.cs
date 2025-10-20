@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using EVDMS.BLL.Services.Abstractions;
+﻿using EVDMS.BLL.Services.Abstractions;
 using EVDMS.Core.Entities;
 using EVDMS.DAL.Repositories.Abstractions; // Đảm bảo using repository
-using Microsoft.EntityFrameworkCore; // Cần cho AnyAsync
-using System.Linq; // Cần cho AnyAsync LINQ extension if using repository directly
 
 namespace EVDMS.BLL.Services.Implementations
 {

@@ -1,5 +1,4 @@
 ﻿using EVDMS.Core.Entities;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace EVDMS.Presentation.Pages.Admin

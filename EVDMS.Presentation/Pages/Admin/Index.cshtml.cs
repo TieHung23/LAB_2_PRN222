@@ -37,34 +37,34 @@ public class IndexModel : PageModel
             var accounts = await _accountService.GetAccounts(null!);
 
             var grouped = (from c in customers
-                group c by new { c.CreatedAt.Year, c.CreatedAt.Month }
+                           group c by new { c.CreatedAt.Year, c.CreatedAt.Month }
                 into g
-                select new
-                {
-                    g.Key.Year,
-                    g.Key.Month,
-                    NewCustomerCount = g.Count()
-                }).ToList();
+                           select new
+                           {
+                               g.Key.Year,
+                               g.Key.Month,
+                               NewCustomerCount = g.Count()
+                           }).ToList();
 
             var vehicleGrouped = (from v in vehicles
-                group v by new { v.CreatedAt.Year, v.CreatedAt.Month }
+                                  group v by new { v.CreatedAt.Year, v.CreatedAt.Month }
                 into g
-                select new
-                {
-                    g.Key.Year,
-                    g.Key.Month,
-                    NewVehicleCount = g.Count()
-                }).ToList();
+                                  select new
+                                  {
+                                      g.Key.Year,
+                                      g.Key.Month,
+                                      NewVehicleCount = g.Count()
+                                  }).ToList();
 
             var orderGrouped = (from o in orders
-                group o by new { o.CreatedAt.Year, o.CreatedAt.Month }
+                                group o by new { o.CreatedAt.Year, o.CreatedAt.Month }
                 into g
-                select new
-                {
-                    g.Key.Year,
-                    g.Key.Month,
-                    NewOrderCount = g.Count()
-                }).ToList();
+                                select new
+                                {
+                                    g.Key.Year,
+                                    g.Key.Month,
+                                    NewOrderCount = g.Count()
+                                }).ToList();
 
             var allMonths = grouped.Select(x => new { x.Year, x.Month })
                 .Union(vehicleGrouped.Select(x => new { x.Year, x.Month }))

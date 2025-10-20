@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions; 
-using System.Text;
-using System.Threading.Tasks;
-using EVDMS.Core.Entities;
+﻿using EVDMS.Core.Entities;
 using EVDMS.DAL.Database;
 using EVDMS.DAL.Repositories.Abstractions;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace EVDMS.DAL.Repositories.Implementations
 {
@@ -23,8 +18,8 @@ namespace EVDMS.DAL.Repositories.Implementations
         public async Task<IEnumerable<Dealer>> GetAllAsync()
         {
             return await _context.Dealers
-                                 .Where(d => !d.IsDeleted) 
-                                 .AsNoTracking() 
+                                 .Where(d => !d.IsDeleted)
+                                 .AsNoTracking()
                                  .ToListAsync();
         }
 
@@ -40,12 +35,12 @@ namespace EVDMS.DAL.Repositories.Implementations
         {
             await _context.Dealers.AddAsync(entity);
             await _context.SaveChangesAsync();
-            return entity; 
+            return entity;
         }
 
         public async Task UpdateAsync(Dealer entity)
         {
-            
+
             _context.Entry(entity).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
@@ -55,13 +50,13 @@ namespace EVDMS.DAL.Repositories.Implementations
 
             _context.Dealers.Remove(entity);
 
-            await _context.SaveChangesAsync(); 
+            await _context.SaveChangesAsync();
         }
 
         public async Task<bool> AnyAsync(Expression<Func<Dealer, bool>> predicate)
         {
             return await _context.Dealers
-                                 .Where(d => !d.IsDeleted) 
+                                 .Where(d => !d.IsDeleted)
                                  .AnyAsync(predicate);
         }
     }

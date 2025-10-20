@@ -1,8 +1,5 @@
 ﻿using EVDMS.Core.Entities;
-using System;
-using System.Collections.Generic;
 using System.Linq.Expressions; // <-- Add this using
-using System.Threading.Tasks;
 
 namespace EVDMS.DAL.Repositories.Abstractions
 {

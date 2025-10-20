@@ -1,11 +1,10 @@
 ﻿using EVDMS.BLL.Services.Abstractions;
-using EVDMS.Core.Entities;
+using EVDMS.DAL.Repositories.Abstractions; // Đảm bảo bạn đã using cái này
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
-using EVDMS.DAL.Repositories.Abstractions; // Đảm bảo bạn đã using cái này
 
 namespace EVDMS.Presentation.Pages.Admin.VehicleModels
 {

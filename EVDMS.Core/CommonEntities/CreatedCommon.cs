@@ -1,6 +1,5 @@
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using EVDMS.Core.Entities;
+using System.ComponentModel.DataAnnotations.Schema;
 
 public class CreatedCommon
 {

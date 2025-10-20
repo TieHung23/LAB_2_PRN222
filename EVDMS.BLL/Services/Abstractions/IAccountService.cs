@@ -1,13 +1,10 @@
 ﻿using EVDMS.Core.Entities;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace EVDMS.BLL.Services.Abstractions
 {
     public interface IAccountService
     {
-        Task<Account> Login(string email, string password); 
+        Task<Account> Login(string email, string password);
         Task<IEnumerable<Account>> GetAccounts(string searchTerm);
         Task<Account> CreateAccountAsync(Account newAccount);
         Task<Account> GetAccountByIdAsync(Guid id);

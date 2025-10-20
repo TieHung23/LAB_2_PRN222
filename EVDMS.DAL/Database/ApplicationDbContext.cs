@@ -1,9 +1,5 @@
-﻿using EVDMS.Core.CommonEntities;
-using EVDMS.Core.Entities;
+﻿using EVDMS.Core.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace EVDMS.DAL.Database;
 

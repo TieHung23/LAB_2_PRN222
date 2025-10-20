@@ -1,9 +1,6 @@
 ﻿using EVDMS.BLL.Services.Abstractions;
 using EVDMS.Core.Entities;
 using EVDMS.DAL.Repositories.Abstractions;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace EVDMS.BLL.Services.Implementations
 {
