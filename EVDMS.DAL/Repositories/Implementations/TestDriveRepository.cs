@@ -56,5 +56,22 @@ namespace EVDMS.DAL.Repositories.Implementations
             _context.TestDrives.Update(testDrive);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<bool> IsSlotAvailableAsync(DateTime appointmentTime)
+        {
+            var startTime = appointmentTime;
+            var endTime = startTime.AddHours(1);
+
+            // Tìm bất kỳ lịch hẹn nào *chưa hoàn thành* (IsSuccess == false) bị trùng lặp
+            var existingAppointment = await _context.TestDrives
+                .FirstOrDefaultAsync(td =>
+                    !td.IsSuccess && 
+                    td.ScheduledDateTime.HasValue &&
+                    td.ScheduledDateTime.Value < endTime && 
+                    td.ScheduledDateTime.Value.AddHours(1) > startTime 
+                );
+
+            return existingAppointment == null; 
+        }
     }
 }

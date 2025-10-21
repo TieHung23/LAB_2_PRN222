@@ -8,5 +8,7 @@ namespace EVDMS.DAL.Repositories.Abstractions
         Task<TestDrive> GetByIdAsync(Guid id);
         Task UpdateAsync(TestDrive testDrive);
         Task<IEnumerable<TestDrive>> GetByDealerAsync(Guid dealerId);
+
+        Task<bool> IsSlotAvailableAsync(DateTime appointmentTime);
     }
 }

@@ -1,6 +1,7 @@
-using EVDMS.BLL.Services.Abstractions;
+﻿using EVDMS.BLL.Services.Abstractions;
 using EVDMS.Core.Entities;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Security.Claims;
 
@@ -25,6 +26,19 @@ namespace EVDMS.Presentation.Pages.Dealer
             {
                 TestDriveList = await _testDriveService.GetByDealerAsync(dealerId);
             }
+        }
+        public async Task<IActionResult> OnPostUpdateStatusAsync(Guid id)
+        {
+            if (id == Guid.Empty)
+            {
+                return Page();
+            }
+
+            // Gọi service đã có sẵn để cập nhật IsSuccess = true
+            await _testDriveService.UpdateStatusAsync(id, true);
+
+            TempData["SuccessMessage"] = "Cập nhật trạng thái lịch hẹn thành công!";
+            return RedirectToPage();
         }
     }
 }
