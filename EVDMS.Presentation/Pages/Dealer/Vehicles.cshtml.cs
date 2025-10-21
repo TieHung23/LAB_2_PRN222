@@ -6,12 +6,12 @@ using System.Security.Claims;
 
 namespace EVDMS.Presentation.Pages.Dealer
 {
-    [Authorize(Roles = "Dealer Staff, Dealer Manager")]
+    [Authorize( Roles = "Dealer Staff, Dealer Manager" )]
     public class VehiclesModel : PageModel
     {
         private readonly IInventoryService _inventoryService;
 
-        public VehiclesModel(IInventoryService inventoryService)
+        public VehiclesModel( IInventoryService inventoryService )
         {
             _inventoryService = inventoryService;
         }
@@ -20,14 +20,12 @@ namespace EVDMS.Presentation.Pages.Dealer
 
         public async Task OnGetAsync()
         {
-            // Lấy DealerId của nhân viên đang đăng nhập từ Claims
-            var dealerIdClaim = User.FindFirstValue("DealerId");
+            var dealerIdClaim = User.FindFirstValue( "DealerId" );
 
-            if (Guid.TryParse(dealerIdClaim, out Guid dealerId))
+            if( Guid.TryParse( dealerIdClaim, out Guid dealerId ) )
             {
-                Vehicles = await _inventoryService.GetByDealerIdAsync(dealerId);
+                Vehicles = await _inventoryService.GetByDealerIdAsync( dealerId );
             }
-            // Bạn có thể thêm else để xử lý lỗi nếu không tìm thấy DealerId
         }
     }
 }

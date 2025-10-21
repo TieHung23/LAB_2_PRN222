@@ -7,23 +7,27 @@ namespace EVDMS.Presentation.Pages.Admin
 {
     public class FeaturesModel : PageModel
     {
-        private readonly IVehicleModelService _vehicleModelService; // Hoặc một service riêng cho Feature
+        private readonly IFeatureService _featureService;
 
-        public FeaturesModel(IVehicleModelService vehicleModelService)
+        public FeaturesModel( IFeatureService featureService )
         {
-            _vehicleModelService = vehicleModelService;
+            _featureService = featureService;
         }
 
-        public IEnumerable<Feature> Features { get; set; }
+        public IEnumerable<Feature> Features
+        {
+            get; set;
+        }
 
         [BindProperty]
-        public Feature Feature { get; set; }
+        public Feature Feature
+        {
+            get; set;
+        }
 
         public async Task OnGetAsync()
         {
-            // Placeholder:
-            // Features = await _vehicleModelService.GetAllFeaturesAsync();
-            Features = new List<Feature>();
+            Features = await _featureService.GetAllFeatureAsync();
         }
 
         public async Task<IActionResult> OnPostAsync()

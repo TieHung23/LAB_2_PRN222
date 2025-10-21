@@ -1,6 +1,6 @@
 ﻿using EVDMS.BLL.Services.Abstractions;
-using EVDMS.BLL.SignalR;
 using EVDMS.Core.Entities;
+using EVDMS.Presentation.SignalR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -10,7 +10,7 @@ using System.Security.Claims;
 
 namespace EVDMS.Presentation.Pages.Dealer
 {
-    [Authorize(Roles = "Dealer Staff, Dealer Manager")]
+    [Authorize( Roles = "Dealer Staff, Dealer Manager" )]
     public class CreateOrderModel : PageModel
     {
         private readonly IOrderService _orderService;
@@ -18,7 +18,7 @@ namespace EVDMS.Presentation.Pages.Dealer
         private readonly ICustomerService _customerService;
         private readonly IPromotionService _promotionService;
         private readonly IHubContext<NotificationHub> _hub;
-        public CreateOrderModel(IOrderService orderService, IInventoryService inventoryService, ICustomerService customerService, IPromotionService promotionService, IHubContext<NotificationHub> hub)
+        public CreateOrderModel( IOrderService orderService, IInventoryService inventoryService, ICustomerService customerService, IPromotionService promotionService, IHubContext<NotificationHub> hub )
         {
             _orderService = orderService;
             _inventoryService = inventoryService;
@@ -28,22 +28,40 @@ namespace EVDMS.Presentation.Pages.Dealer
         }
 
         [BindProperty]
-        public Guid InventoryId { get; set; }
-
-        [BindProperty]
-        public Guid SelectedCustomerId { get; set; }
-
-        [BindProperty]
-        public Guid? SelectedPromotionId { get; set; }
-
-        public Inventory SelectedVehicle { get; set; }
-        public SelectList CustomerOptions { get; set; }
-        public SelectList PromotionOptions { get; set; }
-
-        public async Task<IActionResult> OnGetAsync(Guid inventoryId)
+        public Guid InventoryId
         {
-            SelectedVehicle = await _inventoryService.GetByIdAsync(inventoryId);
-            if (SelectedVehicle == null)
+            get; set;
+        }
+
+        [BindProperty]
+        public Guid SelectedCustomerId
+        {
+            get; set;
+        }
+
+        [BindProperty]
+        public Guid? SelectedPromotionId
+        {
+            get; set;
+        }
+
+        public Inventory SelectedVehicle
+        {
+            get; set;
+        }
+        public SelectList CustomerOptions
+        {
+            get; set;
+        }
+        public SelectList PromotionOptions
+        {
+            get; set;
+        }
+
+        public async Task<IActionResult> OnGetAsync( Guid inventoryId )
+        {
+            SelectedVehicle = await _inventoryService.GetByIdAsync( inventoryId );
+            if( SelectedVehicle == null )
             {
                 return NotFound();
             }
@@ -51,23 +69,23 @@ namespace EVDMS.Presentation.Pages.Dealer
             InventoryId = inventoryId;
 
             var customers = await _customerService.GetAllAsync();
-            CustomerOptions = new SelectList(customers, "Id", "FullName");
+            CustomerOptions = new SelectList( customers, "Id", "FullName" );
 
-            var promotions = (await _promotionService.GetAllAsync()).Where(p => p.IsActive);
-            PromotionOptions = new SelectList(promotions, "Id", "Name");
+            var promotions = ( await _promotionService.GetAllAsync() ).Where( p => p.IsActive );
+            PromotionOptions = new SelectList( promotions, "Id", "Name" );
 
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
+            if( !ModelState.IsValid )
             {
-                await OnGetAsync(InventoryId);
+                await OnGetAsync( InventoryId );
                 return Page();
             }
 
-            var staffAccountId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var staffAccountId = Guid.Parse( User.FindFirstValue( ClaimTypes.NameIdentifier ) );
 
             var newOrder = new Order
             {
@@ -78,11 +96,14 @@ namespace EVDMS.Presentation.Pages.Dealer
                 CreatedById = staffAccountId
             };
 
-            var createdOrder = await _orderService.CreateOrderAsync(newOrder);
+            var createdOrder = await _orderService.CreateOrderAsync( newOrder );
 
-            await _hub.Clients.All.SendAsync("SendMessage", $"{createdOrder.Account!.DealerId}", $"{createdOrder.CreatedAt}");
+            await _hub.Clients.All.SendAsync( "SendMessage", $"{createdOrder.Account!.DealerId}", $"{createdOrder.CreatedAt}" );
 
-            return RedirectToPage("/Dealer/OrderSuccess", new { orderId = createdOrder.Id });
+            return RedirectToPage( "/Dealer/OrderSuccess", new
+            {
+                orderId = createdOrder.Id
+            } );
         }
     }
 }
