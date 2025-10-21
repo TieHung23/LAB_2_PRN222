@@ -43,6 +43,22 @@ namespace EVDMS.BLL.Services.Implementations
 
         public async Task<TestDrive> CreateAsync(TestDrive testDrive)
         {
+            if (!testDrive.ScheduledDateTime.HasValue)
+            {
+                throw new Exception("Vui lòng chọn ngày và giờ hẹn.");
+            }
+
+            //  KIỂM TRA TRÙNG LẶP
+            bool isAvailable = await _testDriveRepository.IsSlotAvailableAsync(testDrive.ScheduledDateTime.Value);
+
+           // NÉM LỖI NẾU BỊ TRÙNG
+            if (!isAvailable)
+            {
+                
+                throw new Exception("Khung giờ này (và trong vòng 1 giờ tới) đã có người đặt. Vui lòng chọn giờ khác.");
+            }
+
+            //  NẾU KHÔNG TRÙNG, TIẾP TỤC TẠO
             return await _testDriveRepository.AddAsync(testDrive);
         }
     }

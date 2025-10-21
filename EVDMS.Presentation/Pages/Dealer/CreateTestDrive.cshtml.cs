@@ -60,24 +60,34 @@ namespace EVDMS.Presentation.Pages.Dealer
         {
             if (!ModelState.IsValid)
             {
-                await OnGetAsync(); // Tải lại dropdowns
+                await OnGetAsync(); 
                 return Page();
             }
 
-            var newTestDrive = new TestDrive
+            try 
             {
-                CustomerId = Input.SelectedCustomerId,
-                VehicleModelId = Input.SelectedVehicleModelId,
-                ScheduledDateTime = Input.ScheduledDateTime,
-                IsActive = true,
-                IsDeleted = false,
-                IsSuccess = false
-            };
+                var newTestDrive = new TestDrive
+                {
+                    CustomerId = Input.SelectedCustomerId,
+                    VehicleModelId = Input.SelectedVehicleModelId,
+                    ScheduledDateTime = Input.ScheduledDateTime,
+                    IsActive = true,
+                    IsDeleted = false,
+                    IsSuccess = false
+                };
 
-            await _testDriveService.CreateAsync(newTestDrive);
+                await _testDriveService.CreateAsync(newTestDrive); 
 
-            TempData["SuccessMessage"] = "Đặt lịch lái thử thành công!";
-            return RedirectToPage("/Dealer/TestDrives");
+                TempData["SuccessMessage"] = "Đặt lịch lái thử thành công!";
+                return RedirectToPage("/Dealer/TestDrives");
+            }
+            catch (Exception ex) 
+            {
+                
+                ModelState.AddModelError(string.Empty, ex.Message);
+                await OnGetAsync(); 
+                return Page(); 
+            }
         }
     }
 }

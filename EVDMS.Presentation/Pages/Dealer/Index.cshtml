@@ -10,20 +10,18 @@
 
 <div class="row">
     <div class="col-md-6">
-        <div class="card text-white bg-success mb-3">
-            <div class="card-header">Your Total Revenue</div>
+        <div class="card text-white bg-primary mb-3">
+            <div class="card-header">Doanh thu cá nhân của bạn</div>
             <div class="card-body">
                 <h4 class="card-title">@Model.StaffTotalRevenue.ToString("C")</h4>
-                <p class="card-text">Total earnings from all your completed sales.</p>
             </div>
         </div>
     </div>
     <div class="col-md-6">
-        <div class="card text-white bg-primary mb-3">
-            <div class="card-header">Your Total Orders</div>
+        <div class="card text-white bg-success mb-3">
+            <div class="card-header">Tổng đơn hàng cá nhân của bạn</div>
             <div class="card-body">
                 <h4 class="card-title">@Model.StaffTotalOrders</h4>
-                <p class="card-text">Total number of orders you have created.</p>
             </div>
         </div>
     </div>
@@ -55,3 +53,71 @@
         </tbody>
     </table>
 </div>
+
+@if (User.IsInRole("Dealer Manager"))
+{
+    <h2 class="mt-5">Thống kê toàn chi nhánh (Manager View)</h2>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card text-white bg-info mb-3">
+                <div class="card-header">Tổng doanh thu chi nhánh</div>
+                <div class="card-body">
+                    <h4 class="card-title">@Model.DealerTotalRevenue.ToString("C")</h4>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card text-white bg-warning mb-3">
+                <div class="card-header">Tổng đơn hàng chi nhánh</div>
+                <div class="card-body">
+                    <h4 class="card-title">@Model.DealerTotalOrders</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h5>Doanh thu theo nhân viên</h5>
+    <table class="table table-hover">
+        <thead>
+            <tr class="table-dark">
+                <th>Tên nhân viên</th>
+                <th>Email</th>
+                <th>Doanh thu</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.StaffRevenues.OrderByDescending(s => s.Revenue))
+            {
+                <tr>
+                    <td>@item.Staff.FullName</td>
+                    <td>@item.Staff.Email</td>
+                    <td>@item.Revenue.ToString("C")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <h5 class="mt-4">10 Đơn hàng mới nhất của chi nhánh</h5>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Ngày đặt</th>
+                <th>Nhân viên</th>
+                <th>Khách hàng</th>
+                <th>Giá trị</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in Model.RecentDealerOrders)
+            {
+                <tr>
+                    <td>@order.CreatedAt.ToString("g")</td>
+                    <td>@(order.Account?.FullName ?? "N/A")</td>
+                    <td>@(order.Customer?.FullName ?? "N/A")</td>
+                    <td>@(order.Payment?.FinalPrice.ToString("C") ?? "N/A")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

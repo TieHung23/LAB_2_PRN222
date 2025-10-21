@@ -1,6 +1,7 @@
 ﻿using EVDMS.BLL.Services.Abstractions;
 using EVDMS.Core.Entities;
 using EVDMS.DAL.Repositories.Abstractions;
+using AccountEntity = EVDMS.Core.Entities.Account;
 
 namespace EVDMS.BLL.Services.Implementations
 {
@@ -77,7 +78,7 @@ namespace EVDMS.BLL.Services.Implementations
             return await _orderRepository.GetOrdersByDealerIdAsync(dealerId);
         }
 
-        public async Task<List<(Account Staff, decimal Revenue)>> GetStaffRevenuesByDealerAsync(Guid dealerId)
+        public async Task<List<(AccountEntity Staff, decimal Revenue)>> GetStaffRevenuesByDealerAsync(Guid dealerId)
         {
             return await _orderRepository.GetStaffRevenuesByDealerAsync(dealerId);
         }

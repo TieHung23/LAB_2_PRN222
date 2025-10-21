@@ -2,7 +2,7 @@
 using EVDMS.DAL.Database;
 using EVDMS.DAL.Repositories.Abstractions;
 using Microsoft.EntityFrameworkCore;
-
+using AccountEntity = EVDMS.Core.Entities.Account;
 namespace EVDMS.DAL.Repositories.Implementations
 {
     public class OrderRepository : IOrderRepository
@@ -82,7 +82,7 @@ namespace EVDMS.DAL.Repositories.Implementations
                 .ToListAsync();
         }
 
-        public async Task<List<(Account Staff, decimal Revenue)>> GetStaffRevenuesByDealerAsync( Guid dealerId )
+        public async Task<List<(AccountEntity Staff, decimal Revenue)>> GetStaffRevenuesByDealerAsync(Guid dealerId)
         {
             var query = from a in _context.Accounts
                         join o in _context.Orders on a.Id equals o.AccountId

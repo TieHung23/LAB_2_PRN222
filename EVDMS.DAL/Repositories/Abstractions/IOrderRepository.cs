@@ -1,5 +1,5 @@
 ﻿using EVDMS.Core.Entities;
-
+using AccountEntity = EVDMS.Core.Entities.Account;
 namespace EVDMS.DAL.Repositories.Abstractions
 {
     public interface IOrderRepository

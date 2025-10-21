@@ -12,7 +12,7 @@
     {
         <div class="col">
             <div class="card h-100">
-                <img src="@item.VehicleModel.ImgUrl" class="card-img-top" alt="@item.VehicleModel.ModelName" style="height: 200px; object-fit: cover;">
+                <img src="@Url.Content(item.VehicleModel.ImgUrl)" class="card-img-top" alt="@item.VehicleModel.ModelName" ...>
                 <div class="card-body">
                     <h5 class="card-title">@item.VehicleModel.Brand @item.VehicleModel.ModelName</h5>
                     <p class="card-text">@item.VehicleModel.Description</p>

@@ -1,5 +1,5 @@
 ﻿using EVDMS.Core.Entities;
-
+using AccountEntity = EVDMS.Core.Entities.Account;
 namespace EVDMS.BLL.Services.Abstractions
 {
     public interface IOrderService
@@ -10,7 +10,7 @@ namespace EVDMS.BLL.Services.Abstractions
         Task<Order> GetByIdAsync(Guid id);
         Task<decimal> GetTotalRevenueByDealerIdAsync(Guid dealerId);
         Task<IEnumerable<Order>> GetOrdersByDealerIdAsync(Guid dealerId);
-        Task<List<(Account Staff, decimal Revenue)>> GetStaffRevenuesByDealerAsync(Guid dealerId);
+        Task<List<(AccountEntity Staff, decimal Revenue)>> GetStaffRevenuesByDealerAsync(Guid dealerId); 
         Task<List<Order>> GetAllOrder();
     }
 }
