@@ -70,3 +70,6 @@ To get the project up and running on your local machine, follow these steps:
  1. Administrator Account:
     - Username: admin@evdms.com
     - Password: admin123  
+ 2. Staff Account:
+    - Username: staff1@evdms.com
+    - Password: admin123 
